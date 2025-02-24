@@ -13,3 +13,9 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
+api:
+  prefix: api/v1
+
+jwt:
+  expiration: 2592000   #30 days = 30 * 24 * 60 * 60
+  secretKey: quJH8fRdfN2X3GZyTlKmYPQWzrCd5VABeMJLOaXsUc0=
