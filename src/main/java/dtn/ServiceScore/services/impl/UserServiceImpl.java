@@ -72,6 +72,9 @@ public class UserServiceImpl implements UserService {
         authenticationManager.authenticate(authenticationToken);
         LoginRespone loginRespone = new LoginRespone();
         loginRespone.setAccessToken(jwtTokenUtil.generateToken(user));
+        String role = user.getRole().getName();  // Nếu getRoles() trả về một Role
+
+        loginRespone.setRole(role);
         return loginRespone;
     }
 

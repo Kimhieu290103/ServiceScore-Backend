@@ -3,6 +3,8 @@ package dtn.ServiceScore.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Optional;
+
 @Setter
 @Getter
 @NoArgsConstructor
@@ -17,6 +19,8 @@ public class Role {
 
     @Column(name = "name", nullable = false)
     private String name;
+
+
 
 //    @OneToMany(mappedBy = "role")
 //    private List<User> users;
