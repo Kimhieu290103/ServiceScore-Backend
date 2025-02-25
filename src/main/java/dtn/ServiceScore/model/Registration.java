@@ -3,6 +3,7 @@ package dtn.ServiceScore.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Setter
@@ -32,7 +33,7 @@ public class Registration {
 
     // dang ki luc nao
     @Column(name = "registered_at")
-    private Date registeredAt = new Date();
+    private LocalDate registeredAt;
 
     // trang thai( da gui danh ki, da xac nhan dang ki)
     @Column(name = "status", nullable = false)

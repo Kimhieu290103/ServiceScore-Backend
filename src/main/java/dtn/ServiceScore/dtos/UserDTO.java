@@ -3,6 +3,7 @@ package dtn.ServiceScore.dtos;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Data
@@ -28,7 +29,7 @@ public class UserDTO {
     private boolean isActive;
 
     @JsonProperty("date_of_birth")
-    private Date dateOfBirth;
+    private LocalDate dateOfBirth;
 
     @JsonProperty("email")
     private String email;

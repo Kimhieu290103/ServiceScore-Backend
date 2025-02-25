@@ -3,6 +3,7 @@ package dtn.ServiceScore.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Setter
@@ -23,11 +24,11 @@ public class Semester {
 
     // ngay bat dau
     @Column(name = "start_date")
-    private Date startDate;
+    private LocalDate startDate;
 
     // ngay ket thuc
     @Column(name = "end_date")
-    private Date endDate;
+    private LocalDate endDate;
 
 //    @OneToMany(mappedBy = "semester")
 //    private List<Event> events;

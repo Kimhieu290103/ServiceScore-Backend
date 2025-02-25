@@ -3,6 +3,7 @@ package dtn.ServiceScore.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Setter
@@ -32,5 +33,5 @@ public class StudentCriteria {
 
     // ngay dat duoc
     @Column(name = "achieved_at")
-    private Date achievedAt = new Date();
+    private LocalDate achievedAt ;
 }

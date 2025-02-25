@@ -3,6 +3,7 @@ package dtn.ServiceScore.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Setter
@@ -32,7 +33,7 @@ public class ExternalEvent {
 
     // ngay to chuc
     @Column(name = "date", nullable = false)
-    private Date date;
+    private LocalDate date;
 
     // duong dan den minh chung(vd: link drive)
     @Column(name = "proof_url", length = 500)

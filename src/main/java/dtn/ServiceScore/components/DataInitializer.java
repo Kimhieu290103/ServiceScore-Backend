@@ -1,11 +1,7 @@
 package dtn.ServiceScore.components;
 
-import dtn.ServiceScore.model.Lcd;
-import dtn.ServiceScore.model.Role;
-import dtn.ServiceScore.model.Semester;
-import dtn.ServiceScore.repositories.LcdRepository;
-import dtn.ServiceScore.repositories.RoleRepository;
-import dtn.ServiceScore.repositories.SemesterRepository;
+import dtn.ServiceScore.model.*;
+import dtn.ServiceScore.repositories.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -18,12 +14,18 @@ public class DataInitializer implements CommandLineRunner {
     private final RoleRepository roleRepository;
     private final LcdRepository lcdRepository;
     private final SemesterRepository semesterRepository;
+    private final CourseRepository courseRepository;
+    private final DepartmentRepository departmentRepository;
     public DataInitializer(RoleRepository roleRepository
             , LcdRepository lcdRepository
-             ,SemesterRepository semesterRepository) {
+             ,SemesterRepository semesterRepository
+            ,CourseRepository courseRepository
+    ,DepartmentRepository departmentRepository) {
         this.roleRepository = roleRepository;
         this.lcdRepository = lcdRepository;
         this.semesterRepository = semesterRepository;
+        this.courseRepository = courseRepository;
+        this.departmentRepository = departmentRepository;
     }
 
     @Override
@@ -56,6 +58,25 @@ public class DataInitializer implements CommandLineRunner {
                 System.out.println("✅ Created semester: " + semesterName);
             }
         }
+        // Thêm dữ liệu vào bảng course
+        List<String> courseNames = List.of("2021-2025","2022-2026", "2023-2027", "2024-2028", "2025-2029", "2026-2030");
+        for (String courseName : courseNames) {
+            if (courseRepository.findByName(courseName).isEmpty()) { // Kiểm tra nếu chưa có trong DB
+                Course course = Course.builder().name(courseName).build();
+                courseRepository.save(course);
+                System.out.println("✅ Created courseName: " + courseName);
+            }
+        }
+        // Thêm dữ liệu vào bảng course
+        List<String> departmentNames = List.of("Khoa CNTT","Khoa Cơ Khí", "Khoa Điện", "Khoa Hóa", "Khoa Xây Dựng", "Khoa Quản Lí Dự Án");
+        for (String departmentName : departmentNames) {
+            if (departmentRepository.findByName(departmentName).isEmpty()) { // Kiểm tra nếu chưa có trong DB
+                Department department = Department.builder().name(departmentName).build();
+                departmentRepository.save(department);
+                System.out.println("✅ Created departmentName: " + departmentName);
+            }
+        }
+
 
     }
 

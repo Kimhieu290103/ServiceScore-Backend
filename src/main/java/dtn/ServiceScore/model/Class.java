@@ -23,6 +23,10 @@ public class Class {
     @JoinColumn(name = "department_id")
     private Department department;
 
+    @ManyToOne
+    @JoinColumn(name = "course_id")
+    private Course course;
+
     // trang thai ( lop da ra truong hay chua)
     @Column(name = "status")
     private boolean status = true;

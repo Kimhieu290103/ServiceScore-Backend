@@ -22,14 +22,7 @@ public class Department {
     @Column(name = "name", nullable = false)
     private String name;
 
-    // khoa ngoai khoa hoc, khoa thuoc khoa hoc nao
-    @ManyToOne
-    @JoinColumn(name = "course_id")
-    private Course course;
 
-    // trang thai cua khoa
-    @Column(name = "status")
-    private boolean status = true;
 
 //    @OneToMany(mappedBy = "department")
 //    private List<Class> classes;

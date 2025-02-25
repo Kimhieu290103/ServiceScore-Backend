@@ -4,7 +4,7 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/ServiceScoreDB #ten database
+    url: jdbc:postgresql://localhost:5432/servicescore_db #ten database
     username: postgres #user postgres
     password: trankimhieu123 #Mat khau
   jpa:
