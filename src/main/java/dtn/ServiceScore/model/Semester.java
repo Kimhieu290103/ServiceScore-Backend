@@ -22,11 +22,11 @@ public class Semester {
     private String name;
 
     // ngay bat dau
-    @Column(name = "start_date", nullable = false)
+    @Column(name = "start_date")
     private Date startDate;
 
     // ngay ket thuc
-    @Column(name = "end_date", nullable = false)
+    @Column(name = "end_date")
     private Date endDate;
 
 //    @OneToMany(mappedBy = "semester")

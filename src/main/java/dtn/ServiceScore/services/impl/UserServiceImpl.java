@@ -44,9 +44,9 @@ public class UserServiceImpl implements UserService {
                 .email(userDTO.getEmail())
                 .username(userDTO.getUsername())
                 .build();
-        Role role = roleRepository.findById(userDTO.getRoleId()).
+        Role role = roleRepository.findByName(userDTO.getRoleName()).
                 orElseThrow(() -> new DataNotFoundException("Không tìm thấy vai trò"));
-        Class clazz = classRepository.findById(userDTO.getClassId()).
+        Class clazz = classRepository.findByName(userDTO.getClassName()).
                 orElseThrow(() -> new DataNotFoundException("Không tìm thấy vai trò"));
         newUser.setRole(role);
         newUser.setClazz(clazz);

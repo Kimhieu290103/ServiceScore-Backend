@@ -3,7 +3,7 @@ package dtn.ServiceScore.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Setter
 @Getter
@@ -27,7 +27,7 @@ public class Event {
 
     // ngay to chuc
     @Column(name = "date", nullable = false)
-    private Date date;
+    private LocalDate date;
 
     // event thuoc hoc ki nao
     @ManyToOne
@@ -53,7 +53,7 @@ public class Event {
 
     // event thuoc loai nao (truyen thong, hoc thuat, ...)
     @Column(name = "event_type", nullable = false)
-    private String eventType = "other";
+    private String eventType = "LCD";
 
 //    @OneToMany(mappedBy = "event")
 //    private List<EventImage> eventImages;

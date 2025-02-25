@@ -43,8 +43,8 @@ public class UserDTO {
     private String retypePassword;
 
     @JsonProperty("class_id")
-    private Long classId; // Chỉ gửi ID của class thay vì object đầy đủ
+    private String className; // Chỉ gửi ID của class thay vì object đầy đủ
 
     @JsonProperty("role_id")
-    private Long roleId;  // Chỉ gửi ID của role thay vì object đầy đủ
+    private String roleName;  // Chỉ gửi ID của role thay vì object đầy đủ
 }
