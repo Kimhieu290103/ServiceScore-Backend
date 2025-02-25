@@ -72,7 +72,10 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 // liet ke danh sach api khong can jwt
                 // vd:
                 Pair.of("api/v1/users/login", "POST"),
-                Pair.of("api/v1/users/register", "POST")
+                Pair.of("api/v1/users/register", "POST"),
+                Pair.of("/swagger-ui/", "GET"),
+                Pair.of("/v3/api-docs", "GET")
+
 
         );
         for (Pair<String,String> bypassToken: bypassTokens){

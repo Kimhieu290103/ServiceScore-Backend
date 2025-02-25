@@ -5,6 +5,7 @@ import dtn.ServiceScore.dtos.UserDTO;
 import dtn.ServiceScore.model.Event;
 import dtn.ServiceScore.responses.EventListResponse;
 import dtn.ServiceScore.services.EventService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -23,6 +24,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EventController {
     public final EventService eventService;
+    @SecurityRequirement(name = "bearerAuth")
     @PostMapping("/create")
     public ResponseEntity<?> createEvent(@Valid @RequestBody EventDTO eventDTO, BindingResult result){
         try {
@@ -41,6 +43,7 @@ public class EventController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+    @SecurityRequirement(name = "bearerAuth")
     @GetMapping("/{id}")
     public ResponseEntity<?> getProductById(@PathVariable("id") Long eventId){
         try {
@@ -51,6 +54,7 @@ public class EventController {
         }
 
     }
+    @SecurityRequirement(name = "bearerAuth")
     @GetMapping("")
     public ResponseEntity<EventListResponse> getProducts(
             @RequestParam("page") int page,
