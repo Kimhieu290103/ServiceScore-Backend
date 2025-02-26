@@ -4,6 +4,7 @@ server:
 
 spring:
   datasource:
+    #TODO: Private this ...
     url: jdbc:postgresql://localhost:5432/servicescore_db #ten database
     username: postgres #user postgres
     password: trankimhieu123 #Mat khau

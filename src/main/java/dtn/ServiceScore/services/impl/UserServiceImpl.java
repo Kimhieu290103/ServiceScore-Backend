@@ -32,7 +32,7 @@ public class UserServiceImpl implements UserService {
     public User createUser(UserDTO userDTO) throws Exception  {
         String username = userDTO.getUsername();
         if(userRepository.existsByUsername(username)){
-            throw  new DataIntegrityViolationException("username existed");
+            throw new DataIntegrityViolationException("username existed");
         }
         User newUser= User.builder()
                 .fullname(userDTO.getFullname())
@@ -52,23 +52,21 @@ public class UserServiceImpl implements UserService {
         newUser.setClazz(clazz);
         newUser.setActive(true);
 
-            String password = userDTO.getPassword();
-            String encodedPassword = passwordEncoder.encode(password);
-            newUser.setPassword(encodedPassword);
+        String password = userDTO.getPassword();
+        String encodedPassword = passwordEncoder.encode(password);
+        newUser.setPassword(encodedPassword);
         return userRepository.save(newUser);
     }
 
     @Override
-    public LoginRespone login(String username, String passsword) throws Exception {
+    public LoginRespone login(String username, String password) throws Exception {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(()-> new DataNotFoundException("khong tim thay user"));
-
-            if(!passwordEncoder.matches(passsword,user.getPassword())){
-                throw new BadCredentialsException("Wrong username or password");
-
+        if(!passwordEncoder.matches(password,user.getPassword())){
+            throw new BadCredentialsException("Wrong username or password");
         }
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(username, passsword, user.getAuthorities());
+                new UsernamePasswordAuthenticationToken(username, password, user.getAuthorities());
         authenticationManager.authenticate(authenticationToken);
         LoginRespone loginRespone = new LoginRespone();
         loginRespone.setAccessToken(jwtTokenUtil.generateToken(user));

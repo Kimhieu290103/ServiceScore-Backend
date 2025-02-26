@@ -37,7 +37,7 @@ public class UserController {
                 return ResponseEntity.badRequest().body("mat khau khong trung khop");
             }
             userService.createUser(userDTO);
-            return  ResponseEntity.ok("dang  ki thanh cong") ;
+            return  ResponseEntity.ok("dang ki thanh cong") ;
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
