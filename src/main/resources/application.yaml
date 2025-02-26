@@ -14,9 +14,20 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
+  web:
+    cors:
+      allowed-origins: "*"
+      allowed-methods: "*"
+      allowed-headers: "*"
+      allow-credentials: false  # Phải đặt là false nếu dùng "*"
+    resources:
+      static-locations: file:uploads/
 api:
   prefix: api/v1
 
 jwt:
   expiration: 2592000   #30 days = 30 * 24 * 60 * 60
   secretKey: quJH8fRdfN2X3GZyTlKmYPQWzrCd5VABeMJLOaXsUc0=
+
+
+

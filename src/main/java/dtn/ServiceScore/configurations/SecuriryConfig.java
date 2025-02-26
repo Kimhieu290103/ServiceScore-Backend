@@ -23,7 +23,7 @@ public class SecuriryConfig {
     public UserDetailsService userDetailsService(){
         return  username->userRepository.findByUsername(username)
                 .orElseThrow(()->
-                        new UsernameNotFoundException("khong tim thay user co so dien thoai la "+ username));
+                        new UsernameNotFoundException("khong tim thay user co username la "+ username));
 
 
     }

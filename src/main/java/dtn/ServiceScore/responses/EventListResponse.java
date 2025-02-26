@@ -12,6 +12,6 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class EventListResponse {
-    private List<Event> events;
+    private List<EventRespone> events;
     private int totalPage;
 }

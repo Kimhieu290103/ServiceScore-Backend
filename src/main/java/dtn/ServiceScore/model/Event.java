@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Setter
 @Getter
@@ -28,6 +29,22 @@ public class Event {
     // ngay to chuc
     @Column(name = "date", nullable = false)
     private LocalDate date;
+
+    // ngay ket thuc
+    @Column(name = "end_date", nullable = false)
+    private LocalDate endDate;
+
+    // ngay bat dau dang ky
+    @Column(name = "registration_start_date", nullable = false)
+    private LocalDate registrationStartDate;
+
+    // ngay ket thuc dang ky
+    @Column(name = "registration_end_date", nullable = false)
+    private LocalDate registrationEndDate;
+
+    // ngay ket thuc dang ky
+    @Column(name = "status", nullable = false)
+    private String status;
 
     // event thuoc hoc ki nao
     @ManyToOne

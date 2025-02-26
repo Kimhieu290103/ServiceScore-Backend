@@ -1,10 +1,14 @@
 package dtn.ServiceScore.dtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.Column;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -20,6 +24,23 @@ public class EventDTO {
 
     @JsonProperty("event_date")
     private LocalDate date;
+
+
+    // ngay ket thuc
+    @JsonProperty( "end_date")
+    private LocalDate endDate;
+
+    // ngay bat dau dang ky
+    @JsonProperty( "registration_start_date")
+    private LocalDate registrationStartDate;
+
+    // ngay ket thuc dang ky
+    @JsonProperty( "registration_end_date")
+    private LocalDate registrationEndDate;
+
+    // ngay ket thuc dang ky
+    @JsonProperty( "status")
+    private String status;
 
     @JsonProperty("semester") // Giữ nguyên kiểu camelCase cho API dễ đọc
     private String semester;
@@ -38,4 +59,6 @@ public class EventDTO {
 
     @JsonProperty("event_category") // Đổi "eventType" thành "event_category"
     private String eventType;
+
+    private List<MultipartFile> files;
 }
