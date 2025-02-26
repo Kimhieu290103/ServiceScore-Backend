@@ -71,7 +71,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public Page<Event> getAllEvents(PageRequest pageRequest) {
         return eventRepository.findAll(pageRequest).map(event -> {
-            Event event1= Event.builder()
+            return Event.builder()
                     .id(event.getId())
                     .name(event.getName())
                     .description(event.getDescription())
@@ -87,8 +87,6 @@ public class EventServiceImpl implements EventService {
                     .currentRegistrations(event.getCurrentRegistrations())
                     .eventType(event.getEventType())
                     .build();
-
-            return event1;
         });
     }
 
