@@ -28,8 +28,9 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenUtil jwtTokenUtil;
     private final AuthenticationManager authenticationManager;
+
     @Override
-    public User createUser(UserDTO userDTO) throws Exception  {
+    public void createUser(UserDTO userDTO) throws Exception {
         String username = userDTO.getUsername();
         if(userRepository.existsByUsername(username)){
             throw new DataIntegrityViolationException("username existed");
@@ -46,16 +47,16 @@ public class UserServiceImpl implements UserService {
                 .build();
         Role role = roleRepository.findByName(userDTO.getRoleName()).
                 orElseThrow(() -> new DataNotFoundException("Không tìm thấy vai trò"));
-        Class clazz = classRepository.findByName(userDTO.getClassName()).
+        Class _class = classRepository.findByName(userDTO.getClassName()).
                 orElseThrow(() -> new DataNotFoundException("Không tìm thấy vai trò"));
         newUser.setRole(role);
-        newUser.setClazz(clazz);
+        newUser.setClazz(_class);
         newUser.setActive(true);
 
         String password = userDTO.getPassword();
         String encodedPassword = passwordEncoder.encode(password);
         newUser.setPassword(encodedPassword);
-        return userRepository.save(newUser);
+        userRepository.save(newUser);
     }
 
     @Override

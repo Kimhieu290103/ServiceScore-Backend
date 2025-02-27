@@ -19,9 +19,6 @@ public class Role {
 
     @Column(name = "name", nullable = false)
     private String name;
-
-
-
-//    @OneToMany(mappedBy = "role")
-//    private List<User> users;
+    //    @OneToMany(mappedBy = "role")
+    //    private List<User> users;
 }

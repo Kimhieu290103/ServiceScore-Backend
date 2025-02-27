@@ -10,7 +10,6 @@ import dtn.ServiceScore.responses.CriteriaResponse;
 import dtn.ServiceScore.responses.EventCriteriaResponse;
 import dtn.ServiceScore.services.EventService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.SpringVersion;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

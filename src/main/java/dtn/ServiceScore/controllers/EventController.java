@@ -3,8 +3,6 @@ package dtn.ServiceScore.controllers;
 import dtn.ServiceScore.dtos.EventDTO;
 import dtn.ServiceScore.dtos.UserDTO;
 import dtn.ServiceScore.model.Event;
-import dtn.ServiceScore.model.EventCriteria;
-import dtn.ServiceScore.model.EventCriteriaLcd;
 import dtn.ServiceScore.model.EventImage;
 import dtn.ServiceScore.responses.EventCriteriaResponse;
 import dtn.ServiceScore.responses.EventImageRespone;
@@ -232,7 +230,7 @@ public class EventController {
             eventService.deleteEvent(eventID);
             return ResponseEntity.ok("xoa thanh cong");
         } catch (Exception e ) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 
