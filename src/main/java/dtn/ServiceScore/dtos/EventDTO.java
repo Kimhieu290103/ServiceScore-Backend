@@ -60,5 +60,11 @@ public class EventDTO {
     @JsonProperty("event_category") // Đổi "eventType" thành "event_category"
     private String eventType;
 
+    @JsonProperty("five_good")
+    private List<Long> five_good_id;
+
+    @JsonProperty("five_good_lcd")
+    private List<Long> five_good_lcd_id;
+
     private List<MultipartFile> files;
 }

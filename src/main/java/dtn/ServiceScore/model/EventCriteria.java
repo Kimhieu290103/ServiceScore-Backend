@@ -2,6 +2,8 @@ package dtn.ServiceScore.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Setter
 @Getter
@@ -18,6 +20,7 @@ public class EventCriteria {
     // id event
     @ManyToOne
     @JoinColumn(name = "event_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Event event;
 
     // id bo tieu chi 5 tot

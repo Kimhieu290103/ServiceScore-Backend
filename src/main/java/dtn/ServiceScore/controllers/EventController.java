@@ -3,7 +3,10 @@ package dtn.ServiceScore.controllers;
 import dtn.ServiceScore.dtos.EventDTO;
 import dtn.ServiceScore.dtos.UserDTO;
 import dtn.ServiceScore.model.Event;
+import dtn.ServiceScore.model.EventCriteria;
+import dtn.ServiceScore.model.EventCriteriaLcd;
 import dtn.ServiceScore.model.EventImage;
+import dtn.ServiceScore.responses.EventCriteriaResponse;
 import dtn.ServiceScore.responses.EventImageRespone;
 import dtn.ServiceScore.responses.EventListResponse;
 import dtn.ServiceScore.responses.EventRespone;
@@ -28,9 +31,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @RequestMapping("api/v1/events")
@@ -231,7 +232,7 @@ public class EventController {
             eventService.deleteEvent(eventID);
             return ResponseEntity.ok("xoa thanh cong");
         } catch (Exception e ) {
-            throw new RuntimeException(e);
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
@@ -247,4 +248,12 @@ public class EventController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @SecurityRequirement(name = "bearerAuth")
+    @GetMapping("/criteria/{eventId}")
+    public ResponseEntity<?> getEventCriteria(@PathVariable Long eventId) {
+        EventCriteriaResponse response = eventService.getFilteredEventCriteria(eventId);
+        return ResponseEntity.ok(response);
+    }
+
 }
