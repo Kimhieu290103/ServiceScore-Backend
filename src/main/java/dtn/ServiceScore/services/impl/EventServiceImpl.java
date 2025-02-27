@@ -16,9 +16,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import javax.swing.plaf.DesktopIconUI;
-import java.beans.DesignMode;
-
 @Service
 @RequiredArgsConstructor
 public class EventServiceImpl implements EventService {
@@ -104,7 +101,6 @@ public class EventServiceImpl implements EventService {
             throw new InvalidParamException("so anh cua san pham lon hon 5");
         }
         return eventImageRepository.save(newEventImage);
-
     }
 
     @Override

@@ -10,10 +10,9 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class EventImageServiceImpl implements EventImageService {
-    private  final EventImageRepository eventImageRepository;
+    private final EventImageRepository eventImageRepository;
     @Override
     public List<EventImage> findByEventid(Long eventId) {
-       List<EventImage> eventImages = eventImageRepository.findByEventId(eventId);
-       return eventImages;
+        return eventImageRepository.findByEventId(eventId);
     }
 }

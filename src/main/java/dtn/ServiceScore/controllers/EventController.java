@@ -30,6 +30,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @RestController
@@ -203,8 +204,9 @@ public class EventController {
         }
 
     }
+
     private String storeFile (MultipartFile file) throws IOException {
-        String filename= StringUtils.cleanPath(file.getOriginalFilename());
+        String filename= StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
         // theem UUID vao truoc ten file de ten file la duy nhat
         String uniqueFilename= UUID.randomUUID().toString() + "_" + filename;
         // duong dan den thu muc chua file anh
