@@ -1,5 +1,6 @@
 package dtn.ServiceScore.services.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dtn.ServiceScore.dtos.EventDTO;
 import dtn.ServiceScore.exceptions.DataNotFoundException;
 import dtn.ServiceScore.exceptions.InvalidParamException;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import javax.swing.plaf.DesktopIconUI;
 import java.beans.DesignMode;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,8 +35,10 @@ public class EventServiceImpl implements EventService {
     private final EventCriteriaRepository eventCriteriaRepository;
     private final FiveGoodCriteriaLcdRepository fiveGoodCriteriaLcdRepository;
     private  final EventCriteriaLcdRepository eventCriteriaLcdRepository;
+    private final ObjectMapper objectMapper = new ObjectMapper();
     @Override
     public Event createEvent(EventDTO eventDTO) throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
         String eventName = eventDTO.getName();
         if(eventRepository.existsByName(eventName)){
             throw  new DataIntegrityViolationException("event name existed");
@@ -62,7 +66,8 @@ public class EventServiceImpl implements EventService {
         newEvent.setUser(user);
         Event event = eventRepository.save(newEvent);
 
-        List<Long> criteriaIds = eventDTO.getFive_good_id();
+
+        List<Long> criteriaIds = convertStringToList(eventDTO.getFive_good_id());
         if (criteriaIds != null && !criteriaIds.isEmpty()) {
             List<FiveGoodCriteria> criteriaList = fiveGoodCriteriaRepository.findAllById(criteriaIds);
             List<EventCriteria> eventCriteriaList = criteriaList.stream()
@@ -74,7 +79,7 @@ public class EventServiceImpl implements EventService {
 
             eventCriteriaRepository.saveAll(eventCriteriaList);
         }
-        List<Long> criteriaLcd_Ids = eventDTO.getFive_good_lcd_id();
+        List<Long> criteriaLcd_Ids = convertStringToList(eventDTO.getFive_good_lcd_id());
         if (criteriaLcd_Ids != null && !criteriaLcd_Ids.isEmpty()) {
             List<FiveGoodCriteriaLcd> criteriaLcd_List = fiveGoodCriteriaLcdRepository.findAllById(criteriaLcd_Ids);
             List<EventCriteriaLcd> eventCriteriaLcdList = criteriaLcd_List.stream()
@@ -178,7 +183,7 @@ public class EventServiceImpl implements EventService {
 
 
             // ✅ **Thêm các liên kết mới**
-            List<Long> criteriaIds = eventDTO.getFive_good_id();
+            List<Long> criteriaIds =convertStringToList(eventDTO.getFive_good_id());
             if (criteriaIds != null && !criteriaIds.isEmpty()) {
                 List<FiveGoodCriteria> criteriaList = fiveGoodCriteriaRepository.findAllById(criteriaIds);
                 List<EventCriteria> eventCriteriaList = criteriaList.stream()
@@ -191,7 +196,7 @@ public class EventServiceImpl implements EventService {
                 eventCriteriaRepository.saveAll(eventCriteriaList);
             }
 
-            List<Long> criteriaLcdIds = eventDTO.getFive_good_lcd_id();
+            List<Long> criteriaLcdIds =convertStringToList(eventDTO.getFive_good_lcd_id());
             if (criteriaLcdIds != null && !criteriaLcdIds.isEmpty()) {
                 List<FiveGoodCriteriaLcd> criteriaLcdList = fiveGoodCriteriaLcdRepository.findAllById(criteriaLcdIds);
                 List<EventCriteriaLcd> eventCriteriaLcdList = criteriaLcdList.stream()
@@ -240,6 +245,15 @@ public class EventServiceImpl implements EventService {
 
         return response;
     }
-
+    private List<Long> convertStringToList(String data) {
+        if (data == null || data.isEmpty()) {
+            return List.of();  // Trả về danh sách rỗng nếu không có dữ liệu
+        }
+        return Arrays.stream(data.replaceAll("[\\[\\]]", "").split(","))
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .map(Long::parseLong)
+                .collect(Collectors.toList());
+    }
 
 }

@@ -62,10 +62,10 @@ public class EventDTO {
     private String eventType;
 
     @JsonProperty("five_good")
-    private List<Long> five_good_id;
+    private String five_good_id;
 
     @JsonProperty("five_good_lcd")
-    private List<Long> five_good_lcd_id;
+    private String five_good_lcd_id;
 
     private List<MultipartFile> files;
 }

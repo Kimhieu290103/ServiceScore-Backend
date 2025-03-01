@@ -149,7 +149,7 @@ public class EventController {
 
     @SecurityRequirement(name = "bearerAuth")
     @PostMapping(value = "/createEventImage", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> uploadProductImage(@Valid @ModelAttribute EventDTO eventDTO,
+    public ResponseEntity<?> uploadEventImage(@Valid @ModelAttribute EventDTO eventDTO,
                                                 BindingResult bidingresult)
     // @RequestParam("file")MultipartFile file)
     {
@@ -267,7 +267,7 @@ public class EventController {
     @SecurityRequirement(name = "bearerAuth")
     @PutMapping("/{id}")
     public  ResponseEntity<?> updateEvent(@Valid @PathVariable("id") Long id,
-                                        @Valid @RequestBody EventDTO eventDTO){
+                                        @Valid  @ModelAttribute EventDTO eventDTO){
         try{
             Event event = eventService.updateEvent(id,eventDTO);
             return ResponseEntity.ok(event);
