@@ -53,8 +53,8 @@ public class Event {
 
     // do ai to chuc(vd: doan truong, lien chi doan, hoi sinh vien)
     @ManyToOne
-    @JoinColumn(name = "organizing_committee")
-    private Lcd organizingCommittee;
+    @JoinColumn(name = "user_id")
+    private User user;
 
     // so diem cua event
     @Column(name = "score")
@@ -71,6 +71,13 @@ public class Event {
     // event thuoc loai nao (truyen thong, hoc thuat, ...)
     @Column(name = "event_type", nullable = false)
     private String eventType = "LCD";
+
+    @Column(name = "location", nullable = false)
+    private String location;          // Thêm trường location
+
+    @Column(name = "additional_info", nullable = false)
+    private String additionalInfo;
+
 
 //    @OneToMany(mappedBy = "event")
 //    private List<EventImage> eventImages;

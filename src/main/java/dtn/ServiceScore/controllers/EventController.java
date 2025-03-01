@@ -75,7 +75,21 @@ public class EventController {
                     .toList();
 
             EventRespone eventRespone = EventRespone.builder()
-                    .event(existingEvent)
+                           .id(existingEvent.getId())
+                    .name(existingEvent.getName())
+                    .description(existingEvent.getDescription())
+                    .date(existingEvent.getDate())
+                    .endDate(existingEvent.getEndDate())
+                    .registrationStartDate(existingEvent.getRegistrationStartDate())
+                    .registrationEndDate(existingEvent.getRegistrationEndDate())
+                    .semester(existingEvent.getSemester().getName())
+                    .user_id(existingEvent.getUser().getId())
+                    .score(existingEvent.getScore())
+                    .maxRegistrations(existingEvent.getMaxRegistrations())
+                    .currentRegistrations(existingEvent.getCurrentRegistrations())
+                    .location(existingEvent.getLocation())
+                    .additionalInfo(existingEvent.getAdditionalInfo())
+                    .eventType(existingEvent.getEventType())
                     .eventImage(eventImageResponses)
                     .build();
             return ResponseEntity.ok(eventRespone);
@@ -104,7 +118,23 @@ public class EventController {
                     .toList();
 
             return EventRespone.builder()
-                    .event(event)
+                    .id(event.getId())
+                    .name(event.getName())
+                    .description(event.getDescription())
+                    .date(event.getDate())
+                    .endDate(event.getEndDate())
+                    .registrationStartDate(event.getRegistrationStartDate())
+                    .registrationEndDate(event.getRegistrationEndDate())
+                    .semester(event.getSemester().getName())
+                    .user_id(event.getUser().getId())
+                    .score(event.getScore())
+                    .maxRegistrations(event.getMaxRegistrations())
+                    .currentRegistrations(event.getCurrentRegistrations())
+                    .location(event.getLocation())
+                    .additionalInfo(event.getAdditionalInfo())
+                    .eventType(event.getEventType())
+                    .additionalInfo(event.getAdditionalInfo())
+                    .location(event.getLocation())
                     .eventImage(eventImages)
                     .build();
         }).toList();
@@ -236,7 +266,7 @@ public class EventController {
 
     @SecurityRequirement(name = "bearerAuth")
     @PutMapping("/{id}")
-    public  ResponseEntity<?> updateOrder(@Valid @PathVariable("id") Long id,
+    public  ResponseEntity<?> updateEvent(@Valid @PathVariable("id") Long id,
                                         @Valid @RequestBody EventDTO eventDTO){
         try{
             Event event = eventService.updateEvent(id,eventDTO);

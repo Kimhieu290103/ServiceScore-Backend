@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.swing.plaf.DesktopIconUI;
@@ -45,19 +46,20 @@ public class EventServiceImpl implements EventService {
                 .endDate(eventDTO.getEndDate())
                 .registrationStartDate(eventDTO.getRegistrationStartDate())
                 .registrationEndDate(eventDTO.getRegistrationEndDate())
-                .status(eventDTO.getStatus())
                 .score(eventDTO.getScore())
                 .maxRegistrations(eventDTO.getMaxRegistrations())
                 .eventType(eventDTO.getEventType())
+                .location(eventDTO.getLocation())
+                .additionalInfo(eventDTO.getAdditionalInfo())
                 .build();
+        newEvent.setStatus("OPEN");
         newEvent.setCurrentRegistrations(0L);
         Semester semester = semesterRepository.findByName(eventDTO.getSemester()).
             orElseThrow(() -> new DataNotFoundException("Không tìm thấy học kì phù hợp"));
-        Lcd lcd = lcdRepository.findByName(eventDTO.getOrganizingCommittee()).
-                orElseThrow(() -> new DataNotFoundException("Không tìm tổ chức phù hợp"));
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         newEvent.setSemester(semester);
-        newEvent.setOrganizingCommittee(lcd);
+        newEvent.setUser(user);
         Event event = eventRepository.save(newEvent);
 
         List<Long> criteriaIds = eventDTO.getFive_good_id();
@@ -118,10 +120,12 @@ public class EventServiceImpl implements EventService {
                     .registrationEndDate(event.getRegistrationEndDate())
                     .status(event.getStatus())
                     .semester(event.getSemester())
-                    .organizingCommittee(event.getOrganizingCommittee())
+                    .user(event.getUser())
                     .score(event.getScore())
                     .maxRegistrations(event.getMaxRegistrations())
                     .currentRegistrations(event.getCurrentRegistrations())
+                    .additionalInfo(event.getAdditionalInfo())
+                    .location(event.getLocation())
                     .eventType(event.getEventType())
                     .build();
         });
@@ -130,6 +134,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public EventImage createEventImage(Long eventId, EventImage eventImage) throws Exception {
         Event existingEvent = getEventById(eventId);
+        eventImageRepository.deleteByEventId(eventId);
         EventImage newEventImage = EventImage.builder()
                 .event(existingEvent)
                 .imageUrl(eventImage.getImageUrl())
@@ -150,21 +155,23 @@ public class EventServiceImpl implements EventService {
         if (existingEvent != null) {
             Semester semester = semesterRepository.findByName(eventDTO.getSemester()).
                     orElseThrow(() -> new DataNotFoundException("Không tìm thấy học kì phù hợp"));
-            Lcd lcd = lcdRepository.findByName(eventDTO.getOrganizingCommittee()).
-                    orElseThrow(() -> new DataNotFoundException("Không tìm tổ chức phù hợp"));
+            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+           // Long userId = user.getId();
 
             existingEvent.setSemester(semester);
-            existingEvent.setOrganizingCommittee(lcd);
+            existingEvent.setUser(user);
             existingEvent.setName(eventDTO.getName());
             existingEvent.setDescription(eventDTO.getDescription());
             existingEvent.setDate(eventDTO.getDate());
             existingEvent.setEndDate(eventDTO.getEndDate());
             existingEvent.setCurrentRegistrations(eventDTO.getCurrentRegistrations());
             existingEvent.setRegistrationEndDate(eventDTO.getRegistrationEndDate());
-            existingEvent.setStatus(eventDTO.getStatus());
             existingEvent.setScore(eventDTO.getScore());
             existingEvent.setMaxRegistrations(eventDTO.getMaxRegistrations());
             existingEvent.setEventType(eventDTO.getEventType());
+            existingEvent.setAdditionalInfo(eventDTO.getAdditionalInfo());
+            existingEvent.setLocation(eventDTO.getLocation());
+
             // ✅ **Xóa các liên kết cũ**
             eventCriteriaRepository.deleteByEventId(id);
             eventCriteriaLcdRepository.deleteByEventId(id);

@@ -1,6 +1,7 @@
 package dtn.ServiceScore.dtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.Column;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -42,8 +43,11 @@ public class EventDTO {
     @JsonProperty("semester") // Giữ nguyên kiểu camelCase cho API dễ đọc
     private String semester;
 
-    @JsonProperty("organizing_committee")
-    private String organizingCommittee;
+    @JsonProperty( "location")
+    private String location;          // Thêm trường location
+
+    @JsonProperty( "additional_info")
+    private String additionalInfo;
 
     @JsonProperty("event_score")
     private Long score;
@@ -54,7 +58,7 @@ public class EventDTO {
     @JsonProperty("current_participants")
     private Long currentRegistrations;
 
-    @JsonProperty("event_category") // Đổi "eventType" thành "event_category"
+    @JsonProperty("event_type")
     private String eventType;
 
     @JsonProperty("five_good")
