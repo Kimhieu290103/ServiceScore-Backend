@@ -22,7 +22,9 @@ public class WebSecurityConfig {
     private String apiPrefix;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable)
+        http
+                .cors(cors -> cors.configure(http))
+                .csrf(AbstractHttpConfigurer::disable)
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(requests -> {
                     requests.anyRequest().permitAll(); // Cho phép tất cả các request, không cần xác thực
