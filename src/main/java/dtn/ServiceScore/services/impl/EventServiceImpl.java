@@ -40,6 +40,12 @@ public class EventServiceImpl implements EventService {
     public Event createEvent(EventDTO eventDTO) throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         String eventName = eventDTO.getName();
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String userRoles = user.getRole().getName();
+        String eventType = (userRoles.contains("BTV") || userRoles.contains("CTSV") ||
+                userRoles.contains("HSV"))
+                ? eventDTO.getEventType()
+                : "LCD";
         if(eventRepository.existsByName(eventName)){
             throw  new DataIntegrityViolationException("event name existed");
         }
@@ -52,16 +58,15 @@ public class EventServiceImpl implements EventService {
                 .registrationEndDate(eventDTO.getRegistrationEndDate())
                 .score(eventDTO.getScore())
                 .maxRegistrations(eventDTO.getMaxRegistrations())
-                .eventType(eventDTO.getEventType())
+                //.eventType(eventDTO.getEventType())
                 .location(eventDTO.getLocation())
                 .additionalInfo(eventDTO.getAdditionalInfo())
                 .build();
         newEvent.setStatus("OPEN");
+        newEvent.setEventType(eventType);
         newEvent.setCurrentRegistrations(0L);
         Semester semester = semesterRepository.findByName(eventDTO.getSemester()).
             orElseThrow(() -> new DataNotFoundException("Không tìm thấy học kì phù hợp"));
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
         newEvent.setSemester(semester);
         newEvent.setUser(user);
         Event event = eventRepository.save(newEvent);

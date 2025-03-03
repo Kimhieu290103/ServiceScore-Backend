@@ -1,7 +1,6 @@
 package dtn.ServiceScore.controllers;
 
 import dtn.ServiceScore.dtos.EventDTO;
-import dtn.ServiceScore.dtos.UserDTO;
 import dtn.ServiceScore.model.Event;
 import dtn.ServiceScore.model.EventImage;
 import dtn.ServiceScore.responses.EventCriteriaResponse;
@@ -15,7 +14,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -282,6 +280,51 @@ public class EventController {
     public ResponseEntity<?> getEventCriteria(@PathVariable Long eventId) {
         EventCriteriaResponse response = eventService.getFilteredEventCriteria(eventId);
         return ResponseEntity.ok(response);
+    }
+
+    @SecurityRequirement(name = "bearerAuth")
+    @PostMapping(value = "/createEventImageAD", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> uploadEventImageAdmin(@Valid @ModelAttribute EventDTO eventDTO,
+                                              BindingResult bidingresult)
+    // @RequestParam("file")MultipartFile file)
+    {
+        try {
+            if(bidingresult.hasErrors()){
+                List<String> errors = bidingresult.getFieldErrors()
+                        .stream()
+                        .map(FieldError::getDefaultMessage)
+                        .toList();
+                return ResponseEntity.badRequest().body(errors);
+            }
+            Event newEvent = eventService.createEvent(eventDTO);
+            List<MultipartFile> files = eventDTO.getFiles();
+            files = files == null?  new ArrayList<>(): files;
+            for(MultipartFile file : files){
+                if(file != null) {
+                    // kiem tra kich thuoc file anh
+                    if (file.getSize() > 10 * 1024 * 1024) {
+                        return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body("this file too laget, maximum size is 10mb");
+
+                    }
+                    String contentType = file.getContentType();
+                    if (contentType == null || !contentType.startsWith("image/")) {
+                        return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).body("file must be an iamge");
+
+                    }
+                    String filename= storeFile(file);
+                    EventImage eventImage= eventService.createEventImage(newEvent.getId(),
+                            EventImage.builder()
+                                    .imageUrl(filename)
+                                    .build());
+                }
+
+            }
+
+            return ResponseEntity.ok("Tạo sự kiện thành công");
+        } catch (Exception e){
+            return ResponseEntity.badRequest().body(e.getLocalizedMessage());
+        }
+
     }
 
 }
