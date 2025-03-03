@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -35,5 +36,32 @@ public class RegistrationServiceImpl implements RegistrationService {
                 .registeredAt(LocalDate.now())
                 .build();
         return registrationRepository.save(newRegistration);
+    }
+
+    @Override
+    public Registration checkInEvent(Long registrationId) throws Exception {
+        Registration existingRegistration = registrationRepository.findById(registrationId)
+                .orElseThrow(() -> new DataNotFoundException("Không tìm thấy registration"));
+        existingRegistration.setAttendances(true);
+        existingRegistration.setStatus("Checked in");
+        return registrationRepository.save(existingRegistration);
+    }
+
+    @Override
+    public Registration checkInEvent(Long eventId, Long userId) throws Exception {
+        List<Registration> registrations = registrationRepository.findByUserIdAndEventId(userId, eventId);
+        if (registrations.isEmpty()) {
+            throw new DataNotFoundException("Không tìm thấy đăng ký");
+        }
+        Registration registration = registrations.get(0);
+        registration.setAttendances(true);
+        registration.setStatus("Checked in");
+        return registrationRepository.save(registration);
+    }
+
+    @Override
+    public boolean isUserRegistered(Long eventId, Long userId) throws Exception {
+        List<Registration> registrations = registrationRepository.findByUserIdAndEventId(userId, eventId);
+        return !registrations.isEmpty();
     }
 }

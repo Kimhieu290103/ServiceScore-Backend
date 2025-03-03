@@ -18,8 +18,5 @@ public interface EventService {
     Page<Event> getAllEvents (PageRequest pageRequest);
     EventImage createEventImage(Long eventId, EventImage eventImage) throws Exception;
     Event updateEvent(Long id, EventDTO eventDTO) throws Exception;
-
     EventCriteriaResponse getFilteredEventCriteria(Long eventId);
-
-
 }
