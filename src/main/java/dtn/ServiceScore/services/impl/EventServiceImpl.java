@@ -97,7 +97,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public Event getEventById(long id) throws Exception {
-        return eventRepository.findById(id).orElseThrow(() -> new DataNotFoundException("khong tim thay"));
+        return eventRepository.findById(id).orElseThrow(() -> new DataNotFoundException("khong tim thay su kien"));
     }
 
     @Override
@@ -245,6 +245,7 @@ public class EventServiceImpl implements EventService {
 
         return response;
     }
+
     private List<Long> convertStringToList(String data) {
         if (data == null || data.isEmpty()) {
             return List.of();  // Trả về danh sách rỗng nếu không có dữ liệu
@@ -255,5 +256,4 @@ public class EventServiceImpl implements EventService {
                 .map(Long::parseLong)
                 .collect(Collectors.toList());
     }
-
 }
