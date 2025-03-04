@@ -12,7 +12,7 @@ import java.util.List;
 public class EventImageServiceImpl implements EventImageService {
     private final EventImageRepository eventImageRepository;
     @Override
-    public List<EventImage> findByEventid(Long eventId) {
+    public List<EventImage> findByEventId(Long eventId) {
         return eventImageRepository.findByEventId(eventId);
     }
 }

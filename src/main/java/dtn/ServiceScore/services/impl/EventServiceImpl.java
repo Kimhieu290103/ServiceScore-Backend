@@ -3,7 +3,7 @@ package dtn.ServiceScore.services.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dtn.ServiceScore.dtos.EventDTO;
 import dtn.ServiceScore.exceptions.DataNotFoundException;
-import dtn.ServiceScore.exceptions.InvalidParamException;
+import dtn.ServiceScore.exceptions.InvalidArgException;
 import dtn.ServiceScore.model.*;
 import dtn.ServiceScore.repositories.*;
 
@@ -17,10 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import javax.swing.plaf.DesktopIconUI;
-import java.beans.DesignMode;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,7 +32,6 @@ public class EventServiceImpl implements EventService {
     private final EventCriteriaRepository eventCriteriaRepository;
     private final FiveGoodCriteriaLcdRepository fiveGoodCriteriaLcdRepository;
     private  final EventCriteriaLcdRepository eventCriteriaLcdRepository;
-    private final ObjectMapper objectMapper = new ObjectMapper();
     @Override
     public Event createEvent(EventDTO eventDTO) throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -47,7 +43,7 @@ public class EventServiceImpl implements EventService {
                 ? eventDTO.getEventType()
                 : "LCD";
         if(eventRepository.existsByName(eventName)){
-            throw  new DataIntegrityViolationException("event name existed");
+            throw new DataIntegrityViolationException("event name existed");
         }
         Event newEvent = Event.builder()
                 .name(eventDTO.getName())
@@ -153,7 +149,7 @@ public class EventServiceImpl implements EventService {
         // khong cho insert qua 5 anh cho 1 san pham
         int size = eventImageRepository.findByEventId(eventId).size();
         if (size > 5) {
-            throw new InvalidParamException("so anh cua san pham lon hon 5");
+            throw new InvalidArgException("so anh cua san pham lon hon 5");
         }
         return eventImageRepository.save(newEventImage);
 

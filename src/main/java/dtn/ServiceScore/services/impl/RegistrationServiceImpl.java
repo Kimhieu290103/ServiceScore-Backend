@@ -48,7 +48,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     @Override
-    public Registration checkInEvent(Long eventId, Long userId) throws Exception {
+    public Registration checkInEvent(Long eventId, Long userId) throws RuntimeException {
         List<Registration> registrations = registrationRepository.findByUserIdAndEventId(userId, eventId);
         if (registrations.isEmpty()) {
             throw new DataNotFoundException("Không tìm thấy đăng ký");
@@ -60,7 +60,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     @Override
-    public boolean isUserRegistered(Long eventId, Long userId) throws Exception {
+    public boolean isUserRegistered(Long eventId, Long userId) {
         List<Registration> registrations = registrationRepository.findByUserIdAndEventId(userId, eventId);
         return !registrations.isEmpty();
     }

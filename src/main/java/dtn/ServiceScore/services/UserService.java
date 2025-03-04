@@ -4,10 +4,10 @@ import dtn.ServiceScore.dtos.UserDTO;
 import dtn.ServiceScore.responses.LoginRespone;
 
 public interface UserService {
-    void createUser(UserDTO userDTO) throws Exception;
+    void createUser(UserDTO userDTO) throws RuntimeException;
 
-    LoginRespone login(String username, String password) throws Exception;
+    LoginRespone login(String username, String password) throws RuntimeException;
 
-    //List<User> searchByUsername(String username) throws Exception;
+    //List<User> searchByUsername(String username) throws RuntimeException;
 
 }

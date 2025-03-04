@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
     private final AuthenticationManager authenticationManager;
 
     @Override
-    public void createUser(UserDTO userDTO) throws Exception {
+    public void createUser(UserDTO userDTO) throws DataIntegrityViolationException, DataNotFoundException {
         String username = userDTO.getUsername();
         if(userRepository.existsByUsername(username)){
             throw new DataIntegrityViolationException("username existed");
@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public LoginRespone login(String username, String password) throws Exception {
+    public LoginRespone login(String username, String password) throws RuntimeException {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(()-> new DataNotFoundException("khong tim thay user"));
         if(!passwordEncoder.matches(password,user.getPassword())){

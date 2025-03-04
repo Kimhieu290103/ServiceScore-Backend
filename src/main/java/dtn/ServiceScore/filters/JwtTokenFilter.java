@@ -44,8 +44,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED,  "Unauthorized");
                 return;
             }
-            if(authHeader!= null
-                    && authHeader.startsWith("Bearer ")){
+            if(authHeader.startsWith("Bearer ")){
                 final String token = authHeader.substring(7);
                 final String phoneNumber =  jwtTokenUtil.extractUserName(token);
                 if(phoneNumber!=null && SecurityContextHolder.getContext().getAuthentication()==null){
