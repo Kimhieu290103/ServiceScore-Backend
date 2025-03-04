@@ -19,6 +19,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -74,6 +77,15 @@ public class UserServiceImpl implements UserService {
 
         loginRespone.setRole(role);
         return loginRespone;
+    }
+
+
+
+    @Override
+    public List<User> findUsersByClassId(Long classId) {
+        Class clazz = classRepository.findById(classId)
+                .orElseThrow(() -> new RuntimeException("Class not found"));
+        return userRepository.findByClazz(clazz);
     }
 
 }

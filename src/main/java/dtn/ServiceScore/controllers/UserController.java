@@ -4,6 +4,7 @@ import dtn.ServiceScore.dtos.UserDTO;
 import dtn.ServiceScore.dtos.UserLoginDTO;
 import dtn.ServiceScore.model.User;
 import dtn.ServiceScore.responses.LoginRespone;
+import dtn.ServiceScore.responses.UserResponse;
 import dtn.ServiceScore.services.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +15,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/v1/users")
@@ -56,5 +59,24 @@ public class UserController {
     public User getCurrentUser() {
         return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
+    }
+    @GetMapping("/by_class/{classId}")
+    public List<?> getUsersByClass(@PathVariable Long classId) {
+        List<UserResponse> userResponses = userService.findUsersByClassId(classId)
+                .stream()
+                .map(user -> UserResponse.builder()
+                        .id(user.getId())
+                        .username(user.getUsername())
+                        .email(user.getEmail())
+                        .address(user.getAddress())
+                        .phoneNumber(user.getPhoneNumber())
+                        .fullname(user.getFullname())
+                        .studentId(user.getStudentId())
+                        .build()
+                ).collect(Collectors.toList());
+
+        // Đảo ngược danh sách
+        Collections.reverse(userResponses);
+        return userResponses;
     }
 }
