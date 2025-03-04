@@ -13,4 +13,5 @@ public interface RegistrationService {
     boolean isUserRegistered(Long eventId, Long userId) throws Exception;
     List<UserResponse> getAllStudentByEvent(Long eventId);
     List<EventRespone> getAllEventByStudent(Long sudentId);
+
 }

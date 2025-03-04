@@ -18,4 +18,5 @@ public interface UserService {
     List<User> findUsersByClassId(Long classId);
     //List<User> searchByUsername(String username) throws RuntimeException;
 
+    User getUserById(Long userId);
 }

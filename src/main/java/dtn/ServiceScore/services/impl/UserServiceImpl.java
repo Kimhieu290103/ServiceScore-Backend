@@ -88,4 +88,14 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByClazz(clazz);
     }
 
+    @Override
+    public User getUserById(Long userId) {
+        try {
+            return userRepository.findById(userId)
+                    .orElseThrow(() -> new Exception("Không tìm thấy người dùng với ID: " + userId));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }
