@@ -1,11 +1,8 @@
 package dtn.ServiceScore.services;
 
 import dtn.ServiceScore.dtos.EventDTO;
-import dtn.ServiceScore.dtos.UserDTO;
 import dtn.ServiceScore.model.*;
 import dtn.ServiceScore.responses.EventCriteriaResponse;
-import dtn.ServiceScore.responses.EventRespone;
-import dtn.ServiceScore.responses.LoginRespone;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 

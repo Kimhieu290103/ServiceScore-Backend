@@ -63,7 +63,7 @@ public class EventController {
     public ResponseEntity<?> getProductById(@PathVariable("id") Long eventId){
         try {
             Event existingEvent = eventService.getEventById(eventId);
-            List<EventImage> eventImages = eventImageService.findByEventid(eventId);
+            List<EventImage> eventImages = eventImageService.findByEventId(eventId);
             List<EventImageRespone> eventImageResponses = eventImages.stream()
                     .map(image -> EventImageRespone.builder()
                             .id(image.getId())
@@ -110,7 +110,7 @@ public class EventController {
         // Map từ Event -> EventRespone
         List<EventRespone> eventResponses = eventPages.getContent().stream().map(event -> {
             // Lấy danh sách ảnh từ EventImageService
-            List<EventImageRespone> eventImages = eventImageService.findByEventid(event.getId())
+            List<EventImageRespone> eventImages = eventImageService.findByEventId(event.getId())
                     .stream()
                     .map(image -> new EventImageRespone(image.getId(), image.getEvent().getId(), image.getImageUrl()))
                     .toList();
