@@ -2,10 +2,7 @@ package dtn.ServiceScore.services;
 
 import dtn.ServiceScore.dtos.UserDTO;
 import dtn.ServiceScore.model.User;
-import dtn.ServiceScore.model.User;
 import dtn.ServiceScore.responses.LoginRespone;
-
-import java.util.List;
 
 import java.util.List;
 

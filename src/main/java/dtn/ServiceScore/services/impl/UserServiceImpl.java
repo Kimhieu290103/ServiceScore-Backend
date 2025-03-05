@@ -20,7 +20,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -35,10 +34,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public void createUser(UserDTO userDTO) throws DataIntegrityViolationException, DataNotFoundException {
         String username = userDTO.getUsername();
-        if(userRepository.existsByUsername(username)){
+        if (userRepository.existsByUsername(username)) {
             throw new DataIntegrityViolationException("username existed");
         }
-        User newUser= User.builder()
+        User newUser = User.builder()
                 .fullname(userDTO.getFullname())
                 .phoneNumber(userDTO.getPhoneNumber())
                 .studentId(userDTO.getStudentId())
@@ -64,8 +63,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public LoginRespone login(String username, String password) throws RuntimeException {
         User user = userRepository.findByUsername(username)
-                .orElseThrow(()-> new DataNotFoundException("khong tim thay user"));
-        if(!passwordEncoder.matches(password,user.getPassword())){
+                .orElseThrow(() -> new DataNotFoundException("khong tim thay user"));
+        if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new BadCredentialsException("Wrong username or password");
         }
         UsernamePasswordAuthenticationToken authenticationToken =
@@ -78,7 +77,6 @@ public class UserServiceImpl implements UserService {
         loginRespone.setRole(role);
         return loginRespone;
     }
-
 
 
     @Override

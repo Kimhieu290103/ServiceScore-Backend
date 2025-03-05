@@ -3,8 +3,6 @@ package dtn.ServiceScore.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Date;
-
 @Setter
 @Getter
 @NoArgsConstructor
@@ -12,7 +10,7 @@ import java.util.Date;
 @Builder
 @Entity
 @Table(name = "five_good_criteria") // bo tieu chi sinh vien 5 tot
-public class FiveGoodCriteria extends BaseEntity{
+public class FiveGoodCriteria extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

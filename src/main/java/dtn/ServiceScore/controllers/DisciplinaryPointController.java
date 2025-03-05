@@ -22,6 +22,7 @@ public class DisciplinaryPointController {
     private final UserService userService;
 
     private final EventService eventService;
+
     @PostMapping("/{userId}/{eventId}")
     public ResponseEntity<?> addPoint(@PathVariable Long userId, @PathVariable Long eventId) {
         try {

@@ -3,8 +3,6 @@ package dtn.ServiceScore.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Optional;
-
 @Setter
 @Getter
 @NoArgsConstructor

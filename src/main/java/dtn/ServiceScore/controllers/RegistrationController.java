@@ -17,17 +17,27 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RegistrationController {
     private final RegistrationService registrationService;
-    @PostMapping("/{eventId}")
-    public ResponseEntity<?> getAllFiveGoodLcd(@Valid @PathVariable("eventId") Long eventId){
-        try {
-           User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-           Long userId = user.getId();
 
-            return ResponseEntity.ok(registrationService.register_event(eventId,userId));
-        } catch (Exception e ) {
+    @PostMapping("/{eventId}")
+    public ResponseEntity<?> getAllFiveGoodLcd(@Valid @PathVariable("eventId") Long eventId) {
+        try {
+            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            Long userId = user.getId();
+
+            return ResponseEntity.ok(registrationService.register_event(eventId, userId));
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
+    }
+
+    @PostMapping("/checkin/{registrationId}")
+    public ResponseEntity<?> checkInEvent(@PathVariable Long registrationId) {
+        try {
+            return ResponseEntity.ok(registrationService.checkInEvent(registrationId));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping("/event/{eventId}")
@@ -35,6 +45,7 @@ public class RegistrationController {
         List<UserResponse> users = registrationService.getAllStudentByEvent(eventId);
         return ResponseEntity.ok(users);
     }
+
     @GetMapping("/user/getevents")
     public ResponseEntity<List<EventRespone>> getEventsByUser() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

@@ -19,7 +19,7 @@ public class LcdsUsers {
     @JoinColumn(name = "user_id")
     private User user;
 
-// to chuc
+    // to chuc
     @ManyToOne
     @JoinColumn(name = "lcd_id")
     private Lcd lcd;

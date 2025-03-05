@@ -13,7 +13,7 @@ public interface EventCriteriaRepository extends JpaRepository<EventCriteria, Lo
     @Modifying
     @Transactional
     @Query("DELETE FROM EventCriteria  ecl WHERE ecl.event.id = :eventId")
-   void  deleteByEventId(@Param("eventId") Long id);
+    void deleteByEventId(@Param("eventId") Long id);
 
     @Query("SELECT ecl FROM EventCriteria ecl WHERE ecl.event.id = :eventId")
     List<EventCriteria> findByEventId(@Param("eventId") Long id);

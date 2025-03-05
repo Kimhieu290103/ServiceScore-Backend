@@ -20,19 +20,21 @@ public class SecuriryConfig {
 
 
     @Bean
-    public UserDetailsService userDetailsService(){
-        return  username->userRepository.findByUsername(username)
-                .orElseThrow(()->
-                        new UsernameNotFoundException("khong tim thay user co username la "+ username));
+    public UserDetailsService userDetailsService() {
+        return username -> userRepository.findByUsername(username)
+                .orElseThrow(() ->
+                        new UsernameNotFoundException("khong tim thay user co username la " + username));
 
 
     }
+
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
     @Bean
-    public AuthenticationProvider authenticationProvider(){
+    public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService());
         authProvider.setPasswordEncoder(passwordEncoder());
@@ -41,7 +43,7 @@ public class SecuriryConfig {
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
-            throws Exception{
+            throws Exception {
         return config.getAuthenticationManager();
     }
 }

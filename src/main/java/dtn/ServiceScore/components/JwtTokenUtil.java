@@ -23,6 +23,7 @@ public class JwtTokenUtil {
     private int expiration; // luu vao bien moi truong
     @Value("${jwt.secretKey}")
     private String serecKey;
+
     public String generateToken(User user) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("userName", user.getUsername());
@@ -38,10 +39,12 @@ public class JwtTokenUtil {
             return null;
         }
     }
+
     private SecretKey getSignInKey() {
         byte[] bytes = Decoders.BASE64.decode(serecKey);
         return Keys.hmacShaKeyFor(bytes);
     }
+
     private Claims extractAllClaims(String token) {
         return Jwts.parser()
                 .setSigningKey(getSignInKey())
@@ -49,17 +52,21 @@ public class JwtTokenUtil {
                 .parseClaimsJws(token)
                 .getBody();
     }
-    public  <T> T extractClaim(String token, Function<Claims,T> claimsResolver){
+
+    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = this.extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
+
     public boolean isTokenExpired(String token) {
         return extractAllClaims(token).getExpiration().before(new Date());
     }
-    public String extractUserName(String token){
+
+    public String extractUserName(String token) {
         return extractClaim(token, Claims::getSubject);
     }
-    public boolean validateToken(String token, UserDetails userDetails){
+
+    public boolean validateToken(String token, UserDetails userDetails) {
         String userName = extractUserName(token);
         return (userName.equals(userDetails.getUsername())) && !isTokenExpired(token);
 

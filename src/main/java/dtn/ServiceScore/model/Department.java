@@ -4,8 +4,6 @@ package dtn.ServiceScore.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
-
 @Setter
 @Getter
 @NoArgsConstructor
@@ -21,7 +19,6 @@ public class Department {
     // ten khoa
     @Column(name = "name", nullable = false)
     private String name;
-
 
 
 //    @OneToMany(mappedBy = "department")

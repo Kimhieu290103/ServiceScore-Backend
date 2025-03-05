@@ -7,13 +7,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ClassServiceImpl implements ClassService {
     private final ClassRepository classRepository;
+
     @Override
     public List<Class> getAllClass() {
         return classRepository.findAll();
     }
-
 }

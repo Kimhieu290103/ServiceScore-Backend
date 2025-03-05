@@ -1,13 +1,9 @@
 package dtn.ServiceScore.responses;
 
-import dtn.ServiceScore.model.Class;
-import dtn.ServiceScore.model.Role;
-import jakarta.persistence.Column;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.*;
 
 import java.time.LocalDate;
+
 @Data
 @Getter
 @Setter
@@ -30,7 +26,6 @@ public class UserResponse {
     private String address;
 
 
-
     private boolean isActive;
 
 
@@ -40,10 +35,6 @@ public class UserResponse {
     private String email;
 
 
-
     private String username;
-
-
-
 
 }
