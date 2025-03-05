@@ -4,6 +4,7 @@ import dtn.ServiceScore.dtos.UserDTO;
 import dtn.ServiceScore.dtos.UserLoginDTO;
 import dtn.ServiceScore.model.User;
 import dtn.ServiceScore.responses.LoginRespone;
+import dtn.ServiceScore.responses.MessageResponse;
 import dtn.ServiceScore.responses.UserResponse;
 import dtn.ServiceScore.services.UserService;
 import jakarta.validation.Valid;
@@ -37,10 +38,10 @@ public class UserController {
             }
 
             if (!userDTO.getPassword().equals(userDTO.getRetypePassword())) {
-                return ResponseEntity.badRequest().body("mat khau khong trung khop");
+                return ResponseEntity.badRequest().body(new MessageResponse("mat khau khong trung khop"));
             }
             userService.createUser(userDTO);
-            return ResponseEntity.ok("dang ki thanh cong");
+            return ResponseEntity.ok(new MessageResponse("dang ki thanh cong"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }

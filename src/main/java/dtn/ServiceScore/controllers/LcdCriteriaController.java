@@ -2,6 +2,7 @@ package dtn.ServiceScore.controllers;
 
 import dtn.ServiceScore.model.Event;
 import dtn.ServiceScore.model.User;
+import dtn.ServiceScore.responses.MessageResponse;
 import dtn.ServiceScore.services.EventService;
 import dtn.ServiceScore.services.LcdCriteriaService;
 import dtn.ServiceScore.services.UserService;
@@ -33,7 +34,7 @@ public class LcdCriteriaController {
             Event event = eventService.getEventById(eventId);
             User user = userService.getUserById(event.getUser().getId());
             if (user == null || event == null) {
-                return ResponseEntity.badRequest().body("User hoặc Event không tồn tại!");
+                return ResponseEntity.badRequest().body(new MessageResponse("User hoặc Event không tồn tại!"));
             }
 
             String result = lcdCriteriaService.Event_validation(user, event);

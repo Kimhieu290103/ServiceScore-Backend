@@ -50,7 +50,7 @@ public class EventController {
 
 
             eventService.createEvent(eventDTO);
-            return ResponseEntity.ok("dang  ki thanh cong");
+            return ResponseEntity.ok(new MessageResponse("dang  ki thanh cong"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -183,9 +183,9 @@ public class EventController {
 
             }
 
-            return ResponseEntity.ok("Tạo sự kiện thành công");
+            return ResponseEntity.ok(new MessageResponse("Create Event Success"));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getLocalizedMessage());
+            return ResponseEntity.badRequest().body(new ErrorResponse(e.getLocalizedMessage()));
         }
 
     }
@@ -201,7 +201,7 @@ public class EventController {
             List<EventImage> eventImages = new ArrayList<>();
             files = files == null ? new ArrayList<>() : files;
             if (files.size() > 5) {
-                return ResponseEntity.badRequest().body("1 san pham khong duoc qua 5 anh");
+                return ResponseEntity.badRequest().body(new MessageResponse("1 san pham khong duoc qua 5 anh"));
             }
             for (MultipartFile file : files) {
                 if (file != null) {
@@ -227,7 +227,7 @@ public class EventController {
 
             return ResponseEntity.ok(eventImages);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getLocalizedMessage());
+            return ResponseEntity.badRequest().body(new ErrorResponse(e.getLocalizedMessage()));
         }
 
     }
@@ -259,7 +259,7 @@ public class EventController {
     public ResponseEntity<?> deleteEventById(@PathVariable("id") Long eventID){
         try {
             eventService.deleteEvent(eventID);
-            return ResponseEntity.ok("xoa thanh cong");
+            return ResponseEntity.ok(new MessageResponse("xoa thanh cong"));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -274,7 +274,7 @@ public class EventController {
             return ResponseEntity.ok(event);
 
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
         }
     }
 
@@ -323,9 +323,9 @@ public class EventController {
 
             }
 
-            return ResponseEntity.ok("Tạo sự kiện thành công");
+            return ResponseEntity.ok(new MessageResponse("Tạo sự kiện thành công"));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getLocalizedMessage());
+            return ResponseEntity.badRequest().body( new ErrorResponse(e.getLocalizedMessage()));
         }
 
     }
