@@ -10,10 +10,10 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface EventImageRepository extends JpaRepository<EventImage, Long> {
-    List<EventImage> findByEventId(Long eventId) ;
+    List<EventImage> findByEventId(Long eventId);
 
     @Modifying
     @Transactional
     @Query("DELETE FROM EventImage  ecl WHERE ecl.event.id = :eventId")
-    void  deleteByEventId(@Param("eventId") Long id);
+    void deleteByEventId(@Param("eventId") Long id);
 }

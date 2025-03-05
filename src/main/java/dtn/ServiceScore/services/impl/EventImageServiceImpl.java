@@ -7,10 +7,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class EventImageServiceImpl implements EventImageService {
     private final EventImageRepository eventImageRepository;
+
     @Override
     public List<EventImage> findByEventId(Long eventId) {
         return eventImageRepository.findByEventId(eventId);

@@ -12,11 +12,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class ClassController {
     private final ClassService classService;
+
     @GetMapping("/all")
-    public ResponseEntity<?> getAllFiveGood(){
+    public ResponseEntity<?> getAllFiveGood() {
         try {
             return ResponseEntity.ok(classService.getAllClass());
-        } catch (Exception e ) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }

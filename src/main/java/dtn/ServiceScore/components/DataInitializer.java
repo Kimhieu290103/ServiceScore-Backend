@@ -2,11 +2,9 @@ package dtn.ServiceScore.components;
 
 import dtn.ServiceScore.model.*;
 import dtn.ServiceScore.repositories.*;
-import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -20,13 +18,14 @@ public class DataInitializer implements CommandLineRunner {
     private final DepartmentRepository departmentRepository;
     private final FiveGoodCriteriaRepository fiveGoodCriteriaRepository;
     private final FiveGoodCriteriaLcdRepository fiveGoodCriteriaLcdRepository;
+
     public DataInitializer(RoleRepository roleRepository
             , LcdRepository lcdRepository
-             ,SemesterRepository semesterRepository
-            ,CourseRepository courseRepository
-    ,DepartmentRepository departmentRepository
-    ,FiveGoodCriteriaRepository fiveGoodCriteriaRepository
-    ,FiveGoodCriteriaLcdRepository fiveGoodCriteriaLcdRepository) {
+            , SemesterRepository semesterRepository
+            , CourseRepository courseRepository
+            , DepartmentRepository departmentRepository
+            , FiveGoodCriteriaRepository fiveGoodCriteriaRepository
+            , FiveGoodCriteriaLcdRepository fiveGoodCriteriaLcdRepository) {
         this.roleRepository = roleRepository;
         this.lcdRepository = lcdRepository;
         this.semesterRepository = semesterRepository;
@@ -67,7 +66,7 @@ public class DataInitializer implements CommandLineRunner {
             }
         }
         // Thêm dữ liệu vào bảng course
-        List<String> courseNames = List.of("2021-2025","2022-2026", "2023-2027", "2024-2028", "2025-2029", "2026-2030");
+        List<String> courseNames = List.of("2021-2025", "2022-2026", "2023-2027", "2024-2028", "2025-2029", "2026-2030");
         for (String courseName : courseNames) {
             if (courseRepository.findByName(courseName).isEmpty()) { // Kiểm tra nếu chưa có trong DB
                 Course course = Course.builder().name(courseName).build();
@@ -76,7 +75,7 @@ public class DataInitializer implements CommandLineRunner {
             }
         }
         // Thêm dữ liệu vào bảng course
-        List<String> departmentNames = List.of("Khoa CNTT","Khoa Cơ Khí", "Khoa Điện", "Khoa Hóa", "Khoa Xây Dựng", "Khoa Quản Lí Dự Án");
+        List<String> departmentNames = List.of("Khoa CNTT", "Khoa Cơ Khí", "Khoa Điện", "Khoa Hóa", "Khoa Xây Dựng", "Khoa Quản Lí Dự Án");
         for (String departmentName : departmentNames) {
             if (departmentRepository.findByName(departmentName).isEmpty()) { // Kiểm tra nếu chưa có trong DB
                 Department department = Department.builder().name(departmentName).build();
@@ -145,9 +144,7 @@ public class DataInitializer implements CommandLineRunner {
         }
 
 
-
     }
-
 
 
 }

@@ -10,11 +10,13 @@ import dtn.ServiceScore.repositories.UserRepository;
 import dtn.ServiceScore.responses.EventRespone;
 import dtn.ServiceScore.responses.UserResponse;
 import dtn.ServiceScore.services.RegistrationService;
+import dtn.ServiceScore.utils.Enums;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,22 +27,22 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final EventRepository eventRepository;
 
     @Override
-    public Registration register_event(Long eventId, Long userId) throws Exception {
+    public Registration register_event(Long eventId, Long userId) throws RuntimeException {
         User existingUser = userRepository.findById(userId)
-        .orElseThrow(() -> new DataNotFoundException("Không tìm người dùng"));
+                .orElseThrow(() -> new DataNotFoundException("Không tìm người dùng"));
 
         Event existingEvent = eventRepository.findById(eventId)
                 .orElseThrow(() -> new DataNotFoundException("Không tìm thấy event"));
-        if(isUserRegistered(eventId, userId)){
+        if (isUserRegistered(eventId, userId)) {
             throw new IllegalStateException("Người dùng đã đăng ký sự kiện này rồi!");
         }
-        if(existingEvent.getCurrentRegistrations()==existingEvent.getMaxRegistrations()){
+        if (Objects.equals(existingEvent.getCurrentRegistrations(), existingEvent.getMaxRegistrations())) {
             throw new IllegalStateException("Sự kiện đã đủ số lượng người đăng kí");
         }
         Registration newRegistration = Registration.builder()
                 .event(existingEvent)
                 .user(existingUser)
-                .status("Registered")
+                .status(Enums.RegistrationStatus.REGISTERED.toString())
                 .registeredAt(LocalDate.now())
                 .build();
 
@@ -54,7 +56,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         Registration existingRegistration = registrationRepository.findById(registrationId)
                 .orElseThrow(() -> new DataNotFoundException("Không tìm thấy registration"));
         existingRegistration.setAttendances(true);
-        existingRegistration.setStatus("Checked in");
+        existingRegistration.setStatus(Enums.RegistrationStatus.CHECKED_IN.toString());
         return registrationRepository.save(existingRegistration);
     }
 
@@ -66,7 +68,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
         Registration registration = registrations.get(0);
         registration.setAttendances(true);
-        registration.setStatus("Checked in");
+        registration.setStatus(Enums.RegistrationStatus.CHECKED_IN.toString());
         return registrationRepository.save(registration);
     }
 

@@ -1,10 +1,10 @@
 package dtn.ServiceScore.model;
 
+import dtn.ServiceScore.utils.Enums;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @Setter
 @Getter
@@ -37,6 +37,6 @@ public class Registration {
 
     // trang thai( da gui danh ki, da xac nhan dang ki)
     @Column(name = "status", nullable = false)
-    private String status = "pending";
+    private String status = Enums.RegistrationStatus.PENDING.toString();
 
 }

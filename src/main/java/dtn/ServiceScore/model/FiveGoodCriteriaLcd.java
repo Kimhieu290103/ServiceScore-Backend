@@ -10,7 +10,7 @@ import lombok.*;
 @Builder
 @Entity
 @Table(name = "five_good_criteria_lcd") // bo tieu chi hoat dong tot cua lien chi doan
-public class FiveGoodCriteriaLcd extends BaseEntity{
+public class FiveGoodCriteriaLcd extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

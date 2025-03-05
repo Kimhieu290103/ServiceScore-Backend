@@ -24,10 +24,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+
     @PostMapping("/register")
-    public ResponseEntity<?> createUser(@Valid @RequestBody UserDTO userDTO, BindingResult result){
+    public ResponseEntity<?> createUser(@Valid @RequestBody UserDTO userDTO, BindingResult result) {
         try {
-            if(result.hasErrors()){
+            if (result.hasErrors()) {
                 List<String> errors = result.getFieldErrors()
                         .stream()
                         .map(FieldError::getDefaultMessage)
@@ -35,17 +36,18 @@ public class UserController {
                 return ResponseEntity.badRequest().body(errors);
             }
 
-            if(!userDTO.getPassword().equals(userDTO.getRetypePassword())){
+            if (!userDTO.getPassword().equals(userDTO.getRetypePassword())) {
                 return ResponseEntity.badRequest().body("mat khau khong trung khop");
             }
             userService.createUser(userDTO);
-            return  ResponseEntity.ok("dang ki thanh cong") ;
+            return ResponseEntity.ok("dang ki thanh cong");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody UserLoginDTO userLoginDTO){
+    public ResponseEntity<?> login(@Valid @RequestBody UserLoginDTO userLoginDTO) {
         try {
             LoginRespone loginRespone = userService.login(userLoginDTO.getUsername(), userLoginDTO.getPassword());
 
@@ -55,11 +57,13 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+
     @GetMapping("/info")
     public User getCurrentUser() {
         return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
     }
+
     @GetMapping("/by_class/{classId}")
     public List<?> getUsersByClass(@PathVariable Long classId) {
         List<UserResponse> userResponses = userService.findUsersByClassId(classId)

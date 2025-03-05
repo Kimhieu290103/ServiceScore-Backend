@@ -1,6 +1,5 @@
 package dtn.ServiceScore.responses;
 
-import dtn.ServiceScore.model.Event;
 import lombok.*;
 
 import java.util.List;

@@ -29,45 +29,47 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     private final UserDetailsService userDetailsService;
     private final JwtTokenUtil jwtTokenUtil;
+
     @Override
     protected void doFilterInternal(@NotNull HttpServletRequest request
-            ,@NotNull HttpServletResponse response
-            ,@NotNull FilterChain filterChain) throws ServletException, IOException {
-        try{
+            , @NotNull HttpServletResponse response
+            , @NotNull FilterChain filterChain) throws ServletException, IOException {
+        try {
             //filterChain.doFilter(request,response); // ai cung cho di qua
-            if(isBypassToken(request)){
-                filterChain.doFilter(request,response);
+            if (isBypassToken(request)) {
+                filterChain.doFilter(request, response);
                 return;
             }
             final String authHeader = request.getHeader("Authorization");
             if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED,  "Unauthorized");
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
                 return;
             }
-            if(authHeader.startsWith("Bearer ")){
+            if (authHeader.startsWith("Bearer ")) {
                 final String token = authHeader.substring(7);
-                final String phoneNumber =  jwtTokenUtil.extractUserName(token);
-                if(phoneNumber!=null && SecurityContextHolder.getContext().getAuthentication()==null){
-                    User userDetails= (User) userDetailsService.loadUserByUsername(phoneNumber);
-                    if(jwtTokenUtil.validateToken(token,userDetails)){
+                final String phoneNumber = jwtTokenUtil.extractUserName(token);
+                if (phoneNumber != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                    User userDetails = (User) userDetailsService.loadUserByUsername(phoneNumber);
+                    if (jwtTokenUtil.validateToken(token, userDetails)) {
                         UsernamePasswordAuthenticationToken authenticationToken =
                                 new UsernamePasswordAuthenticationToken(userDetails
-                                        ,null
-                                        ,userDetails.getAuthorities()
+                                        , null
+                                        , userDetails.getAuthorities()
                                 );
                         authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                     }
                 }
             }
-            filterChain.doFilter(request,response);
+            filterChain.doFilter(request, response);
         } catch (Exception e) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED,"Unauthorized");
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
         }
 
     }
-    private boolean isBypassToken (@NotNull HttpServletRequest request){
-        final List<Pair<String,String>> bypassTokens = Arrays.asList(
+
+    private boolean isBypassToken(@NotNull HttpServletRequest request) {
+        final List<Pair<String, String>> bypassTokens = Arrays.asList(
                 // liet ke danh sach api khong can jwt
                 // vd:
                 Pair.of("api/v1/users/login", "POST"),
@@ -78,9 +80,8 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 Pair.of("/api/v1/five_good/all", "GET")
 
 
-
         );
-        for (Pair<String,String> bypassToken: bypassTokens){
+        for (Pair<String, String> bypassToken : bypassTokens) {
             if (request.getServletPath().contains(bypassToken.getFirst()) &&
                     request.getMethod().equals(bypassToken.getSecond())) {
                 return true;

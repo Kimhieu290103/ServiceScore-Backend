@@ -7,10 +7,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class FiveGoodCriteriaLcdServiceImpl implements FiveGoodCriteriaLcdService {
     private final FiveGoodCriteriaLcdRepository fiveGoodCriteriaLcdRepository;
+
     @Override
     public List<FiveGoodCriteriaLcd> getAllFiveGoodCriteriaLcd() {
         return fiveGoodCriteriaLcdRepository.findAll();

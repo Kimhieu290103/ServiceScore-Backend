@@ -27,7 +27,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("api/v1/events")
@@ -39,9 +41,9 @@ public class EventController {
 
     @SecurityRequirement(name = "bearerAuth")
     @PostMapping("/create")
-    public ResponseEntity<?> createEvent(@Valid @RequestBody EventDTO eventDTO, BindingResult result){
+    public ResponseEntity<?> createEvent(@Valid @RequestBody EventDTO eventDTO, BindingResult result) {
         try {
-            if(result.hasErrors()){
+            if (result.hasErrors()) {
                 List<String> errors = result.getFieldErrors()
                         .stream()
                         .map(FieldError::getDefaultMessage)
@@ -51,7 +53,7 @@ public class EventController {
 
 
             eventService.createEvent(eventDTO);
-            return  ResponseEntity.ok("dang  ki thanh cong") ;
+            return ResponseEntity.ok("dang  ki thanh cong");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -60,7 +62,7 @@ public class EventController {
 
     @SecurityRequirement(name = "bearerAuth")
     @GetMapping("/{id}")
-    public ResponseEntity<?> getProductById(@PathVariable("id") Long eventId){
+    public ResponseEntity<?> getProductById(@PathVariable("id") Long eventId) {
         try {
             Event existingEvent = eventService.getEventById(eventId);
             List<EventImage> eventImages = eventImageService.findByEventId(eventId);
@@ -73,7 +75,7 @@ public class EventController {
                     .toList();
 
             EventRespone eventRespone = EventRespone.builder()
-                           .id(existingEvent.getId())
+                    .id(existingEvent.getId())
                     .name(existingEvent.getName())
                     .description(existingEvent.getDescription())
                     .date(existingEvent.getDate())
@@ -96,13 +98,14 @@ public class EventController {
         }
 
     }
+
     @SecurityRequirement(name = "bearerAuth")
     @GetMapping("")
     public ResponseEntity<EventListResponse> getProducts(
             @RequestParam("page") int page,
             @RequestParam("limit") int limit
-    ){
-        PageRequest pageRequest= PageRequest.of(page,
+    ) {
+        PageRequest pageRequest = PageRequest.of(page,
                 limit);
         Page<Event> eventPages = eventService.getAllEvents(pageRequest);
         int totalPages = eventPages.getTotalPages();
@@ -144,15 +147,14 @@ public class EventController {
     }
 
 
-
     @SecurityRequirement(name = "bearerAuth")
     @PostMapping(value = "/createEventImage", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> uploadEventImage(@Valid @ModelAttribute EventDTO eventDTO,
-                                                BindingResult bidingresult)
+                                              BindingResult bidingresult)
     // @RequestParam("file")MultipartFile file)
     {
         try {
-            if(bidingresult.hasErrors()){
+            if (bidingresult.hasErrors()) {
                 List<String> errors = bidingresult.getFieldErrors()
                         .stream()
                         .map(FieldError::getDefaultMessage)
@@ -161,9 +163,9 @@ public class EventController {
             }
             Event newEvent = eventService.createEvent(eventDTO);
             List<MultipartFile> files = eventDTO.getFiles();
-            files = files == null?  new ArrayList<>(): files;
-            for(MultipartFile file : files){
-                if(file != null) {
+            files = files == null ? new ArrayList<>() : files;
+            for (MultipartFile file : files) {
+                if (file != null) {
                     // kiem tra kich thuoc file anh
                     if (file.getSize() > 10 * 1024 * 1024) {
                         return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body("this file too laget, maximum size is 10mb");
@@ -174,8 +176,8 @@ public class EventController {
                         return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).body("file must be an iamge");
 
                     }
-                    String filename= storeFile(file);
-                    EventImage eventImage= eventService.createEventImage(newEvent.getId(),
+                    String filename = storeFile(file);
+                    EventImage eventImage = eventService.createEventImage(newEvent.getId(),
                             EventImage.builder()
                                     .imageUrl(filename)
                                     .build());
@@ -184,26 +186,27 @@ public class EventController {
             }
 
             return ResponseEntity.ok("Tạo sự kiện thành công");
-        } catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getLocalizedMessage());
         }
 
     }
+
     @SecurityRequirement(name = "bearerAuth")
     @PostMapping(value = "/uploadImage/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> uploadProductImage(@RequestParam("files") List<MultipartFile> files,
                                                 @Valid @PathVariable("id") Long eventID
-    ){
+    ) {
         try {
 
-            Event existingEvent= eventService.getEventById(eventID);
+            Event existingEvent = eventService.getEventById(eventID);
             List<EventImage> eventImages = new ArrayList<>();
-            files = files == null?  new ArrayList<>(): files;
-            if(files.size()>5){
+            files = files == null ? new ArrayList<>() : files;
+            if (files.size() > 5) {
                 return ResponseEntity.badRequest().body("1 san pham khong duoc qua 5 anh");
             }
-            for(MultipartFile file : files){
-                if(file != null) {
+            for (MultipartFile file : files) {
+                if (file != null) {
                     // kiem tra kich thuoc file anh
                     if (file.getSize() > 10 * 1024 * 1024) {
                         return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body("this file too laget, maximum size is 10mb");
@@ -214,8 +217,8 @@ public class EventController {
                         return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).body("file must be an iamge");
 
                     }
-                    String filename= storeFile(file);
-                    EventImage eventImage= eventService.createEventImage(existingEvent.getId(),
+                    String filename = storeFile(file);
+                    EventImage eventImage = eventService.createEventImage(existingEvent.getId(),
                             EventImage.builder()
                                     .imageUrl(filename)
                                     .build());
@@ -225,49 +228,51 @@ public class EventController {
             }
 
             return ResponseEntity.ok(eventImages);
-        } catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getLocalizedMessage());
         }
 
     }
-    private String storeFile (MultipartFile file) throws IOException {
-        String filename= StringUtils.cleanPath(file.getOriginalFilename());
+
+    private String storeFile(MultipartFile file) throws IOException {
+        String filename = StringUtils.cleanPath(file.getOriginalFilename());
         // theem UUID vao truoc ten file de ten file la duy nhat
-        String uniqueFilename= UUID.randomUUID().toString() + "_" + filename;
+        String uniqueFilename = UUID.randomUUID() + "_" + filename;
         // duong dan den thu muc chua file anh
         java.nio.file.Path uploadDir = Paths.get("uploads/images");
-        if(!Files.exists(uploadDir)){
+        if (!Files.exists(uploadDir)) {
             Files.createDirectories(uploadDir);
         }
         // duong dan day du den file
-        java.nio.file.Path destination = Paths.get(uploadDir.toString(),uniqueFilename);
+        java.nio.file.Path destination = Paths.get(uploadDir.toString(), uniqueFilename);
         // sao chep file vao thu muc dich
-        Files.copy(file.getInputStream(),destination, StandardCopyOption.REPLACE_EXISTING);
+        Files.copy(file.getInputStream(), destination, StandardCopyOption.REPLACE_EXISTING);
         return uniqueFilename;
     }
-    private boolean isImageFile(MultipartFile file){
-        String contentType= file.getContentType();
+
+    private boolean isImageFile(MultipartFile file) {
+        String contentType = file.getContentType();
         return contentType != null && contentType.startsWith("image/");
     }
 
 
     @SecurityRequirement(name = "bearerAuth")
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteEventById(@PathVariable("id") Long eventID){
+    public ResponseEntity<String> deleteEventById(@PathVariable("id") Long eventID) {
         try {
             eventService.deleteEvent(eventID);
             return ResponseEntity.ok("xoa thanh cong");
-        } catch (Exception e ) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
     @SecurityRequirement(name = "bearerAuth")
     @PutMapping("/{id}")
-    public  ResponseEntity<?> updateEvent(@Valid @PathVariable("id") Long id,
-                                        @Valid  @ModelAttribute EventDTO eventDTO){
-        try{
-            Event event = eventService.updateEvent(id,eventDTO);
+    public ResponseEntity<?> updateEvent(@Valid @PathVariable("id") Long id,
+                                         @Valid @ModelAttribute EventDTO eventDTO) {
+        try {
+            Event event = eventService.updateEvent(id, eventDTO);
             return ResponseEntity.ok(event);
 
         } catch (Exception e) {
@@ -285,11 +290,11 @@ public class EventController {
     @SecurityRequirement(name = "bearerAuth")
     @PostMapping(value = "/createEventImageAD", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> uploadEventImageAdmin(@Valid @ModelAttribute EventDTO eventDTO,
-                                              BindingResult bidingresult)
+                                                   BindingResult bidingresult)
     // @RequestParam("file")MultipartFile file)
     {
         try {
-            if(bidingresult.hasErrors()){
+            if (bidingresult.hasErrors()) {
                 List<String> errors = bidingresult.getFieldErrors()
                         .stream()
                         .map(FieldError::getDefaultMessage)
@@ -298,9 +303,9 @@ public class EventController {
             }
             Event newEvent = eventService.createEvent(eventDTO);
             List<MultipartFile> files = eventDTO.getFiles();
-            files = files == null?  new ArrayList<>(): files;
-            for(MultipartFile file : files){
-                if(file != null) {
+            files = files == null ? new ArrayList<>() : files;
+            for (MultipartFile file : files) {
+                if (file != null) {
                     // kiem tra kich thuoc file anh
                     if (file.getSize() > 10 * 1024 * 1024) {
                         return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body("this file too laget, maximum size is 10mb");
@@ -311,8 +316,8 @@ public class EventController {
                         return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).body("file must be an iamge");
 
                     }
-                    String filename= storeFile(file);
-                    EventImage eventImage= eventService.createEventImage(newEvent.getId(),
+                    String filename = storeFile(file);
+                    EventImage eventImage = eventService.createEventImage(newEvent.getId(),
                             EventImage.builder()
                                     .imageUrl(filename)
                                     .build());
@@ -321,7 +326,7 @@ public class EventController {
             }
 
             return ResponseEntity.ok("Tạo sự kiện thành công");
-        } catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getLocalizedMessage());
         }
 

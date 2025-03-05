@@ -6,7 +6,6 @@ import dtn.ServiceScore.exceptions.DataNotFoundException;
 import dtn.ServiceScore.exceptions.InvalidArgException;
 import dtn.ServiceScore.model.*;
 import dtn.ServiceScore.repositories.*;
-
 import dtn.ServiceScore.responses.CriteriaResponse;
 import dtn.ServiceScore.responses.EventCriteriaResponse;
 import dtn.ServiceScore.services.EventService;
@@ -27,11 +26,12 @@ public class EventServiceImpl implements EventService {
     private final EventRepository eventRepository;
     private final SemesterRepository semesterRepository;
     private final LcdRepository lcdRepository;
-    private  final EventImageRepository eventImageRepository;
+    private final EventImageRepository eventImageRepository;
     private final FiveGoodCriteriaRepository fiveGoodCriteriaRepository;
     private final EventCriteriaRepository eventCriteriaRepository;
     private final FiveGoodCriteriaLcdRepository fiveGoodCriteriaLcdRepository;
-    private  final EventCriteriaLcdRepository eventCriteriaLcdRepository;
+    private final EventCriteriaLcdRepository eventCriteriaLcdRepository;
+
     @Override
     public Event createEvent(EventDTO eventDTO) throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -42,7 +42,7 @@ public class EventServiceImpl implements EventService {
                 userRoles.contains("HSV"))
                 ? eventDTO.getEventType()
                 : "LCD";
-        if(eventRepository.existsByName(eventName)){
+        if (eventRepository.existsByName(eventName)) {
             throw new DataIntegrityViolationException("event name existed");
         }
         Event newEvent = Event.builder()
@@ -62,7 +62,7 @@ public class EventServiceImpl implements EventService {
         newEvent.setEventType(eventType);
         newEvent.setCurrentRegistrations(0L);
         Semester semester = semesterRepository.findByName(eventDTO.getSemester()).
-            orElseThrow(() -> new DataNotFoundException("Không tìm thấy học kì phù hợp"));
+                orElseThrow(() -> new DataNotFoundException("Không tìm thấy học kì phù hợp"));
         newEvent.setSemester(semester);
         newEvent.setUser(user);
         Event event = eventRepository.save(newEvent);
@@ -162,7 +162,7 @@ public class EventServiceImpl implements EventService {
             Semester semester = semesterRepository.findByName(eventDTO.getSemester()).
                     orElseThrow(() -> new DataNotFoundException("Không tìm thấy học kì phù hợp"));
             User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-           // Long userId = user.getId();
+            // Long userId = user.getId();
 
             existingEvent.setSemester(semester);
             existingEvent.setUser(user);
@@ -184,7 +184,7 @@ public class EventServiceImpl implements EventService {
 
 
             // ✅ **Thêm các liên kết mới**
-            List<Long> criteriaIds =convertStringToList(eventDTO.getFive_good_id());
+            List<Long> criteriaIds = convertStringToList(eventDTO.getFive_good_id());
             if (criteriaIds != null && !criteriaIds.isEmpty()) {
                 List<FiveGoodCriteria> criteriaList = fiveGoodCriteriaRepository.findAllById(criteriaIds);
                 List<EventCriteria> eventCriteriaList = criteriaList.stream()
@@ -197,7 +197,7 @@ public class EventServiceImpl implements EventService {
                 eventCriteriaRepository.saveAll(eventCriteriaList);
             }
 
-            List<Long> criteriaLcdIds =convertStringToList(eventDTO.getFive_good_lcd_id());
+            List<Long> criteriaLcdIds = convertStringToList(eventDTO.getFive_good_lcd_id());
             if (criteriaLcdIds != null && !criteriaLcdIds.isEmpty()) {
                 List<FiveGoodCriteriaLcd> criteriaLcdList = fiveGoodCriteriaLcdRepository.findAllById(criteriaLcdIds);
                 List<EventCriteriaLcd> eventCriteriaLcdList = criteriaLcdList.stream()

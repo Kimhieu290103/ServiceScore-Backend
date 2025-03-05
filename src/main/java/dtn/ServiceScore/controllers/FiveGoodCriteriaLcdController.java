@@ -1,7 +1,6 @@
 package dtn.ServiceScore.controllers;
 
 import dtn.ServiceScore.services.FiveGoodCriteriaLcdService;
-import dtn.ServiceScore.services.FiveGoodCriteriaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,11 +12,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class FiveGoodCriteriaLcdController {
     private final FiveGoodCriteriaLcdService fiveGoodCriteriaLcdService;
+
     @GetMapping("/all")
-    public ResponseEntity<?> getAllFiveGoodLcd(){
+    public ResponseEntity<?> getAllFiveGoodLcd() {
         try {
             return ResponseEntity.ok(fiveGoodCriteriaLcdService.getAllFiveGoodCriteriaLcd());
-        } catch (Exception e ) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
