@@ -3,10 +3,7 @@ package dtn.ServiceScore.controllers;
 import dtn.ServiceScore.dtos.EventDTO;
 import dtn.ServiceScore.model.Event;
 import dtn.ServiceScore.model.EventImage;
-import dtn.ServiceScore.responses.EventCriteriaResponse;
-import dtn.ServiceScore.responses.EventImageRespone;
-import dtn.ServiceScore.responses.EventListResponse;
-import dtn.ServiceScore.responses.EventRespone;
+import dtn.ServiceScore.responses.*;
 import dtn.ServiceScore.services.EventImageService;
 import dtn.ServiceScore.services.EventService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -183,9 +180,11 @@ public class EventController {
 
             }
 
-            return ResponseEntity.ok("Tạo sự kiện thành công");
+            return ResponseEntity.ok(new MessageResponse("Tạo sự kiện thành công"));
         } catch (Exception e){
-            return ResponseEntity.badRequest().body(e.getLocalizedMessage());
+            ErrorResponse errorResponse = ErrorResponse.builder()
+                    .err(e.getLocalizedMessage()).build();
+            return ResponseEntity.badRequest().body(errorResponse);
         }
 
     }
@@ -253,10 +252,10 @@ public class EventController {
 
     @SecurityRequirement(name = "bearerAuth")
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteEventById(@PathVariable("id") Long eventID){
+    public ResponseEntity<?> deleteEventById(@PathVariable("id") Long eventID){
         try {
             eventService.deleteEvent(eventID);
-            return ResponseEntity.ok("xoa thanh cong");
+            return ResponseEntity.ok(new MessageResponse("Xóa thành công"));
         } catch (Exception e ) {
             throw new RuntimeException(e);
         }
@@ -320,7 +319,7 @@ public class EventController {
 
             }
 
-            return ResponseEntity.ok("Tạo sự kiện thành công");
+            return ResponseEntity.ok(new MessageResponse("Tạo sự kiện thành công"));
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getLocalizedMessage());
         }
