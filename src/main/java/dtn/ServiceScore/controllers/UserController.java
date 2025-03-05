@@ -60,8 +60,20 @@ public class UserController {
     }
 
     @GetMapping("/info")
-    public User getCurrentUser() {
-        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public UserResponse getCurrentUser() {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserResponse userResponse = UserResponse.builder()
+                .id(user.getId())
+                .fullname(user.getFullname())
+                .phoneNumber(user.getPhoneNumber())
+                .studentId(user.getStudentId())
+                .address(user.getAddress())
+                .isActive(user.isActive())
+                .dateOfBirth(user.getDateOfBirth())
+                .email(user.getEmail())
+                .username(user.getUsername())
+                .build();
+             return userResponse;
 
     }
 

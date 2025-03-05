@@ -10,6 +10,7 @@ import dtn.ServiceScore.repositories.ClassRepository;
 import dtn.ServiceScore.repositories.RoleRepository;
 import dtn.ServiceScore.repositories.UserRepository;
 import dtn.ServiceScore.responses.LoginRespone;
+import dtn.ServiceScore.responses.UserResponse;
 import dtn.ServiceScore.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -73,8 +74,19 @@ public class UserServiceImpl implements UserService {
         LoginRespone loginRespone = new LoginRespone();
         loginRespone.setAccessToken(jwtTokenUtil.generateToken(user));
         String role = user.getRole().getName();  // Nếu getRoles() trả về một Role
-
+        UserResponse userResponse = UserResponse.builder()
+                .id(user.getId())
+                .fullname(user.getFullname())
+                .phoneNumber(user.getPhoneNumber())
+                .studentId(user.getStudentId())
+                .address(user.getAddress())
+                .isActive(user.isActive())
+                .dateOfBirth(user.getDateOfBirth())
+                .email(user.getEmail())
+                .username(user.getUsername())
+                .build();
         loginRespone.setRole(role);
+        loginRespone.setUserResponse(userResponse);
         return loginRespone;
     }
 
