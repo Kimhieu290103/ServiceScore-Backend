@@ -31,6 +31,15 @@ public class RegistrationController {
 
     }
 
+    @PostMapping("/checkin/{registrationId}")
+    public ResponseEntity<?> checkInEvent(@PathVariable Long registrationId) {
+        try {
+            return ResponseEntity.ok(registrationService.checkInEvent(registrationId));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @GetMapping("/event/{eventId}")
     public ResponseEntity<List<UserResponse>> getUsersByEvent(@PathVariable Long eventId) {
         List<UserResponse> users = registrationService.getAllStudentByEvent(eventId);
