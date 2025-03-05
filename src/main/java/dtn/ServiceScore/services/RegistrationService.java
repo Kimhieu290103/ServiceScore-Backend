@@ -19,4 +19,6 @@ public interface RegistrationService {
 
     List<EventRespone> getAllEventByStudent(Long sudentId);
 
+    List<UserResponse> getCheckedInStudentsByEvent(Long eventId);
+
 }

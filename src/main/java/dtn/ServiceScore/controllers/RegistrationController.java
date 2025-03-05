@@ -53,4 +53,10 @@ public class RegistrationController {
         List<EventRespone> events = registrationService.getAllEventByStudent(userId);
         return ResponseEntity.ok(events);
     }
+
+    @GetMapping("/event/checked/{eventId}")
+    public ResponseEntity<List<UserResponse>> getCheckedInStudentsByEvent(@PathVariable Long eventId) {
+        List<UserResponse> users = registrationService.getCheckedInStudentsByEvent(eventId);
+        return ResponseEntity.ok(users);
+    }
 }

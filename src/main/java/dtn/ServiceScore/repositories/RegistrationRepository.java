@@ -30,4 +30,6 @@ public interface RegistrationRepository extends JpaRepository<Registration, Long
     @Transactional
     @Query("DELETE FROM Registration r WHERE r.user.id = :userId AND r.event.id = :eventId")
     void deleteByUserIdAndEventId(@Param("userId") Long userId, @Param("eventId") Long eventId);
+
+    List<Registration> findByEventAndAttendancesTrue(Event event);
 }

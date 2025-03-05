@@ -122,4 +122,26 @@ public class RegistrationServiceImpl implements RegistrationService {
                         .build())
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<UserResponse> getCheckedInStudentsByEvent(Long eventID) {
+        Event existingEvent = eventRepository.findById(eventID)
+                .orElseThrow(() -> new DataNotFoundException("Không tìm thấy event"));
+
+        List<Registration> registrations = registrationRepository.findByEventAndAttendancesTrue(existingEvent);
+
+        return registrations.stream()
+                .map(reg -> UserResponse.builder()
+                        .id(reg.getUser().getId())
+                        .username(reg.getUser().getUsername())
+                        .email(reg.getUser().getEmail())
+                        .fullname(reg.getUser().getFullname())
+                        .phoneNumber(reg.getUser().getPhoneNumber())
+                        .studentId(reg.getUser().getStudentId())
+                        .address(reg.getUser().getAddress())
+                        .dateOfBirth(reg.getUser().getDateOfBirth())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
 }
