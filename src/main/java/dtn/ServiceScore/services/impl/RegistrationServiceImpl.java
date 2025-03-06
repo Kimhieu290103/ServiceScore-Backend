@@ -52,16 +52,16 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     @Override
-    public Registration checkInEvent(Long registrationId) throws Exception {
+    public void checkInEvent(Long registrationId) throws RuntimeException {
         Registration existingRegistration = registrationRepository.findById(registrationId)
                 .orElseThrow(() -> new DataNotFoundException("Không tìm thấy registration"));
         existingRegistration.setAttendances(true);
         existingRegistration.setStatus(Enums.RegistrationStatus.CHECKED_IN.toString());
-        return registrationRepository.save(existingRegistration);
+        registrationRepository.save(existingRegistration);
     }
 
     @Override
-    public Registration checkInEvent(Long eventId, Long userId) throws RuntimeException {
+    public void checkInEvent(Long eventId, Long userId) throws RuntimeException {
         List<Registration> registrations = registrationRepository.findByUserIdAndEventId(userId, eventId);
         if (registrations.isEmpty()) {
             throw new DataNotFoundException("Không tìm thấy đăng ký");
@@ -69,7 +69,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         Registration registration = registrations.get(0);
         registration.setAttendances(true);
         registration.setStatus(Enums.RegistrationStatus.CHECKED_IN.toString());
-        return registrationRepository.save(registration);
+        registrationRepository.save(registration);
     }
 
     @Override

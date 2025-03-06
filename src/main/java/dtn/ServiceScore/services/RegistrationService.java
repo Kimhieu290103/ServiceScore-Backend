@@ -9,9 +9,9 @@ import java.util.List;
 public interface RegistrationService {
     Registration register_event(Long eventId, Long userId) throws Exception;
 
-    Registration checkInEvent(Long registrationId) throws Exception;
+    void checkInEvent(Long registrationId) throws Exception;
 
-    Registration checkInEvent(Long eventId, Long userId) throws Exception;
+    void checkInEvent(Long eventId, Long userId) throws Exception;
 
     boolean isUserRegistered(Long eventId, Long userId) throws Exception;
 
