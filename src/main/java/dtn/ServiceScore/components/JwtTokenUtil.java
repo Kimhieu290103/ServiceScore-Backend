@@ -22,7 +22,7 @@ public class JwtTokenUtil {
     @Value("${jwt.expiration}")
     private int expiration; // luu vao bien moi truong
     @Value("${jwt.secretKey}")
-    private String serecKey;
+    private String serectKey;
 
     public String generateToken(User user) {
         Map<String, Object> claims = new HashMap<>();
@@ -41,7 +41,7 @@ public class JwtTokenUtil {
     }
 
     private SecretKey getSignInKey() {
-        byte[] bytes = Decoders.BASE64.decode(serecKey);
+        byte[] bytes = Decoders.BASE64.decode(serectKey);
         return Keys.hmacShaKeyFor(bytes);
     }
 
