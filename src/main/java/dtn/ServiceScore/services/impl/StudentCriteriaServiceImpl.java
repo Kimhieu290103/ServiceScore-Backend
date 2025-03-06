@@ -12,6 +12,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StudentCriteriaServiceImpl implements StudentCriteriaService {
     private final StudentCriteriaRepository studentCriteriaRepository;
+
     @Override
     public boolean hasCompletedAllCriteria(User user) {
         long distinctCriteriaCount = studentCriteriaRepository.countDistinctCriteriaByUser(user.getId());

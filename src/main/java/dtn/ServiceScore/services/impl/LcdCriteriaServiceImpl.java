@@ -1,8 +1,10 @@
 package dtn.ServiceScore.services.impl;
 
-import dtn.ServiceScore.model.*;
+import dtn.ServiceScore.model.Event;
+import dtn.ServiceScore.model.EventCriteriaLcd;
+import dtn.ServiceScore.model.LcdCriteria;
+import dtn.ServiceScore.model.User;
 import dtn.ServiceScore.repositories.EventCriteriaLcdRepository;
-import dtn.ServiceScore.repositories.EventCriteriaRepository;
 import dtn.ServiceScore.repositories.LcdCriteriaRepository;
 import dtn.ServiceScore.services.LcdCriteriaService;
 import lombok.RequiredArgsConstructor;
@@ -10,11 +12,13 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class LcdCriteriaServiceImpl implements LcdCriteriaService {
     private final EventCriteriaLcdRepository eventCriteriaLcdRepository;
     private final LcdCriteriaRepository lcdCriteriaRepository;
+
     @Override
     public List<User> getLcdsCompletedAllCriteria() {
         return lcdCriteriaRepository.findLcdsCompletedAllCriteria();

@@ -6,5 +6,6 @@ import java.util.List;
 
 public interface StudentCriteriaService {
     boolean hasCompletedAllCriteria(User user);
-    public List<User> getStudentsCompletedAllCriteria();
+
+    List<User> getStudentsCompletedAllCriteria();
 }

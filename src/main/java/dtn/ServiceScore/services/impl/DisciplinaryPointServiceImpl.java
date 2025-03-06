@@ -21,6 +21,7 @@ public class DisciplinaryPointServiceImpl implements DisciplinaryPointService {
     private final RegistrationRepository registrationRepository;
     private final EventCriteriaRepository eventCriteriaRepository;
     private final StudentCriteriaRepository studentCriteriaRepository;
+
     @Override
     public DisciplinaryPoint Addpoint(User user, Event event) {
         Registration registration = registrationRepository.findByUserAndEvent(user, event);

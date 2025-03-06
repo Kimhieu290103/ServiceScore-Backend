@@ -73,7 +73,7 @@ public class UserController {
                 .email(user.getEmail())
                 .username(user.getUsername())
                 .build();
-             return userResponse;
+        return userResponse;
 
     }
 

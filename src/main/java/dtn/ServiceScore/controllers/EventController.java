@@ -144,7 +144,6 @@ public class EventController {
     }
 
 
-
     @SecurityRequirement(name = "bearerAuth")
     @PostMapping(value = "/createEventImage", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> uploadEventImage(@Valid @ModelAttribute EventDTO eventDTO,
@@ -256,7 +255,7 @@ public class EventController {
 
     @SecurityRequirement(name = "bearerAuth")
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteEventById(@PathVariable("id") Long eventID){
+    public ResponseEntity<?> deleteEventById(@PathVariable("id") Long eventID) {
         try {
             eventService.deleteEvent(eventID);
             return ResponseEntity.ok(new MessageResponse("xoa thanh cong"));
@@ -325,7 +324,7 @@ public class EventController {
 
             return ResponseEntity.ok(new MessageResponse("Tạo sự kiện thành công"));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body( new ErrorResponse(e.getLocalizedMessage()));
+            return ResponseEntity.badRequest().body(new ErrorResponse(e.getLocalizedMessage()));
         }
 
     }
