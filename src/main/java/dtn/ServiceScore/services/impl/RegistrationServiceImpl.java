@@ -104,6 +104,10 @@ public class RegistrationServiceImpl implements RegistrationService {
         Event existingEvent = eventRepository.findById(eventID)
                 .orElseThrow(() -> new DataNotFoundException("Không tìm thấy event"));
         List<Registration> registrations = registrationRepository.findByEvent(existingEvent);
+        return getUserResponses(registrations);
+    }
+
+    private List<UserResponse> getUserResponses(List<Registration> registrations) {
         return registrations.stream()
                 .map(reg -> UserResponse.builder()
                         .id(reg.getUser().getId())
@@ -151,18 +155,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
         List<Registration> registrations = registrationRepository.findByEventAndAttendancesTrue(existingEvent);
 
-        return registrations.stream()
-                .map(reg -> UserResponse.builder()
-                        .id(reg.getUser().getId())
-                        .username(reg.getUser().getUsername())
-                        .email(reg.getUser().getEmail())
-                        .fullname(reg.getUser().getFullname())
-                        .phoneNumber(reg.getUser().getPhoneNumber())
-                        .studentId(reg.getUser().getStudentId())
-                        .address(reg.getUser().getAddress())
-                        .dateOfBirth(reg.getUser().getDateOfBirth())
-                        .build())
-                .collect(Collectors.toList());
+        return getUserResponses(registrations);
     }
 
 }

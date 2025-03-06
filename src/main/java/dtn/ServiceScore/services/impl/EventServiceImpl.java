@@ -9,6 +9,7 @@ import dtn.ServiceScore.repositories.*;
 import dtn.ServiceScore.responses.CriteriaResponse;
 import dtn.ServiceScore.responses.EventCriteriaResponse;
 import dtn.ServiceScore.services.EventService;
+import dtn.ServiceScore.utils.Utils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -16,7 +17,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -68,7 +68,13 @@ public class EventServiceImpl implements EventService {
         Event event = eventRepository.save(newEvent);
 
 
-        List<Long> criteriaIds = convertStringToList(eventDTO.getFive_good_id());
+        updateEventCriteria(eventDTO, event);
+
+        return event;
+    }
+
+    private void updateEventCriteria(EventDTO eventDTO, Event event) {
+        List<Long> criteriaIds = Utils.convertStringToList(eventDTO.getFive_good_id());
         if (criteriaIds != null && !criteriaIds.isEmpty()) {
             List<FiveGoodCriteria> criteriaList = fiveGoodCriteriaRepository.findAllById(criteriaIds);
             List<EventCriteria> eventCriteriaList = criteriaList.stream()
@@ -80,7 +86,7 @@ public class EventServiceImpl implements EventService {
 
             eventCriteriaRepository.saveAll(eventCriteriaList);
         }
-        List<Long> criteriaLcd_Ids = convertStringToList(eventDTO.getFive_good_lcd_id());
+        List<Long> criteriaLcd_Ids = Utils.convertStringToList(eventDTO.getFive_good_lcd_id());
         if (criteriaLcd_Ids != null && !criteriaLcd_Ids.isEmpty()) {
             List<FiveGoodCriteriaLcd> criteriaLcd_List = fiveGoodCriteriaLcdRepository.findAllById(criteriaLcd_Ids);
             List<EventCriteriaLcd> eventCriteriaLcdList = criteriaLcd_List.stream()
@@ -92,8 +98,6 @@ public class EventServiceImpl implements EventService {
 
             eventCriteriaLcdRepository.saveAll(eventCriteriaLcdList);
         }
-
-        return event;
     }
 
     @Override
@@ -184,31 +188,7 @@ public class EventServiceImpl implements EventService {
 
 
             // ✅ **Thêm các liên kết mới**
-            List<Long> criteriaIds = convertStringToList(eventDTO.getFive_good_id());
-            if (criteriaIds != null && !criteriaIds.isEmpty()) {
-                List<FiveGoodCriteria> criteriaList = fiveGoodCriteriaRepository.findAllById(criteriaIds);
-                List<EventCriteria> eventCriteriaList = criteriaList.stream()
-                        .map(criteria -> EventCriteria.builder()
-                                .event(existingEvent)
-                                .criteria(criteria)
-                                .build())
-                        .collect(Collectors.toList());
-
-                eventCriteriaRepository.saveAll(eventCriteriaList);
-            }
-
-            List<Long> criteriaLcdIds = convertStringToList(eventDTO.getFive_good_lcd_id());
-            if (criteriaLcdIds != null && !criteriaLcdIds.isEmpty()) {
-                List<FiveGoodCriteriaLcd> criteriaLcdList = fiveGoodCriteriaLcdRepository.findAllById(criteriaLcdIds);
-                List<EventCriteriaLcd> eventCriteriaLcdList = criteriaLcdList.stream()
-                        .map(criteria -> EventCriteriaLcd.builder()
-                                .event(existingEvent)
-                                .criteria(criteria)
-                                .build())
-                        .collect(Collectors.toList());
-
-                eventCriteriaLcdRepository.saveAll(eventCriteriaLcdList);
-            }
+            updateEventCriteria(eventDTO, existingEvent);
 
             return eventRepository.save(existingEvent);
 
@@ -245,16 +225,5 @@ public class EventServiceImpl implements EventService {
         }
 
         return response;
-    }
-
-    private List<Long> convertStringToList(String data) {
-        if (data == null || data.isEmpty()) {
-            return List.of();  // Trả về danh sách rỗng nếu không có dữ liệu
-        }
-        return Arrays.stream(data.replaceAll("[\\[\\]]", "").split(","))
-                .map(String::trim)
-                .filter(s -> !s.isEmpty())
-                .map(Long::parseLong)
-                .collect(Collectors.toList());
     }
 }
