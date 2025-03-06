@@ -72,6 +72,27 @@ public class RegistrationServiceImpl implements RegistrationService {
         registrationRepository.save(registration);
     }
 
+    public void multiCheckInEvent(List<Long> registrationIds) throws RuntimeException {
+        for (Long registrationId : registrationIds) {
+            checkInEvent(registrationId);
+        }
+    }
+
+    public void multiCheckInEvent(Long eventId, List<Long> userIds) throws RuntimeException {
+        for (Long userId : userIds) {
+            checkInEvent(eventId, userId);
+        }
+    }
+
+    public void allCheckInEvent(Long eventId) throws RuntimeException {
+        List<Registration> registrations = registrationRepository.findByEventId(eventId);
+        for (Registration registration : registrations) {
+            registration.setAttendances(true);
+            registration.setStatus(Enums.RegistrationStatus.CHECKED_IN.toString());
+            registrationRepository.save(registration);
+        }
+    }
+
     @Override
     public boolean isUserRegistered(Long eventId, Long userId) {
         List<Registration> registrations = registrationRepository.findByUserIdAndEventId(userId, eventId);

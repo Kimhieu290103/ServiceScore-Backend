@@ -7,13 +7,19 @@ import dtn.ServiceScore.responses.UserResponse;
 import java.util.List;
 
 public interface RegistrationService {
-    Registration register_event(Long eventId, Long userId) throws Exception;
+    Registration register_event(Long eventId, Long userId) throws RuntimeException;
 
-    void checkInEvent(Long registrationId) throws Exception;
+    void checkInEvent(Long registrationId) throws RuntimeException;
 
-    void checkInEvent(Long eventId, Long userId) throws Exception;
+    void checkInEvent(Long eventId, Long userId) throws RuntimeException;
 
-    boolean isUserRegistered(Long eventId, Long userId) throws Exception;
+    void multiCheckInEvent(List<Long> registrationIds) throws RuntimeException;
+
+    void multiCheckInEvent(Long eventId, List<Long> userIds) throws RuntimeException;
+
+    void allCheckInEvent(Long eventId) throws RuntimeException;
+
+    boolean isUserRegistered(Long eventId, Long userId) throws RuntimeException;
 
     List<UserResponse> getAllStudentByEvent(Long eventId);
 
