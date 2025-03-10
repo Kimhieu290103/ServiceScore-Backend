@@ -18,14 +18,15 @@ public class DataInitializer implements CommandLineRunner {
     private final DepartmentRepository departmentRepository;
     private final FiveGoodCriteriaRepository fiveGoodCriteriaRepository;
     private final FiveGoodCriteriaLcdRepository fiveGoodCriteriaLcdRepository;
-
+    private final EventTypeRepository eventTypeRepository;
     public DataInitializer(RoleRepository roleRepository
             , LcdRepository lcdRepository
             , SemesterRepository semesterRepository
             , CourseRepository courseRepository
             , DepartmentRepository departmentRepository
             , FiveGoodCriteriaRepository fiveGoodCriteriaRepository
-            , FiveGoodCriteriaLcdRepository fiveGoodCriteriaLcdRepository) {
+            , FiveGoodCriteriaLcdRepository fiveGoodCriteriaLcdRepository
+            ,   EventTypeRepository eventTypeRepository) {
         this.roleRepository = roleRepository;
         this.lcdRepository = lcdRepository;
         this.semesterRepository = semesterRepository;
@@ -33,6 +34,7 @@ public class DataInitializer implements CommandLineRunner {
         this.departmentRepository = departmentRepository;
         this.fiveGoodCriteriaRepository = fiveGoodCriteriaRepository;
         this.fiveGoodCriteriaLcdRepository = fiveGoodCriteriaLcdRepository;
+        this.eventTypeRepository = eventTypeRepository;
     }
 
     @Override
@@ -48,14 +50,14 @@ public class DataInitializer implements CommandLineRunner {
             }
         }
         // Thêm dữ liệu vào bảng Lcd
-        List<String> lcdNames = List.of("BTV", "LCD", "HSV", "CTSV", "SV");
-        for (String lcdName : lcdNames) {
-            if (lcdRepository.findByName(lcdName).isEmpty()) { // Kiểm tra nếu chưa có trong DB
-                Lcd lcd = Lcd.builder().name(lcdName).build();
-                lcdRepository.save(lcd);
-                System.out.println("✅ Created LCD: " + lcdName);
-            }
-        }
+//        List<String> lcdNames = List.of("BTV", "LCD", "HSV", "CTSV", "SV");
+//        for (String lcdName : lcdNames) {
+//            if (lcdRepository.findByName(lcdName).isEmpty()) { // Kiểm tra nếu chưa có trong DB
+//                Lcd lcd = Lcd.builder().name(lcdName).build();
+//                lcdRepository.save(lcd);
+//                System.out.println("✅ Created LCD: " + lcdName);
+//            }
+//        }
         // Thêm dữ liệu vào bảng Lcd
         List<String> semesterNames = List.of("2024-2025", "2025-2026", "2026-2027", "2027-2028", "2028-2029");
         for (String semesterName : semesterNames) {
@@ -115,6 +117,17 @@ public class DataInitializer implements CommandLineRunner {
 
             fiveGoodCriteriaRepository.saveAll(criteriaList); // Lưu tất cả vào database
         }
+        // Kiểm tra nếu bảng eventType chưa có dữ liệu
+        if (eventTypeRepository.count() == 0) {
+            List<String> eventTypeNames = List.of("Hoạt động liên chi đoàn", "Hoạt động truyền thống", "Hoạt động học thuật", "Hoạt động khác");
+
+            for (String eventTypeName : eventTypeNames) {
+                EventType eventType = EventType.builder().name(eventTypeName).build();
+                eventTypeRepository.save(eventType);
+                System.out.println("✅ Created eventType: " + eventTypeName);
+            }
+        }
+
 
         if (fiveGoodCriteriaLcdRepository.count() == 0) { // Kiểm tra nếu bảng chưa có dữ liệu
             List<FiveGoodCriteriaLcd> criteriaList = List.of(

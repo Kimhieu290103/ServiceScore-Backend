@@ -17,6 +17,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,27 +34,38 @@ public class EventServiceImpl implements EventService {
     private final EventCriteriaRepository eventCriteriaRepository;
     private final FiveGoodCriteriaLcdRepository fiveGoodCriteriaLcdRepository;
     private final EventCriteriaLcdRepository eventCriteriaLcdRepository;
-
+    private final EventTypeRepository eventTypeRepository;
     @Override
     public Event createEvent(EventDTO eventDTO) throws Exception {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
         ObjectMapper objectMapper = new ObjectMapper();
         String eventName = eventDTO.getName();
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String userRoles = user.getRole().getName();
-        String eventType = (userRoles.contains("BTV") || userRoles.contains("CTSV") ||
-                userRoles.contains("HSV"))
-                ? eventDTO.getEventType()
-                : "LCD";
+        // Xác định loại sự kiện dựa vào role
+        Long eventTypeId = Long.parseLong(String.valueOf(eventDTO.getEventType()));
+        Long eventTypeName = (userRoles.contains("BTV") || userRoles.contains("CTSV") || userRoles.contains("HSV"))
+                ? eventTypeId
+                : 1;
+
+        EventType eventType = eventTypeRepository.findById(eventTypeName)
+                .orElseThrow(() -> new DataNotFoundException("Không tìm thấy loại sự kiện phù hợp"));
+
         if (eventRepository.existsByName(eventName)) {
             throw new DataIntegrityViolationException("event name existed");
         }
+        // Chuyển đổi các chuỗi ngày giờ sang LocalDateTime
+        LocalDateTime date = parseLocalDateTime(eventDTO.getDate(), formatter);
+        LocalDateTime endDate = parseLocalDateTime(eventDTO.getEndDate(), formatter);
+        LocalDateTime registrationStartDate = parseLocalDateTime(eventDTO.getRegistrationStartDate(), formatter);
+        LocalDateTime registrationEndDate = parseLocalDateTime(eventDTO.getRegistrationEndDate(), formatter);
         Event newEvent = Event.builder()
                 .name(eventDTO.getName())
                 .description(eventDTO.getDescription())
-                .date(eventDTO.getDate())
-                .endDate(eventDTO.getEndDate())
-                .registrationStartDate(eventDTO.getRegistrationStartDate())
-                .registrationEndDate(eventDTO.getRegistrationEndDate())
+                .date(date)
+                .endDate(endDate)
+                .registrationStartDate(registrationStartDate)
+                .registrationEndDate(registrationEndDate)
                 .score(eventDTO.getScore())
                 .maxRegistrations(eventDTO.getMaxRegistrations())
                 //.eventType(eventDTO.getEventType())
@@ -161,27 +175,42 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public Event updateEvent(Long id, EventDTO eventDTO) throws Exception {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
         Event existingEvent = getEventById(id);
         if (existingEvent != null) {
             Semester semester = semesterRepository.findByName(eventDTO.getSemester()).
                     orElseThrow(() -> new DataNotFoundException("Không tìm thấy học kì phù hợp"));
             User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            // Long userId = user.getId();
 
+            String userRoles = user.getRole().getName();
+            Long eventTypeId = Long.parseLong(String.valueOf(eventDTO.getEventType()));
+            Long eventTypeName = (userRoles.contains("BTV") || userRoles.contains("CTSV") || userRoles.contains("HSV"))
+                    ? eventTypeId
+                    : 1;
+
+            EventType eventType = eventTypeRepository.findById(eventTypeName)
+                    .orElseThrow(() -> new DataNotFoundException("Không tìm thấy loại sự kiện phù hợp"));
+
+
+            // Long userId = user.getId();
+            LocalDateTime date = parseLocalDateTime(eventDTO.getDate(), formatter);
+            LocalDateTime endDate = parseLocalDateTime(eventDTO.getEndDate(), formatter);
+            LocalDateTime registrationStartDate = parseLocalDateTime(eventDTO.getRegistrationStartDate(), formatter);
+            LocalDateTime registrationEndDate = parseLocalDateTime(eventDTO.getRegistrationEndDate(), formatter);
             existingEvent.setSemester(semester);
             existingEvent.setUser(user);
             existingEvent.setName(eventDTO.getName());
             existingEvent.setDescription(eventDTO.getDescription());
-            existingEvent.setDate(eventDTO.getDate());
-            existingEvent.setEndDate(eventDTO.getEndDate());
+            existingEvent.setDate(date);
+            existingEvent.setEndDate(endDate);
             existingEvent.setCurrentRegistrations(eventDTO.getCurrentRegistrations());
-            existingEvent.setRegistrationEndDate(eventDTO.getRegistrationEndDate());
+            existingEvent.setRegistrationEndDate(registrationEndDate);
             existingEvent.setScore(eventDTO.getScore());
             existingEvent.setMaxRegistrations(eventDTO.getMaxRegistrations());
-            existingEvent.setEventType(eventDTO.getEventType());
+            existingEvent.setEventType(eventType);
             existingEvent.setAdditionalInfo(eventDTO.getAdditionalInfo());
             existingEvent.setLocation(eventDTO.getLocation());
-
+            existingEvent.setRegistrationStartDate(registrationStartDate);
             // ✅ **Xóa các liên kết cũ**
             eventCriteriaRepository.deleteByEventId(id);
             eventCriteriaLcdRepository.deleteByEventId(id);
@@ -225,5 +254,14 @@ public class EventServiceImpl implements EventService {
         }
 
         return response;
+    }
+
+    // Hàm chuyển đổi chuỗi sang LocalDateTime
+    private LocalDateTime parseLocalDateTime(LocalDateTime dateTime, DateTimeFormatter formatter) {
+        try {
+            return dateTime != null ? dateTime : null;
+        } catch (Exception e) {
+            throw new DateTimeParseException("Lỗi định dạng ngày giờ", dateTime.toString(), 0);
+        }
     }
 }

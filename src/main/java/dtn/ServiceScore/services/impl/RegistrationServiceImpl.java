@@ -142,7 +142,7 @@ public class RegistrationServiceImpl implements RegistrationService {
                         .currentRegistrations(reg.getEvent().getCurrentRegistrations())
                         .location(reg.getEvent().getLocation())
                         .additionalInfo(reg.getEvent().getAdditionalInfo())
-                        .eventType(reg.getEvent().getEventType())
+                        .eventType(reg.getEvent().getEventType().getName())
 
                         .build())
                 .collect(Collectors.toList());

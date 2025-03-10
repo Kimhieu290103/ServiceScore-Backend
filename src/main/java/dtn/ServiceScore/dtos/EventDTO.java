@@ -5,6 +5,8 @@ import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -21,19 +23,19 @@ public class EventDTO {
     private String description;
 
     @JsonProperty("event_date")
-    private LocalDate date;
+    private LocalDateTime date;
 
     // ngay ket thuc
     @JsonProperty("end_date")
-    private LocalDate endDate;
+    private LocalDateTime endDate;
 
     // ngay bat dau dang ky
     @JsonProperty("registration_start_date")
-    private LocalDate registrationStartDate;
+    private LocalDateTime registrationStartDate;
 
     // ngay ket thuc dang ky
     @JsonProperty("registration_end_date")
-    private LocalDate registrationEndDate;
+    private LocalDateTime registrationEndDate;
 
     // ngay ket thuc dang ky
     @JsonProperty("status")
@@ -58,7 +60,7 @@ public class EventDTO {
     private Long currentRegistrations;
 
     @JsonProperty("event_type")
-    private String eventType;
+    private Long eventType;
 
     @JsonProperty("five_good")
     private String five_good_id;

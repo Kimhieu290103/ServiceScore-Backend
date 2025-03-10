@@ -86,7 +86,7 @@ public class EventController {
                     .currentRegistrations(existingEvent.getCurrentRegistrations())
                     .location(existingEvent.getLocation())
                     .additionalInfo(existingEvent.getAdditionalInfo())
-                    .eventType(existingEvent.getEventType())
+                    .eventType(existingEvent.getEventType().getName())
                     .eventImage(eventImageResponses)
                     .build();
             return ResponseEntity.ok(eventRespone);
@@ -130,7 +130,7 @@ public class EventController {
                     .currentRegistrations(event.getCurrentRegistrations())
                     .location(event.getLocation())
                     .additionalInfo(event.getAdditionalInfo())
-                    .eventType(event.getEventType())
+                    .eventType(event.getEventType().getName())
                     .additionalInfo(event.getAdditionalInfo())
                     .location(event.getLocation())
                     .eventImage(eventImages)

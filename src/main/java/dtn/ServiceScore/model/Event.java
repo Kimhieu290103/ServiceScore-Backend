@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 @Setter
 @Getter
@@ -27,19 +29,19 @@ public class Event {
 
     // ngay to chuc
     @Column(name = "date", nullable = false)
-    private LocalDate date;
+    private LocalDateTime date;
 
     // ngay ket thuc
     @Column(name = "end_date", nullable = false)
-    private LocalDate endDate;
+    private LocalDateTime endDate;
 
     // ngay bat dau dang ky
     @Column(name = "registration_start_date", nullable = false)
-    private LocalDate registrationStartDate;
+    private LocalDateTime registrationStartDate;
 
     // ngay ket thuc dang ky
     @Column(name = "registration_end_date", nullable = false)
-    private LocalDate registrationEndDate;
+    private LocalDateTime registrationEndDate;
 
     // ngay ket thuc dang ky
     @Column(name = "status", nullable = false)
@@ -67,9 +69,9 @@ public class Event {
     @Column(name = "current_registrations")
     private Long currentRegistrations;
 
-    // event thuoc loai nao (truyen thong, hoc thuat, ...)
-    @Column(name = "event_type", nullable = false)
-    private String eventType = "LCD";
+    @ManyToOne
+    @JoinColumn(name = "event_type_id", nullable = false)
+    private EventType eventType;
 
     @Column(name = "location", nullable = false)
     private String location;          // Thêm trường location

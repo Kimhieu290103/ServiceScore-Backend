@@ -3,6 +3,8 @@ package dtn.ServiceScore.responses;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -21,16 +23,16 @@ public class EventRespone {
     private String description;
 
 
-    private LocalDate date;
+    private LocalDateTime date;
 
 
-    private LocalDate endDate;
+    private LocalDateTime endDate;
 
 
-    private LocalDate registrationStartDate;
+    private LocalDateTime registrationStartDate;
 
 
-    private LocalDate registrationEndDate;
+    private LocalDateTime registrationEndDate;
 
 
 //  private String status;
