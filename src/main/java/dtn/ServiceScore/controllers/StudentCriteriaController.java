@@ -2,16 +2,15 @@ package dtn.ServiceScore.controllers;
 
 import dtn.ServiceScore.model.User;
 import dtn.ServiceScore.responses.MessageResponse;
+import dtn.ServiceScore.responses.UserResponse;
 import dtn.ServiceScore.services.StudentCriteriaService;
 import dtn.ServiceScore.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/student_criteria")
@@ -38,5 +37,6 @@ public class StudentCriteriaController {
     public ResponseEntity<List<User>> getStudentsCompletedAllCriteria() {
         List<User> students = studentCriteriaService.getStudentsCompletedAllCriteria();
         return ResponseEntity.ok(students);
+
     }
 }

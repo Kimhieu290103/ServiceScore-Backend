@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -156,6 +157,11 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    public Page<Event> getEventsByEventType(Long eventTypeId, Pageable pageable) {
+        return eventRepository.findByEventType_Id(eventTypeId, pageable);
+    }
+
+    @Override
     public EventImage createEventImage(Long eventId, EventImage eventImage) throws Exception {
         Event existingEvent = getEventById(eventId);
         eventImageRepository.deleteByEventId(eventId);
@@ -255,6 +261,14 @@ public class EventServiceImpl implements EventService {
 
         return response;
     }
+
+    @Override
+    public List<Event> getEventByUser() {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Long userId = user.getId();
+        return eventRepository.findByUser_Id(userId);
+    }
+
 
     // Hàm chuyển đổi chuỗi sang LocalDateTime
     private LocalDateTime parseLocalDateTime(LocalDateTime dateTime, DateTimeFormatter formatter) {

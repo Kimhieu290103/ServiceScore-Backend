@@ -3,6 +3,7 @@ package dtn.ServiceScore.controllers;
 import dtn.ServiceScore.dtos.EventDTO;
 import dtn.ServiceScore.model.Event;
 import dtn.ServiceScore.model.EventImage;
+import dtn.ServiceScore.model.User;
 import dtn.ServiceScore.responses.*;
 import dtn.ServiceScore.services.EventImageService;
 import dtn.ServiceScore.services.EventService;
@@ -11,9 +12,11 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -55,6 +58,7 @@ public class EventController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+
 
 
     @SecurityRequirement(name = "bearerAuth")
@@ -143,6 +147,13 @@ public class EventController {
                 .build());
     }
 
+    @GetMapping("/by-event-type")
+    public Page<Event> getEventsByEventType(
+            @RequestParam Long eventTypeId,
+            Pageable pageable
+    ) {
+        return eventService.getEventsByEventType(eventTypeId, pageable);
+    }
 
     @SecurityRequirement(name = "bearerAuth")
     @PostMapping(value = "/createEventImage", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -326,6 +337,14 @@ public class EventController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(new ErrorResponse(e.getLocalizedMessage()));
         }
+
+    }
+    @SecurityRequirement(name = "bearerAuth")
+    @PostMapping("/by_user")
+    public ResponseEntity<?> getEventByUser() {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+       Long userId = user.getId();
+       return ResponseEntity.ok(eventService.getEventByUser());
 
     }
 

@@ -5,13 +5,16 @@ import dtn.ServiceScore.repositories.DisciplinaryPointRepository;
 import dtn.ServiceScore.repositories.EventCriteriaRepository;
 import dtn.ServiceScore.repositories.RegistrationRepository;
 import dtn.ServiceScore.repositories.StudentCriteriaRepository;
+import dtn.ServiceScore.responses.PointResponse;
 import dtn.ServiceScore.services.DisciplinaryPointService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -63,6 +66,37 @@ public class DisciplinaryPointServiceImpl implements DisciplinaryPointService {
         registration.setAttendances(true);
         registrationRepository.save(registration);
         return disciplinaryPointRepository.save(disciplinaryPoint);
+    }
+
+    @Override
+    public List<PointResponse> getDisciplinaryPointsByUserId() {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Long userId = user.getId();
+        List<DisciplinaryPoint> disciplinaryPoints= disciplinaryPointRepository.findByUser_Id(userId);
+        // Tạo danh sách kết quả
+        List<PointResponse> responseList = disciplinaryPoints.stream()
+                .map(dp -> PointResponse.builder()
+                        .id(dp.getId())
+                        .semester(dp.getSemester().getName())
+                        .points(dp.getPoints())
+                        .build())
+                .toList();
+
+        return responseList;
+    }
+
+    @Override
+    public Map<String, Object> getDisciplinaryPointsWithTotal() {
+        List<PointResponse> pointsList = getDisciplinaryPointsByUserId();
+
+        Long totalPoints = pointsList.stream()
+                .mapToLong(PointResponse::getPoints)
+                .sum();
+
+        return Map.of(
+                "disciplinaryPoints", pointsList,
+                "totalPoints", totalPoints
+        );
     }
 
 

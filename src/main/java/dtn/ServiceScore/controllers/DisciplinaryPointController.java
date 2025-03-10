@@ -3,15 +3,16 @@ package dtn.ServiceScore.controllers;
 import dtn.ServiceScore.model.DisciplinaryPoint;
 import dtn.ServiceScore.model.Event;
 import dtn.ServiceScore.model.User;
+import dtn.ServiceScore.responses.PointResponse;
 import dtn.ServiceScore.services.DisciplinaryPointService;
 import dtn.ServiceScore.services.EventService;
 import dtn.ServiceScore.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/v1/points")
@@ -35,5 +36,10 @@ public class DisciplinaryPointController {
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body("Lỗi hệ thống: " + e.getMessage());
         }
+    }
+    @GetMapping("/by-user")
+    public ResponseEntity<?> getDisciplinaryPointsByUserId() {
+        Map<String, Object> result = disciplinaryPointService.getDisciplinaryPointsWithTotal();
+        return ResponseEntity.ok(result);
     }
 }
