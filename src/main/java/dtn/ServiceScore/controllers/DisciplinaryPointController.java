@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -36,6 +37,27 @@ public class DisciplinaryPointController {
             Event event = eventService.getEventById(eventId);
             DisciplinaryPoint disciplinaryPoint = disciplinaryPointService.Addpoint(user, event);
             return ResponseEntity.ok(disciplinaryPoint);
+        } catch (IllegalStateException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Lỗi hệ thống: " + e.getMessage());
+        }
+    }
+
+    // Điêmr danh các sinh viên được chợn
+    @PostMapping("/batch/{eventId}")
+    public ResponseEntity<?> addPointsForMultipleUsers(@PathVariable Long eventId, @RequestBody List<Long> userIds) {
+        try {
+            Event event = eventService.getEventById(eventId);
+            List<DisciplinaryPoint> disciplinaryPoints = new ArrayList<>();
+
+            for (Long userId : userIds) {
+                User user = userService.getUserById(userId);
+                DisciplinaryPoint disciplinaryPoint = disciplinaryPointService.Addpoint(user, event);
+                disciplinaryPoints.add(disciplinaryPoint);
+            }
+
+            return ResponseEntity.ok(disciplinaryPoints);
         } catch (IllegalStateException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
