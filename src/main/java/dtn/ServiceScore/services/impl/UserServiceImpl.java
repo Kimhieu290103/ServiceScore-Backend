@@ -21,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -84,6 +85,13 @@ public class UserServiceImpl implements UserService {
                 .dateOfBirth(user.getDateOfBirth())
                 .email(user.getEmail())
                 .username(user.getUsername())
+                .Department(Optional.ofNullable(user.getClazz())
+                        .map(clazz -> clazz.getDepartment())
+                        .map(department -> department.getName())
+                        .orElse(null)) // Nếu null thì trả về null
+                .clazz(Optional.ofNullable(user.getClazz())
+                        .map(clazz -> clazz.getName())
+                        .orElse(null))
                 .build();
         loginRespone.setRole(role);
         loginRespone.setUserResponse(userResponse);

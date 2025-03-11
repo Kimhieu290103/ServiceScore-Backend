@@ -41,4 +41,6 @@ public class UserResponse {
 
     private String Department;
 
+    private boolean attendances;
+
 }

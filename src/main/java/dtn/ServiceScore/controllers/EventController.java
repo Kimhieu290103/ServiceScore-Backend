@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -107,8 +108,11 @@ public class EventController {
             @RequestParam("page") int page,
             @RequestParam("limit") int limit
     ) {
-        PageRequest pageRequest = PageRequest.of(page,
-                limit);
+//        PageRequest pageRequest = PageRequest.of(page,
+//                limit);
+        // Thêm sắp xếp mặc định theo registrationStartDate giảm dần
+        PageRequest pageRequest = PageRequest.of(page, limit, Sort.by(Sort.Direction.DESC, "registrationStartDate"));
+
         Page<Event> eventPages = eventService.getAllEvents(pageRequest);
         int totalPages = eventPages.getTotalPages();
 

@@ -173,6 +173,7 @@ public class RegistrationServiceImpl implements RegistrationService {
                         .Department((reg.getUser().getClazz() != null && reg.getUser().getClazz().getDepartment() != null)
                                 ? reg.getUser().getClazz().getDepartment().getName()
                                 : null) // Kiểm tra null
+                        .attendances(reg.isAttendances())
                         .build())
                 .collect(Collectors.toList());
     }
