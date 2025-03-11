@@ -13,7 +13,8 @@ public interface StudentCriteriaRepository extends JpaRepository<StudentCriteria
     long countDistinctCriteriaByUser(@Param("userId") Long userId);
 
     @Query("SELECT sc.student FROM StudentCriteria sc " +
+            "WHERE sc.semester.id = :semesterId " +
             "GROUP BY sc.student " +
             "HAVING COUNT(DISTINCT sc.criteria.id) = 5")
-    List<User> findStudentsCompletedAllCriteria();
+    List<User> findStudentsCompletedAllCriteria(@Param("semesterId") Long semesterId);
 }

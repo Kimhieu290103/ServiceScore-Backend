@@ -37,4 +37,8 @@ public class UserResponse {
 
     private String username;
 
+    private String clazz;
+
+    private String Department;
+
 }

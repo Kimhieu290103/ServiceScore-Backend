@@ -1,6 +1,7 @@
 package dtn.ServiceScore.services;
 
 import dtn.ServiceScore.model.Registration;
+import dtn.ServiceScore.responses.EventRegistrationResponse;
 import dtn.ServiceScore.responses.EventRespone;
 import dtn.ServiceScore.responses.UserResponse;
 
@@ -21,7 +22,8 @@ public interface RegistrationService {
 
     boolean isUserRegistered(Long eventId, Long userId) throws RuntimeException;
 
-    List<UserResponse> getAllStudentByEvent(Long eventId);
+    // danh sách sinh viên đăng kí sự kiện
+    EventRegistrationResponse getAllStudentByEvent(Long eventId);
 
     List<EventRespone> getAllEventByStudent(Long sudentId);
 

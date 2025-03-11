@@ -7,15 +7,20 @@ import dtn.ServiceScore.model.User;
 import dtn.ServiceScore.repositories.EventRepository;
 import dtn.ServiceScore.repositories.RegistrationRepository;
 import dtn.ServiceScore.repositories.UserRepository;
+import dtn.ServiceScore.responses.EventRegistrationResponse;
 import dtn.ServiceScore.responses.EventRespone;
 import dtn.ServiceScore.responses.UserResponse;
 import dtn.ServiceScore.services.RegistrationService;
 import dtn.ServiceScore.utils.Enums;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -26,6 +31,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final UserRepository userRepository;
     private final EventRepository eventRepository;
 
+    // đăng kí sự kiện
     @Override
     public Registration register_event(Long eventId, Long userId) throws RuntimeException {
         User existingUser = userRepository.findById(userId)
@@ -34,7 +40,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         Event existingEvent = eventRepository.findById(eventId)
                 .orElseThrow(() -> new DataNotFoundException("Không tìm thấy event"));
         if (isUserRegistered(eventId, userId)) {
-            throw new IllegalStateException("Người dùng đã đăng ký sự kiện này rồi!");
+            throw new IllegalStateException("Bạn đã đăng kí sự kiện");
         }
         if (Objects.equals(existingEvent.getCurrentRegistrations(), existingEvent.getMaxRegistrations())) {
             throw new IllegalStateException("Sự kiện đã đủ số lượng người đăng kí");
@@ -99,12 +105,57 @@ public class RegistrationServiceImpl implements RegistrationService {
         return !registrations.isEmpty();
     }
 
+    // danh sách sinh viên đăng kí sự kiện
     @Override
-    public List<UserResponse> getAllStudentByEvent(Long eventID) {
+    public EventRegistrationResponse  getAllStudentByEvent(Long eventID) {
         Event existingEvent = eventRepository.findById(eventID)
                 .orElseThrow(() -> new DataNotFoundException("Không tìm thấy event"));
         List<Registration> registrations = registrationRepository.findByEvent(existingEvent);
-        return getUserResponses(registrations);
+
+        // Danh sách sinh viên đăng ký
+        List<UserResponse> users = getUserResponses(registrations);
+
+
+        // Tổng số sinh viên đăng ký
+        int totalRegistrations = registrations.size();
+
+        // Lấy số lượng mã đăng ký tối đa của sự kiện
+        int maxRegistrations = Math.toIntExact(existingEvent.getMaxRegistrations());
+
+        // Khởi tạo danh sách khóa học với giá trị mặc định là 0
+        Map<String, Long> studentByCourse = new HashMap<>();
+        studentByCourse.put("Course_20", 0L);
+        studentByCourse.put("Course_21", 0L);
+        studentByCourse.put("Course_22", 0L);
+        studentByCourse.put("Course_23", 0L);
+        studentByCourse.put("Course_24", 0L);
+        studentByCourse.put("Other", 0L);
+
+        // Đếm số sinh viên theo khóa học từ bảng Class
+        Map<String, Long> studentCounts = registrations.stream()
+                .map(reg -> reg.getUser().getClazz()) // Lấy thông tin lớp từ User
+                .map(studentClass -> (studentClass != null) ? studentClass.getName() : "Other") // Nếu lớp bị null, gán "Other"
+                .map(className -> (className != null && className.length() >= 2) ? className.substring(0, 2) : "Other") // Lấy 2 ký tự đầu
+                .collect(Collectors.groupingBy(course -> {
+                    switch (course) {
+                        case "20": return "Course_20";
+                        case "21": return "Course_21";
+                        case "22": return "Course_22";
+                        case "23": return "Course_23";
+                        case "24": return "Course_24";
+                        default: return "Other";
+                    }
+                }, Collectors.counting()));
+
+        // Cập nhật số lượng thực tế vào studentByCourse
+        studentCounts.forEach(studentByCourse::put);
+
+        return EventRegistrationResponse.builder()
+                .users(users)
+                .totalRegistrations(totalRegistrations)
+                .maxRegistrations(maxRegistrations)
+                .studentByCourse(studentByCourse)
+                .build();
     }
 
     private List<UserResponse> getUserResponses(List<Registration> registrations) {
@@ -118,6 +169,10 @@ public class RegistrationServiceImpl implements RegistrationService {
                         .studentId(reg.getUser().getStudentId())
                         .address(reg.getUser().getAddress())
                         .dateOfBirth(reg.getUser().getDateOfBirth())
+                        .clazz(reg.getUser().getClazz() != null ? reg.getUser().getClazz().getName() : null) // Kiểm tra null
+                        .Department((reg.getUser().getClazz() != null && reg.getUser().getClazz().getDepartment() != null)
+                                ? reg.getUser().getClazz().getDepartment().getName()
+                                : null) // Kiểm tra null
                         .build())
                 .collect(Collectors.toList());
     }

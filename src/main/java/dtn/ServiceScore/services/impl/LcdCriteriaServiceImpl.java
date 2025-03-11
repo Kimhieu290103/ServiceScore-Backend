@@ -34,14 +34,23 @@ public class LcdCriteriaServiceImpl implements LcdCriteriaService {
 
         try {
             for (EventCriteriaLcd eventCriteriaLcd : eventCriteriaLcdList) {
-                LcdCriteria lcdCriteria = LcdCriteria.builder()
-                        .user(user)
-                        .fiveGoodCriteriaLcd(eventCriteriaLcd.getCriteria()) // Liên kết với tiêu chí 5 tốt
-                        .achievedAt(LocalDate.now())
-                        .isCompleted(true)
-                        .build();
+                boolean exists = lcdCriteriaRepository.existsByUserAndCriteriaAndSemester(
+                        user,
+                        eventCriteriaLcd.getCriteria(),
+                        event.getSemester()
+                );
 
-                lcdCriteriaRepository.save(lcdCriteria);
+                if (!exists) { // Chỉ lưu nếu chưa tồn tại
+                    LcdCriteria lcdCriteria = LcdCriteria.builder()
+                            .user(user)
+                            .fiveGoodCriteriaLcd(eventCriteriaLcd.getCriteria())
+                            .semester(event.getSemester())
+                            .achievedAt(LocalDate.now())
+                            .isCompleted(true)
+                            .build();
+
+                    lcdCriteriaRepository.save(lcdCriteria);
+                }
             }
             return "Xác nhận thành công!";
         } catch (Exception e) {

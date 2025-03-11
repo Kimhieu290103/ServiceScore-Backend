@@ -26,6 +26,10 @@ public class StudentCriteria {
     @JoinColumn(name = "criteria_id")
     private FiveGoodCriteria criteria;
 
+    @ManyToOne
+    @JoinColumn(name = "semester_id", nullable = false)
+    private Semester semester;
+
     // da hoan thanh chua(an hien, neu ma qua ki thi an di)
     @Column(name = "is_completed", nullable = false)
     private boolean isCompleted = true;

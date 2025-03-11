@@ -34,8 +34,8 @@ public class StudentCriteriaController {
     }
 
     @GetMapping("/completed")
-    public ResponseEntity<List<User>> getStudentsCompletedAllCriteria() {
-        List<User> students = studentCriteriaService.getStudentsCompletedAllCriteria();
+    public ResponseEntity<List<User>> getStudentsCompletedAllCriteria(@RequestParam Long semesterId) {
+        List<User> students = studentCriteriaService.getStudentsCompletedAllCriteria(semesterId);
         return ResponseEntity.ok(students);
 
     }

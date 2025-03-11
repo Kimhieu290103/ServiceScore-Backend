@@ -26,6 +26,10 @@ public class LcdCriteria {
     @JoinColumn(name = "criteria_id")
     private FiveGoodCriteriaLcd fiveGoodCriteriaLcd;
 
+    @ManyToOne
+    @JoinColumn(name = "semester_id", nullable = false)
+    private Semester semester;
+
     // hoat dong o dau
     @Column(name = "achieved_at")
     private LocalDate achievedAt;

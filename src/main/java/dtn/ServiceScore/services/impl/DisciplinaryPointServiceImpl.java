@@ -1,10 +1,8 @@
 package dtn.ServiceScore.services.impl;
 
+import dtn.ServiceScore.enums.ExternalEventStatus;
 import dtn.ServiceScore.model.*;
-import dtn.ServiceScore.repositories.DisciplinaryPointRepository;
-import dtn.ServiceScore.repositories.EventCriteriaRepository;
-import dtn.ServiceScore.repositories.RegistrationRepository;
-import dtn.ServiceScore.repositories.StudentCriteriaRepository;
+import dtn.ServiceScore.repositories.*;
 import dtn.ServiceScore.responses.PointResponse;
 import dtn.ServiceScore.services.DisciplinaryPointService;
 import jakarta.transaction.Transactional;
@@ -24,7 +22,7 @@ public class DisciplinaryPointServiceImpl implements DisciplinaryPointService {
     private final RegistrationRepository registrationRepository;
     private final EventCriteriaRepository eventCriteriaRepository;
     private final StudentCriteriaRepository studentCriteriaRepository;
-
+    private final ExternalEventRepository externalEventRepository;
     @Override
     public DisciplinaryPoint Addpoint(User user, Event event) {
         Registration registration = registrationRepository.findByUserAndEvent(user, event);
@@ -54,7 +52,8 @@ public class DisciplinaryPointServiceImpl implements DisciplinaryPointService {
         for (EventCriteria eventCriteria : eventCriteriaList) {
             StudentCriteria studentCriteria = StudentCriteria.builder()
                     .student(user)
-                    .criteria(eventCriteria.getCriteria()) // Liên kết với tiêu chí 5 tốt
+                    .criteria(eventCriteria.getCriteria())
+                    .semester(event.getSemester())// Liên kết với tiêu chí 5 tốt
                     .achievedAt(LocalDate.now())
                     .isCompleted(true)
                     .build();
@@ -66,6 +65,51 @@ public class DisciplinaryPointServiceImpl implements DisciplinaryPointService {
         registration.setAttendances(true);
         registrationRepository.save(registration);
         return disciplinaryPointRepository.save(disciplinaryPoint);
+    }
+
+    @Override
+    public DisciplinaryPoint AddPointForExternalEvent(User user, ExternalEvent externalEvent) {
+        // Kiểm tra xem đã có bản ghi trong bảng DisciplinaryPoint chưa
+        DisciplinaryPoint disciplinaryPoint = disciplinaryPointRepository.findByUserAndSemester(user, externalEvent.getSemester());
+
+        if (disciplinaryPoint == null) {
+            // Nếu chưa có, tạo mới bản ghi
+            DisciplinaryPoint newPoint = DisciplinaryPoint.builder()
+                    .user(user)
+                    .semester(externalEvent.getSemester())
+                    .points(externalEvent.getPoints()) // Lấy điểm từ ExternalEvent
+                    .build();
+
+            // Cập nhật trạng thái của ExternalEvent thành APPROVED
+            externalEvent.setStatus(ExternalEventStatus.APPROVED);
+            externalEventRepository.save(externalEvent);
+
+            // Lưu vào database
+            return disciplinaryPointRepository.save(newPoint);
+
+        } else {
+            // Nếu đã có bản ghi, cộng thêm điểm của externalEvent vào điểm hiện tại
+            disciplinaryPoint.setPoints(disciplinaryPoint.getPoints() + externalEvent.getPoints());
+        }
+
+        // Cập nhật trạng thái của ExternalEvent thành APPROVED
+        externalEvent.setStatus(ExternalEventStatus.APPROVED);
+        externalEventRepository.save(externalEvent);
+
+        return disciplinaryPointRepository.save(disciplinaryPoint);
+    }
+
+    @Override
+    public String rejectExternalEvent(Long eventId) {
+        ExternalEvent externalEvent = externalEventRepository.findById(eventId).orElse(null);
+        if (externalEvent == null) {
+            return "External Event not found";
+        }
+
+        externalEvent.setStatus(ExternalEventStatus.REJECTED);
+        externalEventRepository.save(externalEvent);
+
+        return "External Event has been rejected.";
     }
 
     @Override

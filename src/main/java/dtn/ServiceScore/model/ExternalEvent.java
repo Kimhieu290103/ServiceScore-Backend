@@ -1,5 +1,6 @@
 package dtn.ServiceScore.model;
 
+import dtn.ServiceScore.enums.ExternalEventStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -38,9 +39,11 @@ public class ExternalEvent {
     @Column(name = "proof_url", length = 500)
     private String proofUrl;
 
-    //trang thai an hien
+
+    // Trạng thái (Pending / Approved / Rejected)
+    @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private String status = "pending";
+    private ExternalEventStatus status = ExternalEventStatus.PENDING;
 
     // so diem cua hoat dong do
     @Column(name = "points")
@@ -50,4 +53,6 @@ public class ExternalEvent {
     @ManyToOne
     @JoinColumn(name = "semester_id")
     private Semester semester;
+
+
 }

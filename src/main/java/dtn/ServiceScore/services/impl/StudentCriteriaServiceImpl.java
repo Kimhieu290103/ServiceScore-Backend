@@ -20,7 +20,7 @@ public class StudentCriteriaServiceImpl implements StudentCriteriaService {
     }
 
     @Override
-    public List<User> getStudentsCompletedAllCriteria() {
-        return studentCriteriaRepository.findStudentsCompletedAllCriteria();
+    public List<User> getStudentsCompletedAllCriteria(Long semesterId) {
+        return studentCriteriaRepository.findStudentsCompletedAllCriteria(semesterId);
     }
 }
