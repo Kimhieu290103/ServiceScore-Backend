@@ -5,6 +5,7 @@ import dtn.ServiceScore.model.Event;
 import dtn.ServiceScore.model.EventImage;
 import dtn.ServiceScore.model.User;
 import dtn.ServiceScore.responses.*;
+import dtn.ServiceScore.services.CloudinaryService;
 import dtn.ServiceScore.services.EventImageService;
 import dtn.ServiceScore.services.EventService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -37,7 +38,7 @@ import java.util.UUID;
 public class EventController {
     public final EventService eventService;
     public final EventImageService eventImageService;
-
+    private final CloudinaryService cloudinaryService;
 
     @SecurityRequirement(name = "bearerAuth")
     @PostMapping("/create")
@@ -184,10 +185,18 @@ public class EventController {
                         return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).body("file must be an iamge");
 
                     }
-                    String filename = storeFile(file);
+//                    String filename = storeFile(file);
+//                    EventImage eventImage = eventService.createEventImage(newEvent.getId(),
+//                            EventImage.builder()
+//                                    .imageUrl(filename)
+//                                    .build());
+                    // Upload ảnh lên Cloudinary
+                    String imageUrl = cloudinaryService.uploadFile(file);
+
+                    // Lưu URL ảnh vào database
                     EventImage eventImage = eventService.createEventImage(newEvent.getId(),
                             EventImage.builder()
-                                    .imageUrl(filename)
+                                    .imageUrl(imageUrl)
                                     .build());
                 }
 
@@ -225,11 +234,18 @@ public class EventController {
                         return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).body("file must be an iamge");
 
                     }
-                    String filename = storeFile(file);
+//                    String filename = storeFile(file);
+//                    EventImage eventImage = eventService.createEventImage(existingEvent.getId(),
+//                            EventImage.builder()
+//                                    .imageUrl(filename)
+//                                    .build());
+//                    eventImages.add(eventImage);
+                    // Upload ảnh lên Cloudinary
+                    String imageUrl = cloudinaryService.uploadFile(file);
+
+                    // Lưu thông tin ảnh vào database
                     EventImage eventImage = eventService.createEventImage(existingEvent.getId(),
-                            EventImage.builder()
-                                    .imageUrl(filename)
-                                    .build());
+                            EventImage.builder().imageUrl(imageUrl).build());
                     eventImages.add(eventImage);
                 }
 
@@ -242,21 +258,24 @@ public class EventController {
 
     }
 
-    private String storeFile(MultipartFile file) throws IOException {
-        String filename = StringUtils.cleanPath(file.getOriginalFilename());
-        // theem UUID vao truoc ten file de ten file la duy nhat
-        String uniqueFilename = UUID.randomUUID() + "_" + filename;
-        // duong dan den thu muc chua file anh
-        java.nio.file.Path uploadDir = Paths.get("uploads/images");
-        if (!Files.exists(uploadDir)) {
-            Files.createDirectories(uploadDir);
-        }
-        // duong dan day du den file
-        java.nio.file.Path destination = Paths.get(uploadDir.toString(), uniqueFilename);
-        // sao chep file vao thu muc dich
-        Files.copy(file.getInputStream(), destination, StandardCopyOption.REPLACE_EXISTING);
-        return uniqueFilename;
-    }
+//    private String storeFile(MultipartFile file) throws IOException {
+//        String filename = StringUtils.cleanPath(file.getOriginalFilename());
+//        // theem UUID vao truoc ten file de ten file la duy nhat
+//        String uniqueFilename = UUID.randomUUID() + "_" + filename;
+//        // duong dan den thu muc chua file anh
+//        java.nio.file.Path uploadDir = Paths.get("uploads/images");
+//        if (!Files.exists(uploadDir)) {
+//            Files.createDirectories(uploadDir);
+//        }
+//        // duong dan day du den file
+//        java.nio.file.Path destination = Paths.get(uploadDir.toString(), uniqueFilename);
+//        // sao chep file vao thu muc dich
+//        Files.copy(file.getInputStream(), destination, StandardCopyOption.REPLACE_EXISTING);
+//        return uniqueFilename;
+//    }
+private String storeFile(MultipartFile file) throws IOException {
+    return cloudinaryService.uploadFile(file);
+}
 
     private boolean isImageFile(MultipartFile file) {
         String contentType = file.getContentType();
@@ -324,10 +343,18 @@ public class EventController {
                         return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).body("file must be an iamge");
 
                     }
-                    String filename = storeFile(file);
+//                    String filename = storeFile(file);
+//                    EventImage eventImage = eventService.createEventImage(newEvent.getId(),
+//                            EventImage.builder()
+//                                    .imageUrl(filename)
+//                                    .build());
+                    // Upload ảnh lên Cloudinary
+                    String imageUrl = cloudinaryService.uploadFile(file);
+
+                    // Lưu URL ảnh vào database
                     EventImage eventImage = eventService.createEventImage(newEvent.getId(),
                             EventImage.builder()
-                                    .imageUrl(filename)
+                                    .imageUrl(imageUrl)
                                     .build());
                 }
 
