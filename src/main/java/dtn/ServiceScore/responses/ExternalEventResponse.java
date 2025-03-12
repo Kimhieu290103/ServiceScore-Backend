@@ -7,6 +7,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Data
 @Getter
 @Setter
@@ -43,6 +45,11 @@ public class ExternalEventResponse {
 
     private Long points;
 
+    private String studentName;
+
+    private LocalDateTime created_at;
+
+    private String clazz;
 
     private String semester;
 }

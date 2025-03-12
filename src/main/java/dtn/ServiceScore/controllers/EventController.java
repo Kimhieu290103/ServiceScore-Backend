@@ -68,7 +68,11 @@ public class EventController {
     public ResponseEntity<?> getProductById(@PathVariable("id") Long eventId) {
         try {
             Event existingEvent = eventService.getEventById(eventId);
+            // Lấy hỉnh ảnh
             List<EventImage> eventImages = eventImageService.findByEventId(eventId);
+            // Lấy danh sách tiêu chí
+            EventCriteriaResponse eventCriteriaResponse = eventService.getFilteredEventCriteria(eventId);
+
             List<EventImageRespone> eventImageResponses = eventImages.stream()
                     .map(image -> EventImageRespone.builder()
                             .id(image.getId())
@@ -94,6 +98,7 @@ public class EventController {
                     .additionalInfo(existingEvent.getAdditionalInfo())
                     .eventType(existingEvent.getEventType().getName())
                     .eventImage(eventImageResponses)
+                    .eventCriteria(eventCriteriaResponse)
                     .build();
             return ResponseEntity.ok(eventRespone);
         } catch (Exception e) {

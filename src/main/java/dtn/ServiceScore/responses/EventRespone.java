@@ -58,7 +58,7 @@ public class EventRespone {
     private String additionalInfo;
 
     private String eventType;
-
+    private EventCriteriaResponse eventCriteria;
     //  private Event event;
     private List<EventImageRespone> eventImage;
 

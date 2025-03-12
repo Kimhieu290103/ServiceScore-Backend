@@ -44,51 +44,63 @@ public class ExternalEventServiceIpml implements ExternalEventService {
 
         externalEvent = externalEventRepository.save(externalEvent);
 
-        return new ExternalEventResponse(
-                externalEvent.getId(),
-                externalEvent.getUser().getId(),
-                externalEvent.getName(),
-                externalEvent.getDescription(),
-                externalEvent.getDate(),
-                externalEvent.getProofUrl(),
-                externalEvent.getStatus().name(),
-                externalEvent.getPoints(),
-                externalEvent.getSemester().getName()
-        );
+        return ExternalEventResponse.builder()
+                .id(externalEvent.getId())
+                .user_id(externalEvent.getUser().getId())
+                .name(externalEvent.getName())
+                .description(externalEvent.getDescription())
+                .date(externalEvent.getDate())
+                .proofUrl(externalEvent.getProofUrl())
+                .status(externalEvent.getStatus().name())
+                .points(externalEvent.getPoints())
+                .semester(externalEvent.getSemester().getName())
+                .studentName(externalEvent.getUser().getFullname())
+                .clazz(externalEvent.getUser().getClazz() != null ? externalEvent.getUser().getClazz().getName() : "N/A")
+                .created_at(externalEvent.getCreatedAt())
+                .build();
     }
 
     @Override
     public List<ExternalEventResponse> getPendingEvents() {
         List<ExternalEvent> pendingEvents = externalEventRepository.findByStatus(ExternalEventStatus.PENDING);
-
-        return pendingEvents.stream().map(event -> new ExternalEventResponse(
-                event.getId(),
-                event.getUser().getId(),
-                event.getName(),
-                event.getDescription(),
-                event.getDate(),
-                event.getProofUrl(),
-                event.getStatus().name(),
-                event.getPoints(),
-                event.getSemester().getName()
-        )).collect(Collectors.toList());
+        return pendingEvents.stream()
+                .map(event -> ExternalEventResponse.builder()
+                        .id(event.getId())
+                        .user_id(event.getUser().getId())
+                        .name(event.getName())
+                        .description(event.getDescription())
+                        .date(event.getDate())
+                        .proofUrl(event.getProofUrl())
+                        .status(event.getStatus().name())
+                        .points(event.getPoints())
+                        .studentName(event.getUser().getFullname())
+                        .semester(event.getSemester().getName())
+                        .clazz(event.getUser().getClazz() != null ? event.getUser().getClazz().getName() : "N/A")
+                        .created_at(event.getCreatedAt())
+                        .build()
+                ).collect(Collectors.toList());
     }
 
     @Override
     public List<ExternalEventResponse> getUserEvents(Long userId) {
         List<ExternalEvent> userEvents = externalEventRepository.findByUserId(userId);
 
-        return userEvents.stream().map(event -> new ExternalEventResponse(
-                event.getId(),
-                event.getUser().getId(),
-                event.getName(),
-                event.getDescription(),
-                event.getDate(),
-                event.getProofUrl(),
-                event.getStatus().name(),
-                event.getPoints(),
-                event.getSemester().getName()
-        )).collect(Collectors.toList());
+        return userEvents.stream()
+                .map(event -> ExternalEventResponse.builder()
+                        .id(event.getId())
+                        .user_id(event.getUser().getId())
+                        .name(event.getName())
+                        .description(event.getDescription())
+                        .date(event.getDate())
+                        .proofUrl(event.getProofUrl())
+                        .status(event.getStatus().name())
+                        .points(event.getPoints())
+                        .studentName(event.getUser().getFullname())
+                        .semester(event.getSemester().getName())
+                        .clazz(event.getUser().getClazz() != null ? event.getUser().getClazz().getName() : "N/A")
+                        .created_at(event.getCreatedAt())
+                        .build()
+                ).collect(Collectors.toList());
     }
 
     @Override

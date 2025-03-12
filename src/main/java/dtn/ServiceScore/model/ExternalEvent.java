@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @Builder
 @Entity
 @Table(name = "external_events") // event sinh vien tham gia ben ngoai
-public class ExternalEvent {
+public class ExternalEvent extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
