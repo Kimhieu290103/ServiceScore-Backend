@@ -76,7 +76,7 @@ public class EventServiceImpl implements EventService {
         newEvent.setStatus("OPEN");
         newEvent.setEventType(eventType);
         newEvent.setCurrentRegistrations(0L);
-        Semester semester = semesterRepository.findByName(eventDTO.getSemester()).
+        Semester semester = semesterRepository.findById(eventDTO.getSemester()).
                 orElseThrow(() -> new DataNotFoundException("Không tìm thấy học kì phù hợp"));
         newEvent.setSemester(semester);
         newEvent.setUser(user);
@@ -184,7 +184,7 @@ public class EventServiceImpl implements EventService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
         Event existingEvent = getEventById(id);
         if (existingEvent != null) {
-            Semester semester = semesterRepository.findByName(eventDTO.getSemester()).
+            Semester semester = semesterRepository.findById(eventDTO.getSemester()).
                     orElseThrow(() -> new DataNotFoundException("Không tìm thấy học kì phù hợp"));
             User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 

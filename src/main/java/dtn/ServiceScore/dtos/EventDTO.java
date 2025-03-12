@@ -42,7 +42,7 @@ public class EventDTO {
     private String status;
 
     @JsonProperty("semester") // Giữ nguyên kiểu camelCase cho API dễ đọc
-    private String semester;
+    private Long semester;
 
     @JsonProperty("location")
     private String location;          // Thêm trường location
