@@ -23,6 +23,8 @@ public class ExternalEventResponse {
 
     private Long user_id;
 
+    private String nameStudent;
+
     // ten event tham gia ben ngoai
 
     private String name;

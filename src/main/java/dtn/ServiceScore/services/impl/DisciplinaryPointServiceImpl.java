@@ -11,6 +11,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,7 +29,7 @@ public class DisciplinaryPointServiceImpl implements DisciplinaryPointService {
     public DisciplinaryPoint Addpoint(User user, Event event) {
         Registration registration = registrationRepository.findByUserAndEvent(user, event);
         if (registration != null && registration.isAttendances()) {
-            throw new IllegalStateException("Đã được điểm danh rồi");
+            return null;
         }
 
         // Kiểm tra xem đã có bản ghi trong bảng DisciplinaryPoint hay chưa
@@ -111,6 +113,31 @@ public class DisciplinaryPointServiceImpl implements DisciplinaryPointService {
 
         return "External Event has been rejected.";
     }
+
+    // điêmr danh tất cả sinh viên
+    @Override
+    public Map<String, Object> addPointsForAllRegisteredUsers(Event event) {
+        List<Registration> registrations = registrationRepository.findByEvent(event);
+        List<DisciplinaryPoint> disciplinaryPoints = new ArrayList<>();
+        List<Long> skippedUsers = new ArrayList<>();
+
+        for (Registration registration : registrations) {
+            User user = registration.getUser();
+            DisciplinaryPoint disciplinaryPoint = Addpoint(user, event);
+
+            if (disciplinaryPoint == null) {
+                skippedUsers.add(user.getId());
+            } else {
+                disciplinaryPoints.add(disciplinaryPoint);
+            }
+        }
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("disciplinaryPoints", disciplinaryPoints);
+        response.put("skippedUsers", skippedUsers);
+        return response;
+    }
+
 
     @Override
     public List<PointResponse> getDisciplinaryPointsByUserId() {

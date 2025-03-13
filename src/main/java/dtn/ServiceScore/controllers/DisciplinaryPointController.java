@@ -1,9 +1,7 @@
 package dtn.ServiceScore.controllers;
 
-import dtn.ServiceScore.model.DisciplinaryPoint;
-import dtn.ServiceScore.model.Event;
-import dtn.ServiceScore.model.ExternalEvent;
-import dtn.ServiceScore.model.User;
+import dtn.ServiceScore.model.*;
+import dtn.ServiceScore.responses.MessageResponse;
 import dtn.ServiceScore.responses.PointResponse;
 import dtn.ServiceScore.services.DisciplinaryPointService;
 import dtn.ServiceScore.services.EventService;
@@ -14,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,6 +35,9 @@ public class DisciplinaryPointController {
             User user = userService.getUserById(userId);
             Event event = eventService.getEventById(eventId);
             DisciplinaryPoint disciplinaryPoint = disciplinaryPointService.Addpoint(user, event);
+            if (disciplinaryPoint == null) {
+                return ResponseEntity.badRequest().body(new MessageResponse("Đã được điểm danh rồi"));
+            }
             return ResponseEntity.ok(disciplinaryPoint);
         } catch (IllegalStateException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -43,23 +45,45 @@ public class DisciplinaryPointController {
             return ResponseEntity.internalServerError().body("Lỗi hệ thống: " + e.getMessage());
         }
     }
+    // điểm danh tất cả sinh viên
+    @PostMapping("/batchAll/{eventId}")
+    public ResponseEntity<?> addPointsForAllRegisteredUsers(@PathVariable Long eventId) {
+        try {
+            Event event = eventService.getEventById(eventId); // Lấy sự kiện
+            Map<String, Object> response = disciplinaryPointService.addPointsForAllRegisteredUsers(event);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Lỗi hệ thống: " + e.getMessage());
+        }
+    }
 
-    // Điêmr danh các sinh viên được chợn
+    // điểm danh cách sinh viên được chọn
     @PostMapping("/batch/{eventId}")
     public ResponseEntity<?> addPointsForMultipleUsers(@PathVariable Long eventId, @RequestBody List<Long> userIds) {
         try {
             Event event = eventService.getEventById(eventId);
             List<DisciplinaryPoint> disciplinaryPoints = new ArrayList<>();
+            List<Long> skippedUsers = new ArrayList<>();
 
             for (Long userId : userIds) {
-                User user = userService.getUserById(userId);
-                DisciplinaryPoint disciplinaryPoint = disciplinaryPointService.Addpoint(user, event);
-                disciplinaryPoints.add(disciplinaryPoint);
+                try {
+                    User user = userService.getUserById(userId);
+                    DisciplinaryPoint disciplinaryPoint = disciplinaryPointService.Addpoint(user, event);
+                    if (disciplinaryPoint != null) {
+                        disciplinaryPoints.add(disciplinaryPoint);
+                    } else {
+                        skippedUsers.add(userId); // Ghi nhận sinh viên đã điểm danh trước đó
+                    }
+                } catch (Exception e) {
+                    skippedUsers.add(userId); // Nếu có lỗi khác, cũng bỏ qua sinh viên đó
+                }
             }
 
-            return ResponseEntity.ok(disciplinaryPoints);
-        } catch (IllegalStateException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            Map<String, Object> response = new HashMap<>();
+            response.put("successful", disciplinaryPoints);
+            response.put("skipped", skippedUsers);
+
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body("Lỗi hệ thống: " + e.getMessage());
         }
@@ -100,4 +124,24 @@ public class DisciplinaryPointController {
         }
         return ResponseEntity.ok(result);
     }
+
+    // điểm danh bằng QR
+    @PostMapping("/attend-by-qr")
+    public ResponseEntity<?> attendByQR(@RequestBody Map<String, Long> requestData) {
+        try {
+            Long userId = requestData.get("userId");
+            Long eventId = requestData.get("eventId");
+
+            User user = userService.getUserById(userId);
+            Event event = eventService.getEventById(eventId);
+            DisciplinaryPoint disciplinaryPoint = disciplinaryPointService.Addpoint(user, event);
+
+            return ResponseEntity.ok("Điểm danh thành công!");
+        } catch (IllegalStateException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Lỗi hệ thống: " + e.getMessage());
+        }
+    }
+
 }

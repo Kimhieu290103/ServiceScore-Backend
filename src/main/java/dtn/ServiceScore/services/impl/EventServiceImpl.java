@@ -209,7 +209,6 @@ public class EventServiceImpl implements EventService {
             existingEvent.setDescription(eventDTO.getDescription());
             existingEvent.setDate(date);
             existingEvent.setEndDate(endDate);
-            existingEvent.setCurrentRegistrations(eventDTO.getCurrentRegistrations());
             existingEvent.setRegistrationEndDate(registrationEndDate);
             existingEvent.setScore(eventDTO.getScore());
             existingEvent.setMaxRegistrations(eventDTO.getMaxRegistrations());
@@ -242,7 +241,7 @@ public class EventServiceImpl implements EventService {
         // Chỉ lấy dữ liệu cần thiết từ eventCriteriaLcd
         for (EventCriteriaLcd ecl : eventCriteriaLcdList) {
             CriteriaResponse criteriaResponse = new CriteriaResponse(
-                    ecl.getId(),
+                    ecl.getCriteria().getId(),
                     ecl.getCriteria().getName(),
                     ecl.getCriteria().getDescription()
             );
@@ -252,7 +251,7 @@ public class EventServiceImpl implements EventService {
         // Chỉ lấy dữ liệu cần thiết từ eventCriteria
         for (EventCriteria ec : eventCriteriaList) {
             CriteriaResponse criteriaResponse = new CriteriaResponse(
-                    ec.getId(),
+                    ec.getCriteria().getId(),
                     ec.getCriteria().getName(),
                     ec.getCriteria().getDescription()
             );
@@ -267,6 +266,11 @@ public class EventServiceImpl implements EventService {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Long userId = user.getId();
         return eventRepository.findByUser_Id(userId);
+    }
+
+    @Override
+    public List<Event> getExpiredEvents(LocalDateTime now) {
+        return eventRepository.findByEndDateBeforeAndStatusNot(now, "COMPLETED");
     }
 
 

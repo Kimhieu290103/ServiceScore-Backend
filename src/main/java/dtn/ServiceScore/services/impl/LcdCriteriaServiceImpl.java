@@ -5,6 +5,7 @@ import dtn.ServiceScore.model.EventCriteriaLcd;
 import dtn.ServiceScore.model.LcdCriteria;
 import dtn.ServiceScore.model.User;
 import dtn.ServiceScore.repositories.EventCriteriaLcdRepository;
+import dtn.ServiceScore.repositories.EventRepository;
 import dtn.ServiceScore.repositories.LcdCriteriaRepository;
 import dtn.ServiceScore.services.LcdCriteriaService;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ public class LcdCriteriaServiceImpl implements LcdCriteriaService {
     private final EventCriteriaLcdRepository eventCriteriaLcdRepository;
     private final LcdCriteriaRepository lcdCriteriaRepository;
 
+    private final EventRepository eventRepository;
     @Override
     public List<User> getLcdsCompletedAllCriteria() {
         return lcdCriteriaRepository.findLcdsCompletedAllCriteria();
@@ -52,6 +54,9 @@ public class LcdCriteriaServiceImpl implements LcdCriteriaService {
                     lcdCriteriaRepository.save(lcdCriteria);
                 }
             }
+            // ✅ Cập nhật trạng thái sự kiện
+            event.setStatus("COMPLETED");
+            eventRepository.save(event);
             return "Xác nhận thành công!";
         } catch (Exception e) {
             return "Lỗi khi ghi dữ liệu: " + e.getMessage();

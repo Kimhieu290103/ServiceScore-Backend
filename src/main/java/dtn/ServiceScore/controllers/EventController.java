@@ -8,6 +8,7 @@ import dtn.ServiceScore.responses.*;
 import dtn.ServiceScore.services.CloudinaryService;
 import dtn.ServiceScore.services.EventImageService;
 import dtn.ServiceScore.services.EventService;
+import dtn.ServiceScore.services.impl.QRCodeService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +41,7 @@ public class EventController {
     public final EventService eventService;
     public final EventImageService eventImageService;
     private final CloudinaryService cloudinaryService;
-
+    private final QRCodeService qrCodeService;
     @SecurityRequirement(name = "bearerAuth")
     @PostMapping("/create")
     public ResponseEntity<?> createEvent(@Valid @RequestBody EventDTO eventDTO, BindingResult result) {
@@ -382,6 +383,18 @@ private String storeFile(MultipartFile file) throws IOException {
        Long userId = user.getId();
        return ResponseEntity.ok(eventService.getEventByUser());
 
+    }
+
+    // tạo mã QR
+    @GetMapping("/generateQR/{eventId}")
+    public ResponseEntity<String> generateEventQRCode(@PathVariable Long eventId) {
+        try {
+            String qrText = "https://your-frontend.com/attend?eventId=" + eventId;
+            String qrBase64 = qrCodeService.generateQRCode(qrText, 300, 300);
+            return ResponseEntity.ok(qrBase64);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Lỗi tạo QR: " + e.getMessage());
+        }
     }
 
 }

@@ -27,22 +27,22 @@ public class LcdCriteriaController {
         return ResponseEntity.ok(lcds);
     }
 
-    @PostMapping("/confirm/{eventId}")
-    public ResponseEntity<?> confirmCompletedEvent(@PathVariable("eventId") Long eventId) {
-        try {
-
-            Event event = eventService.getEventById(eventId);
-            User user = userService.getUserById(event.getUser().getId());
-            if (user == null || event == null) {
-                return ResponseEntity.badRequest().body(new MessageResponse("User hoặc Event không tồn tại!"));
-            }
-
-            String result = lcdCriteriaService.Event_validation(user, event);
-            return ResponseEntity.ok(result);
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Lỗi khi lấy Event: " + e.getMessage());
-        }
-    }
+//    @PostMapping("/confirm/{eventId}")
+//    public ResponseEntity<?> confirmCompletedEvent(@PathVariable("eventId") Long eventId) {
+//        try {
+//
+//            Event event = eventService.getEventById(eventId);
+//            User user = userService.getUserById(event.getUser().getId());
+//            if (user == null || event == null) {
+//                return ResponseEntity.badRequest().body(new MessageResponse("User hoặc Event không tồn tại!"));
+//            }
+//
+//            String result = lcdCriteriaService.Event_validation(user, event);
+//            return ResponseEntity.ok(result);
+//
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//                    .body("Lỗi khi lấy Event: " + e.getMessage());
+//        }
+//    }
 }

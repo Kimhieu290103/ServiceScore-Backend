@@ -19,6 +19,8 @@ public interface DisciplinaryPointService {
     // Từ chối hoạt động mà sinh viên đã gửi
     String rejectExternalEvent(Long eventId);
 
+    // điểm danh tất cả sinh viên
+    Map<String, Object> addPointsForAllRegisteredUsers(Event event);
     // Danh sách điểm theo các kì
     List<PointResponse> getDisciplinaryPointsByUserId();
     Map<String, Object> getDisciplinaryPointsWithTotal();
