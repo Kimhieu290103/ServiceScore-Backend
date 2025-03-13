@@ -1,11 +1,11 @@
 package dtn.ServiceScore.controllers;
 
+import dtn.ServiceScore.dtos.FiveGoodCriteriaDTO;
+import dtn.ServiceScore.model.FiveGoodCriteria;
 import dtn.ServiceScore.services.FiveGoodCriteriaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/v1/five_good")
@@ -21,4 +21,6 @@ public class FiveGoodCriteriaController {
             throw new RuntimeException(e);
         }
     }
+
+
 }

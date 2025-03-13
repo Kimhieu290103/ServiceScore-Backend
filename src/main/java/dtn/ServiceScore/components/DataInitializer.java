@@ -49,7 +49,7 @@ public class DataInitializer implements CommandLineRunner {
                 System.out.println("✅ Created role: " + roleName);
             }
         }
-        // Thêm dữ liệu vào bảng Lcd
+
 //        List<String> lcdNames = List.of("BTV", "LCD", "HSV", "CTSV", "SV");
 //        for (String lcdName : lcdNames) {
 //            if (lcdRepository.findByName(lcdName).isEmpty()) { // Kiểm tra nếu chưa có trong DB
@@ -58,32 +58,51 @@ public class DataInitializer implements CommandLineRunner {
 //                System.out.println("✅ Created LCD: " + lcdName);
 //            }
 //        }
-        // Thêm dữ liệu vào bảng Lcd
-        List<String> semesterNames = List.of("2024-2025", "2025-2026", "2026-2027", "2027-2028", "2028-2029");
-        for (String semesterName : semesterNames) {
-            if (semesterRepository.findByName(semesterName).isEmpty()) { // Kiểm tra nếu chưa có trong DB
-                Semester semester = Semester.builder().name(semesterName).build();
-                semesterRepository.save(semester);
-                System.out.println("✅ Created semester: " + semesterName);
-            }
+
+//        List<String> semesterNames = List.of("2024-2025", "2025-2026", "2026-2027", "2027-2028", "2028-2029");
+//        for (String semesterName : semesterNames) {
+//            if (semesterRepository.findByName(semesterName).isEmpty()) { // Kiểm tra nếu chưa có trong DB
+//                Semester semester = Semester.builder().name(semesterName).build();
+//                semesterRepository.save(semester);
+//                System.out.println("✅ Created semester: " + semesterName);
+//            }
+//        }
+        // Kiểm tra bảng Semester trống thì thêm dữ liệu
+        if (semesterRepository.count() == 0) {
+            List<String> semesterNames = List.of("2024-2025", "2025-2026", "2026-2027", "2027-2028", "2028-2029");
+            semesterNames.forEach(name -> semesterRepository.save(Semester.builder().name(name).build()));
+            System.out.println("✅ Inserted semesters");
         }
-        // Thêm dữ liệu vào bảng course
-        List<String> courseNames = List.of("2021-2025", "2022-2026", "2023-2027", "2024-2028", "2025-2029", "2026-2030");
-        for (String courseName : courseNames) {
-            if (courseRepository.findByName(courseName).isEmpty()) { // Kiểm tra nếu chưa có trong DB
-                Course course = Course.builder().name(courseName).build();
-                courseRepository.save(course);
-                System.out.println("✅ Created courseName: " + courseName);
-            }
+
+
+//        List<String> courseNames = List.of("2021-2025", "2022-2026", "2023-2027", "2024-2028", "2025-2029", "2026-2030");
+//        for (String courseName : courseNames) {
+//            if (courseRepository.findByName(courseName).isEmpty()) { // Kiểm tra nếu chưa có trong DB
+//                Course course = Course.builder().name(courseName).build();
+//                courseRepository.save(course);
+//                System.out.println("✅ Created courseName: " + courseName);
+//            }
+//        }
+        if (courseRepository.count() == 0) {
+            List<String> courseNames = List.of("2021-2025", "2022-2026", "2023-2027", "2024-2028", "2025-2029", "2026-2030");
+            courseNames.forEach(name -> courseRepository.save(Course.builder().name(name).build()));
+            System.out.println("✅ Inserted courses");
         }
-        // Thêm dữ liệu vào bảng course
-        List<String> departmentNames = List.of("Khoa CNTT", "Khoa Cơ Khí", "Khoa Điện", "Khoa Hóa", "Khoa Xây Dựng", "Khoa Quản Lí Dự Án");
-        for (String departmentName : departmentNames) {
-            if (departmentRepository.findByName(departmentName).isEmpty()) { // Kiểm tra nếu chưa có trong DB
-                Department department = Department.builder().name(departmentName).build();
-                departmentRepository.save(department);
-                System.out.println("✅ Created departmentName: " + departmentName);
-            }
+
+
+//        List<String> departmentNames = List.of("Khoa CNTT", "Khoa Cơ Khí", "Khoa Điện", "Khoa Hóa", "Khoa Xây Dựng", "Khoa Quản Lí Dự Án");
+//        for (String departmentName : departmentNames) {
+//            if (departmentRepository.findByName(departmentName).isEmpty()) { // Kiểm tra nếu chưa có trong DB
+//                Department department = Department.builder().name(departmentName).build();
+//                departmentRepository.save(department);
+//                System.out.println("✅ Created departmentName: " + departmentName);
+//            }
+//        }
+        // Kiểm tra bảng Department trống thì thêm dữ liệu
+        if (departmentRepository.count() == 0) {
+            List<String> departmentNames = List.of("Khoa CNTT", "Khoa Cơ Khí", "Khoa Điện", "Khoa Hóa", "Khoa Xây Dựng", "Khoa Quản Lí Dự Án");
+            departmentNames.forEach(name -> departmentRepository.save(Department.builder().name(name).build()));
+            System.out.println("✅ Inserted departments");
         }
 
         // thêm dữ liệu vào bảng tiêu chí sinh viên 5 tốt

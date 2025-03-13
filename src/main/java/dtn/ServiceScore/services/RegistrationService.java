@@ -1,5 +1,6 @@
 package dtn.ServiceScore.services;
 
+import dtn.ServiceScore.model.Event;
 import dtn.ServiceScore.model.Registration;
 import dtn.ServiceScore.responses.EventRegistrationResponse;
 import dtn.ServiceScore.responses.EventRespone;
@@ -29,4 +30,9 @@ public interface RegistrationService {
 
     List<UserResponse> getCheckedInStudentsByEvent(Long eventId);
 
+    // danh sách các sự kiện sinh viên đã điểm danh
+    List<EventRespone> getAttendedEvents(Long userId, Long semesterId);
+
+//    // danh sách các sự kiện sinh viên đã điểm danh phân theo kì
+//    List<EventRespone> getAttendedEventsBySemester(Long userId, String semesterName);
 }

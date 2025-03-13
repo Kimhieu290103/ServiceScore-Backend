@@ -5,6 +5,7 @@ import dtn.ServiceScore.model.Event;
 import dtn.ServiceScore.model.ExternalEvent;
 import dtn.ServiceScore.model.User;
 import dtn.ServiceScore.responses.PointResponse;
+import dtn.ServiceScore.responses.StudentPointResponse;
 
 import java.util.List;
 import java.util.Map;
@@ -24,4 +25,10 @@ public interface DisciplinaryPointService {
     // Danh sách điểm theo các kì
     List<PointResponse> getDisciplinaryPointsByUserId();
     Map<String, Object> getDisciplinaryPointsWithTotal();
+
+    // danh sách thông tin và điểm của sinh viên theo lớp
+    List<StudentPointResponse> getStudentsWithTotalPointsByClass(Long classId);
+
+    // danh sách thông tin và điểm của sinh viên theo kì
+    List<StudentPointResponse> getStudentsWithTotalPointsByClassAndSemester(Long classId, Long semester);
 }

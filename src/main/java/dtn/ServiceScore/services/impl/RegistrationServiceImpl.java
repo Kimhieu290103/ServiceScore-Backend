@@ -2,14 +2,15 @@ package dtn.ServiceScore.services.impl;
 
 import dtn.ServiceScore.exceptions.DataNotFoundException;
 import dtn.ServiceScore.model.Event;
+import dtn.ServiceScore.model.EventImage;
 import dtn.ServiceScore.model.Registration;
 import dtn.ServiceScore.model.User;
 import dtn.ServiceScore.repositories.EventRepository;
 import dtn.ServiceScore.repositories.RegistrationRepository;
 import dtn.ServiceScore.repositories.UserRepository;
-import dtn.ServiceScore.responses.EventRegistrationResponse;
-import dtn.ServiceScore.responses.EventRespone;
-import dtn.ServiceScore.responses.UserResponse;
+import dtn.ServiceScore.responses.*;
+import dtn.ServiceScore.services.EventImageService;
+import dtn.ServiceScore.services.EventService;
 import dtn.ServiceScore.services.RegistrationService;
 import dtn.ServiceScore.utils.Enums;
 import lombok.RequiredArgsConstructor;
@@ -18,10 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,7 +28,8 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final RegistrationRepository registrationRepository;
     private final UserRepository userRepository;
     private final EventRepository eventRepository;
-
+    public final EventImageService eventImageService;
+    public final EventService eventService;
     // đăng kí sự kiện
     @Override
     public Registration register_event(Long eventId, Long userId) throws RuntimeException {
@@ -213,5 +212,56 @@ public class RegistrationServiceImpl implements RegistrationService {
 
         return getUserResponses(registrations);
     }
+
+    @Override
+    public List<EventRespone> getAttendedEvents(Long userId, Long semesterId ) {
+        System.out.println("Received semesterId: " + semesterId);
+        List<Registration> registrations = registrationRepository.findByUserIdAndAttendancesTrue(userId);
+
+        return registrations.stream()
+                .filter(registration -> registration.getEvent().getSemester().getId().equals(semesterId)) // Lọc theo kỳ học
+                .map(registration -> mapToDTO(registration.getEvent()))
+                .collect(Collectors.toList());
+    }
+
+
+
+    private EventRespone mapToDTO(Event event) {
+
+        // Lấy danh sách hình ảnh
+        List<EventImage> eventImages = eventImageService.findByEventId(event.getId());
+
+        // Lấy danh sách tiêu chí sự kiện
+        EventCriteriaResponse eventCriteriaResponse = eventService.getFilteredEventCriteria(event.getId());
+
+        List<EventImageRespone> eventImageResponses = eventImages.stream()
+                .map(image -> EventImageRespone.builder()
+                        .id(image.getId())
+                        .eventID(image.getEvent().getId())
+                        .imageUrl(image.getImageUrl())
+                        .build())
+                .toList();
+
+        return EventRespone.builder()
+                .id(event.getId())
+                .name(event.getName())
+                .user_id(event.getUser().getId())
+                .description(event.getDescription())
+                .date(event.getDate())
+                .endDate(event.getEndDate())
+                .registrationStartDate(event.getRegistrationStartDate())
+                .registrationEndDate(event.getRegistrationEndDate())
+                .semester(event.getSemester().getName())  // Lấy tên kỳ học
+                .score(event.getScore())
+                .maxRegistrations(event.getMaxRegistrations())
+                .currentRegistrations(event.getCurrentRegistrations())
+                .location(event.getLocation())
+                .additionalInfo(event.getAdditionalInfo())
+                .eventType(event.getEventType().getName())  // Lấy tên loại sự kiện
+                .eventCriteria(eventCriteriaResponse)  // Map tiêu chí sự kiện
+                .eventImage(eventImageResponses)  // Map danh sách ảnh sự kiện
+                .build();
+    }
+
 
 }

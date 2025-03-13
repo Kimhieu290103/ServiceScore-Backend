@@ -12,10 +12,11 @@ import java.util.List;
 
 public interface LcdCriteriaRepository extends JpaRepository<LcdCriteria, Long> {
     @Query("SELECT lc.user FROM LcdCriteria lc " +
+            "WHERE lc.semester.id = :semesterId " +
             "GROUP BY lc.user " +
             "HAVING COUNT(DISTINCT lc.fiveGoodCriteriaLcd.id) = " +
             "(SELECT COUNT(f) FROM FiveGoodCriteriaLcd f)")
-    List<User> findLcdsCompletedAllCriteria();
+    List<User> findLcdsCompletedAllCriteria(@Param("semesterId") Long semesterId);
 
 
     @Query("SELECT COUNT(l) > 0 FROM LcdCriteria l WHERE l.user = :user AND l.fiveGoodCriteriaLcd = :criteria AND l.semester = :semester")

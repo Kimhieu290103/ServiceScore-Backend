@@ -22,8 +22,8 @@ public class LcdCriteriaController {
     private final EventService eventService;
 
     @GetMapping("/completed")
-    public ResponseEntity<List<User>> getLcdsCompletedAllCriteria() {
-        List<User> lcds = lcdCriteriaService.getLcdsCompletedAllCriteria();
+    public ResponseEntity<List<User>> getLcdsCompletedAllCriteria(@RequestParam Long semesterId) {
+        List<User> lcds = lcdCriteriaService.getLcdsCompletedAllCriteria(semesterId);
         return ResponseEntity.ok(lcds);
     }
 

@@ -1,6 +1,7 @@
 package dtn.ServiceScore.controllers;
 
 import dtn.ServiceScore.exceptions.DataNotFoundException;
+import dtn.ServiceScore.model.Event;
 import dtn.ServiceScore.model.Registration;
 import dtn.ServiceScore.model.User;
 import dtn.ServiceScore.responses.EventRegistrationResponse;
@@ -113,4 +114,16 @@ public class RegistrationController {
         List<UserResponse> users = registrationService.getCheckedInStudentsByEvent(eventId);
         return ResponseEntity.ok(users);
     }
+
+
+   @GetMapping("/attended/{userId}")
+   public ResponseEntity<?> getAttendedEvents(
+           @PathVariable Long userId,
+           @RequestParam(required = false) Long semesterId) {  // Thêm tham số semesterId tùy chọn
+       List<EventRespone> events = registrationService.getAttendedEvents(userId, semesterId);
+       return ResponseEntity.ok(events);
+   }
+
+
+
 }

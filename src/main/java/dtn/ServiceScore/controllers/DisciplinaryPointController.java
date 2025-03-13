@@ -3,6 +3,7 @@ package dtn.ServiceScore.controllers;
 import dtn.ServiceScore.model.*;
 import dtn.ServiceScore.responses.MessageResponse;
 import dtn.ServiceScore.responses.PointResponse;
+import dtn.ServiceScore.responses.StudentPointResponse;
 import dtn.ServiceScore.services.DisciplinaryPointService;
 import dtn.ServiceScore.services.EventService;
 import dtn.ServiceScore.services.ExternalEventService;
@@ -142,6 +143,24 @@ public class DisciplinaryPointController {
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body("Lỗi hệ thống: " + e.getMessage());
         }
+    }
+
+    // Lấy danh sách sinh viên thoe lớp
+    @GetMapping("/class/{classId}")
+    public ResponseEntity<List<StudentPointResponse>> getStudentsByClass(@PathVariable Long classId) {
+        List<StudentPointResponse> studentPoints = disciplinaryPointService.getStudentsWithTotalPointsByClass(classId);
+        return ResponseEntity.ok(studentPoints);
+    }
+
+    @GetMapping("/class/{classId}/semester/{semester}")
+    public ResponseEntity<List<StudentPointResponse>> getStudentsByClassAndSemester(
+            @PathVariable Long classId,
+            @PathVariable Long semester) {
+
+        List<StudentPointResponse> studentPoints =
+                disciplinaryPointService.getStudentsWithTotalPointsByClassAndSemester(classId, semester);
+
+        return ResponseEntity.ok(studentPoints);
     }
 
 }
