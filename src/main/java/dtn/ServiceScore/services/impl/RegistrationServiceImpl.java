@@ -219,7 +219,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         List<Registration> registrations = registrationRepository.findByUserIdAndAttendancesTrue(userId);
 
         return registrations.stream()
-                .filter(registration -> registration.getEvent().getSemester().getId().equals(semesterId)) // Lọc theo kỳ học
+                .filter(registration ->semesterId == null || registration.getEvent().getSemester().getId().equals(semesterId)) // Lọc theo kỳ học
                 .map(registration -> mapToDTO(registration.getEvent()))
                 .collect(Collectors.toList());
     }
