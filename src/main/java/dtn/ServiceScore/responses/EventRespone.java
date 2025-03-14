@@ -38,7 +38,7 @@ public class EventRespone {
 //  private String status;
 
 
-    private String semester;
+    private SemesterRespone semester;
 
 
     private Long user_id;

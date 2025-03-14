@@ -15,13 +15,21 @@ import dtn.ServiceScore.services.RegistrationService;
 import dtn.ServiceScore.utils.Enums;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
-
+import org.springframework.http.HttpHeaders;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class RegistrationServiceImpl implements RegistrationService {
@@ -191,7 +199,10 @@ public class RegistrationServiceImpl implements RegistrationService {
                         .endDate(reg.getEvent().getEndDate())
                         .registrationStartDate(reg.getEvent().getRegistrationStartDate())
                         .registrationEndDate(reg.getEvent().getRegistrationEndDate())
-                        .semester(reg.getEvent().getSemester().getName())
+                        .semester(SemesterRespone.builder()
+                                .id(reg.getEvent().getSemester().getId())
+                                .name(reg.getEvent().getSemester().getName())
+                                .build())
                         .score(reg.getEvent().getScore())
                         .maxRegistrations(reg.getEvent().getMaxRegistrations())
                         .currentRegistrations(reg.getEvent().getCurrentRegistrations())
@@ -251,7 +262,10 @@ public class RegistrationServiceImpl implements RegistrationService {
                 .endDate(event.getEndDate())
                 .registrationStartDate(event.getRegistrationStartDate())
                 .registrationEndDate(event.getRegistrationEndDate())
-                .semester(event.getSemester().getName())  // Lấy tên kỳ học
+                .semester(SemesterRespone.builder()
+                        .id(event.getSemester().getId())
+                        .name(event.getSemester().getName())
+                        .build())  // Lấy tên kỳ học
                 .score(event.getScore())
                 .maxRegistrations(event.getMaxRegistrations())
                 .currentRegistrations(event.getCurrentRegistrations())
@@ -263,5 +277,67 @@ public class RegistrationServiceImpl implements RegistrationService {
                 .build();
     }
 
+
+    public ResponseEntity<Resource> exportEventRegistrationsToExcel(Long eventID) {
+        EventRegistrationResponse response = getAllStudentByEvent(eventID);
+
+        try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            Sheet sheet = workbook.createSheet("Event Registrations");
+
+            // Tạo font cho tiêu đề
+            CellStyle headerStyle = workbook.createCellStyle();
+            Font headerFont = workbook.createFont();
+            headerFont.setBold(true);
+            headerStyle.setFont(headerFont);
+
+            // Tạo hàng tiêu đề
+            String[] columns = {"ID", "Tên", "Username", "Email", "Số điện thoại", "Mã sinh viên", "Địa chỉ",
+                    "Ngày sinh", "Lớp", "Khoa", "Có điểm danh không?"};
+
+            Row headerRow = sheet.createRow(0);
+            for (int i = 0; i < columns.length; i++) {
+                Cell cell = headerRow.createCell(i);
+                cell.setCellValue(columns[i]);
+                cell.setCellStyle(headerStyle);
+            }
+
+            // Điền dữ liệu sinh viên
+            List<UserResponse> users = response.getUsers();
+            int rowNum = 1;
+            for (UserResponse user : users) {
+                Row row = sheet.createRow(rowNum++);
+                row.createCell(0).setCellValue(user.getId());
+                row.createCell(1).setCellValue(user.getFullname());
+                row.createCell(2).setCellValue(user.getUsername());
+                row.createCell(3).setCellValue(user.getEmail());
+                row.createCell(4).setCellValue(user.getPhoneNumber());
+                row.createCell(5).setCellValue(user.getStudentId());
+                row.createCell(6).setCellValue(user.getAddress());
+                row.createCell(7).setCellValue(user.getDateOfBirth().toString()); // Convert Date to String
+                row.createCell(8).setCellValue(user.getClazz());
+                row.createCell(9).setCellValue(user.getDepartment());
+                row.createCell(10).setCellValue(user.isAttendances() ? "Có" : "Không");
+            }
+
+            // Tự động điều chỉnh độ rộng cột
+            for (int i = 0; i < columns.length; i++) {
+                sheet.autoSizeColumn(i);
+            }
+
+            // Ghi vào file
+            workbook.write(out);
+            ByteArrayResource resource = new ByteArrayResource(out.toByteArray());
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=event_registrations.xlsx");
+            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+
+            return ResponseEntity.ok()
+                    .headers(headers)
+                    .body(resource);
+        } catch (IOException e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
 
 }

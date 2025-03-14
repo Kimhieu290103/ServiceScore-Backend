@@ -23,4 +23,11 @@ public class FiveGoodCriteria extends BaseEntity {
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
+    @ManyToOne
+    @JoinColumn(name = "semester_id", nullable = false)
+    private Semester semester; // Liên kết tiêu chí với kỳ học
+
+    @Column(name = "is_active", nullable = false)
+    private Boolean isActive = true; // Mặc định là hiển thị (true)
+
 }

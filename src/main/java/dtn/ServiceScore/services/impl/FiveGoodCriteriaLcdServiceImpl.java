@@ -15,6 +15,6 @@ public class FiveGoodCriteriaLcdServiceImpl implements FiveGoodCriteriaLcdServic
 
     @Override
     public List<FiveGoodCriteriaLcd> getAllFiveGoodCriteriaLcd() {
-        return fiveGoodCriteriaLcdRepository.findAll();
+        return fiveGoodCriteriaLcdRepository.findByIsActiveTrue();
     }
 }

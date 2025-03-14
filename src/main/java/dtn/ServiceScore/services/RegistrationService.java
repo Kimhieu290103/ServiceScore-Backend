@@ -1,10 +1,12 @@
 package dtn.ServiceScore.services;
 
-import dtn.ServiceScore.model.Event;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import dtn.ServiceScore.model.Registration;
 import dtn.ServiceScore.responses.EventRegistrationResponse;
 import dtn.ServiceScore.responses.EventRespone;
 import dtn.ServiceScore.responses.UserResponse;
+
 
 import java.util.List;
 
@@ -35,4 +37,6 @@ public interface RegistrationService {
 
 //    // danh sách các sự kiện sinh viên đã điểm danh phân theo kì
 //    List<EventRespone> getAttendedEventsBySemester(Long userId, String semesterName);
+
+    ResponseEntity<Resource> exportEventRegistrationsToExcel(Long eventID);
 }

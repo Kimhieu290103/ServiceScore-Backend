@@ -17,7 +17,7 @@ public class FiveGoodCriteriaServiceImpl implements FiveGoodCriteriaService {
     private final StudentCriteriaRepository studentCriteriaRepository;
     @Override
     public List<FiveGoodCriteria> getAllFiveGoodCriteria() {
-        return fiveGoodCriteriaRepository.findAll();
+        return fiveGoodCriteriaRepository.findByIsActiveTrue();
     }
 
 

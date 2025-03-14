@@ -1,7 +1,7 @@
 package dtn.ServiceScore.controllers;
 
 import dtn.ServiceScore.exceptions.DataNotFoundException;
-import dtn.ServiceScore.model.Event;
+import org.springframework.core.io.Resource;
 import dtn.ServiceScore.model.Registration;
 import dtn.ServiceScore.model.User;
 import dtn.ServiceScore.responses.EventRegistrationResponse;
@@ -123,6 +123,11 @@ public class RegistrationController {
        List<EventRespone> events = registrationService.getAttendedEvents(userId, semesterId);
        return ResponseEntity.ok(events);
    }
+
+    @GetMapping("/export/{eventId}")
+    public ResponseEntity<Resource> exportEventRegistrations(@PathVariable Long eventId) {
+        return registrationService.exportEventRegistrationsToExcel(eventId);
+    }
 
 
 

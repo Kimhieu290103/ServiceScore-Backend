@@ -15,7 +15,7 @@ public interface LcdCriteriaRepository extends JpaRepository<LcdCriteria, Long> 
             "WHERE lc.semester.id = :semesterId " +
             "GROUP BY lc.user " +
             "HAVING COUNT(DISTINCT lc.fiveGoodCriteriaLcd.id) = " +
-            "(SELECT COUNT(f) FROM FiveGoodCriteriaLcd f)")
+            "(SELECT COUNT(f) FROM FiveGoodCriteriaLcd f WHERE f.semester.id = :semesterId)")
     List<User> findLcdsCompletedAllCriteria(@Param("semesterId") Long semesterId);
 
 
