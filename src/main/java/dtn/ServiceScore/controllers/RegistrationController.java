@@ -1,6 +1,7 @@
 package dtn.ServiceScore.controllers;
 
 import dtn.ServiceScore.exceptions.DataNotFoundException;
+import dtn.ServiceScore.responses.MessageResponse;
 import org.springframework.core.io.Resource;
 import dtn.ServiceScore.model.Registration;
 import dtn.ServiceScore.model.User;
@@ -25,17 +26,17 @@ public class RegistrationController {
 
     // đâng kí sự kiện
     @PostMapping("/{eventId}")
-    public ResponseEntity<?> getAllFiveGoodLcd(@Valid @PathVariable("eventId") Long eventId) {
+    public ResponseEntity<?> registerEvent(@Valid @PathVariable("eventId") Long eventId) {
         try {
             User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             Long userId = user.getId();
 
             Registration registration = registrationService.register_event(eventId, userId);
-            return ResponseEntity.ok(registration);
+            return ResponseEntity.ok(new MessageResponse("Đăng kí thành công"));
         } catch (DataNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse(e.getMessage()));
         } catch (IllegalStateException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse(e.getMessage()));
             // Trả về 409 Conflict nếu người dùng đã đăng ký hoặc sự kiện đầy
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Lỗi hệ thống");

@@ -9,6 +9,7 @@ import dtn.ServiceScore.services.EventService;
 import dtn.ServiceScore.services.ExternalEventService;
 import dtn.ServiceScore.services.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,7 +40,7 @@ public class DisciplinaryPointController {
             if (disciplinaryPoint == null) {
                 return ResponseEntity.badRequest().body(new MessageResponse("Đã được điểm danh rồi"));
             }
-            return ResponseEntity.ok(disciplinaryPoint);
+            return ResponseEntity.ok(new MessageResponse("Điểm danh thành công"));
         } catch (IllegalStateException e) {
             return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
         } catch (Exception e) {
@@ -98,23 +99,32 @@ public class DisciplinaryPointController {
 
     // Xét duyệt một ExternalEvent (Chuyển thành APPROVED và cộng điểm)
     @PutMapping("/{eventId}/approve")
-    public ResponseEntity<String> approveExternalEvent(@PathVariable Long eventId) {
-        // Tìm ExternalEvent theo ID
-        ExternalEvent externalEvent = externalEventService.findById(eventId);
-        if (externalEvent == null) {
-            return ResponseEntity.badRequest().body("External Event not found");
+    public ResponseEntity<?> approveExternalEvent(@PathVariable Long eventId) {
+        try {
+            // Tìm ExternalEvent theo ID
+            ExternalEvent externalEvent = externalEventService.findById(eventId);
+            if (externalEvent == null) {
+                return ResponseEntity.badRequest().body(new MessageResponse("External Event not found"));
+            }
+
+            // Tìm User từ ExternalEvent
+            User user = externalEvent.getUser();
+            if (user == null) {
+                return ResponseEntity.badRequest().body(new MessageResponse("User not found for this event"));
+            }
+
+            // Gọi hàm cộng điểm và cập nhật trạng thái
+            disciplinaryPointService.AddPointForExternalEvent(user, externalEvent);
+            return ResponseEntity.ok(new MessageResponse("External Event approved successfully and points added!"));
+        }catch (IllegalStateException e) {
+            // Trường hợp sự kiện đã được duyệt trước đó
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse(e.getMessage()));
+        } catch (Exception e) {
+            // Xử lý lỗi không mong muốn
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new MessageResponse("An error occurred while approving the event: " + e.getMessage()));
         }
 
-        // Tìm User từ ExternalEvent
-        User user = externalEvent.getUser();
-        if (user == null) {
-            return ResponseEntity.badRequest().body("User not found for this event");
-        }
-
-        // Gọi hàm cộng điểm và cập nhật trạng thái
-        disciplinaryPointService.AddPointForExternalEvent(user, externalEvent);
-
-        return ResponseEntity.ok("External Event approved successfully and points added!");
     }
 
     @PutMapping("/{eventId}/reject")

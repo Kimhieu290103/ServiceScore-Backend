@@ -13,6 +13,7 @@ import dtn.ServiceScore.services.EventImageService;
 import dtn.ServiceScore.services.EventService;
 import dtn.ServiceScore.services.RegistrationService;
 import dtn.ServiceScore.utils.Enums;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -40,6 +41,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     public final EventService eventService;
     // đăng kí sự kiện
     @Override
+    @Transactional
     public Registration register_event(Long eventId, Long userId) throws RuntimeException {
         User existingUser = userRepository.findById(userId)
                 .orElseThrow(() -> new DataNotFoundException("Không tìm người dùng"));

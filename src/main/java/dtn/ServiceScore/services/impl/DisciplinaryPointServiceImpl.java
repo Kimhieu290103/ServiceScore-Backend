@@ -29,6 +29,7 @@ public class DisciplinaryPointServiceImpl implements DisciplinaryPointService {
     private final ClassRepository classRepository;
     private final SemesterRepository semesterRepository;
     @Override
+    @Transactional
     public DisciplinaryPoint Addpoint(User user, Event event) {
         Registration registration = registrationRepository.findByUserAndEvent(user, event);
         // Nếu không tìm thấy bản đăng ký -> Trả về lỗi
@@ -40,24 +41,21 @@ public class DisciplinaryPointServiceImpl implements DisciplinaryPointService {
             return null;
         }
 
-        // Kiểm tra xem đã có bản ghi trong bảng DisciplinaryPoint hay chưa
-        DisciplinaryPoint disciplinaryPoint = disciplinaryPointRepository.findByUserAndSemester(user, event.getSemester());
+        DisciplinaryPoint disciplinaryPoint = disciplinaryPointRepository.findByUserAndSemester(user, event.getSemester())
+                .orElseGet(() -> {
+                    // Nếu chưa có, tạo bản ghi mới
+                    DisciplinaryPoint newPoint = DisciplinaryPoint.builder()
+                            .user(user)
+                            .semester(event.getSemester())
+                            .points(event.getScore()) // Set điểm event
+                            .build();
+                    return disciplinaryPointRepository.save(newPoint);
+                });
 
-        if (disciplinaryPoint == null) {
-            // Nếu chưa có, tạo mới bản ghi
-            DisciplinaryPoint newPoint = DisciplinaryPoint.builder()
-                    .user(user)
-                    .semester(event.getSemester())
-                    .points(event.getScore()) // Set điểm mặc định là 0, có thể sửa lại theo yêu cầu
-                    .build();
-
-            // Lưu vào database
-            return disciplinaryPointRepository.save(newPoint);
-
-        } else {
-            // Nếu đã có bản ghi, cộng thêm điểm của event vào điểm hiện tại
+        if (disciplinaryPoint.getId() != null) {
             disciplinaryPoint.setPoints(disciplinaryPoint.getPoints() + event.getScore());
         }
+
         List<EventCriteria> eventCriteriaList = eventCriteriaRepository.findByEventId(event.getId());
         for (EventCriteria eventCriteria : eventCriteriaList) {
             StudentCriteria studentCriteria = StudentCriteria.builder()
@@ -78,9 +76,17 @@ public class DisciplinaryPointServiceImpl implements DisciplinaryPointService {
     }
 
     @Override
+    @Transactional
     public DisciplinaryPoint AddPointForExternalEvent(User user, ExternalEvent externalEvent) {
+
+        // Nếu sự kiện đã được duyệt, ném exception để Controller xử lý
+        if (externalEvent.getStatus() == ExternalEventStatus.APPROVED) {
+            throw new IllegalStateException("Sự kiện này đã được duyệt trước đó.");
+        }
         // Kiểm tra xem đã có bản ghi trong bảng DisciplinaryPoint chưa
-        DisciplinaryPoint disciplinaryPoint = disciplinaryPointRepository.findByUserAndSemester(user, externalEvent.getSemester());
+        DisciplinaryPoint disciplinaryPoint = disciplinaryPointRepository.findByUserAndSemester(user, externalEvent.getSemester())
+                .orElse(null);
+
 
         if (disciplinaryPoint == null) {
             // Nếu chưa có, tạo mới bản ghi

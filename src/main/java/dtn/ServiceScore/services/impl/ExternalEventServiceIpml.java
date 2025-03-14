@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -65,6 +66,7 @@ public class ExternalEventServiceIpml implements ExternalEventService {
     public List<ExternalEventResponse> getPendingEvents() {
         List<ExternalEvent> pendingEvents = externalEventRepository.findByStatus(ExternalEventStatus.PENDING);
         return pendingEvents.stream()
+                .sorted(Comparator.comparing(event -> event.getUser().getId()))
                 .map(event -> ExternalEventResponse.builder()
                         .id(event.getId())
                         .user_id(event.getUser().getId())
