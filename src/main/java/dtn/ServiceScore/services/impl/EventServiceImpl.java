@@ -158,7 +158,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public Page<Event> getEventsByEventType(Long eventTypeId, Pageable pageable) {
-        return eventRepository.findByEventType_Id(eventTypeId, pageable);
+        return eventRepository.findByEventTypeNative(eventTypeId, pageable);
     }
 
     @Override

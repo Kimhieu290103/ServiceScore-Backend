@@ -1,7 +1,5 @@
 package dtn.ServiceScore.services.impl;
-
 import dtn.ServiceScore.enums.ExternalEventStatus;
-import dtn.ServiceScore.exceptions.DataNotFoundException;
 import dtn.ServiceScore.model.*;
 import dtn.ServiceScore.model.Class;
 import dtn.ServiceScore.repositories.*;
@@ -12,10 +10,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.util.*;
-
 @Service
 @RequiredArgsConstructor
 @Transactional
