@@ -41,9 +41,9 @@ public class DisciplinaryPointController {
             }
             return ResponseEntity.ok(disciplinaryPoint);
         } catch (IllegalStateException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body("Lỗi hệ thống: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(new MessageResponse("Lỗi hệ thống: " + e.getMessage()));
         }
     }
     // điểm danh tất cả sinh viên

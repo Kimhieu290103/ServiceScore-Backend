@@ -8,7 +8,8 @@ import java.util.List;
 public interface FiveGoodCriteriaService {
     List<dtn.ServiceScore.model.FiveGoodCriteria> getAllFiveGoodCriteria();
 
+    FiveGoodCriteria createCriteria(FiveGoodCriteriaDTO dto);
 
-
+    void softDeleteCriteria(Long id);
 
 }

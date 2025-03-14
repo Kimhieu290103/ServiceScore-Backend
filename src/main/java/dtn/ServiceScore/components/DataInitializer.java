@@ -54,23 +54,6 @@ public class DataInitializer implements CommandLineRunner {
             }
         }
 
-//        List<String> lcdNames = List.of("BTV", "LCD", "HSV", "CTSV", "SV");
-//        for (String lcdName : lcdNames) {
-//            if (lcdRepository.findByName(lcdName).isEmpty()) { // Kiểm tra nếu chưa có trong DB
-//                Lcd lcd = Lcd.builder().name(lcdName).build();
-//                lcdRepository.save(lcd);
-//                System.out.println("✅ Created LCD: " + lcdName);
-//            }
-//        }
-
-//        List<String> semesterNames = List.of("2024-2025", "2025-2026", "2026-2027", "2027-2028", "2028-2029");
-//        for (String semesterName : semesterNames) {
-//            if (semesterRepository.findByName(semesterName).isEmpty()) { // Kiểm tra nếu chưa có trong DB
-//                Semester semester = Semester.builder().name(semesterName).build();
-//                semesterRepository.save(semester);
-//                System.out.println("✅ Created semester: " + semesterName);
-//            }
-//        }
         // Kiểm tra bảng Semester trống thì thêm dữ liệu
         if (semesterRepository.count() == 0) {
             List<String> semesterNames = List.of("2024-2025", "2025-2026", "2026-2027", "2027-2028", "2028-2029");
@@ -79,14 +62,7 @@ public class DataInitializer implements CommandLineRunner {
         }
 
 
-//        List<String> courseNames = List.of("2021-2025", "2022-2026", "2023-2027", "2024-2028", "2025-2029", "2026-2030");
-//        for (String courseName : courseNames) {
-//            if (courseRepository.findByName(courseName).isEmpty()) { // Kiểm tra nếu chưa có trong DB
-//                Course course = Course.builder().name(courseName).build();
-//                courseRepository.save(course);
-//                System.out.println("✅ Created courseName: " + courseName);
-//            }
-//        }
+
         if (courseRepository.count() == 0) {
             List<String> courseNames = List.of("2021-2025", "2022-2026", "2023-2027", "2024-2028", "2025-2029", "2026-2030");
             courseNames.forEach(name -> courseRepository.save(Course.builder().name(name).build()));
@@ -94,14 +70,7 @@ public class DataInitializer implements CommandLineRunner {
         }
 
 
-//        List<String> departmentNames = List.of("Khoa CNTT", "Khoa Cơ Khí", "Khoa Điện", "Khoa Hóa", "Khoa Xây Dựng", "Khoa Quản Lí Dự Án");
-//        for (String departmentName : departmentNames) {
-//            if (departmentRepository.findByName(departmentName).isEmpty()) { // Kiểm tra nếu chưa có trong DB
-//                Department department = Department.builder().name(departmentName).build();
-//                departmentRepository.save(department);
-//                System.out.println("✅ Created departmentName: " + departmentName);
-//            }
-//        }
+
         // Kiểm tra bảng Department trống thì thêm dữ liệu
         if (departmentRepository.count() == 0) {
             List<String> departmentNames = List.of("Khoa CNTT", "Khoa Cơ Khí", "Khoa Điện", "Khoa Hóa", "Khoa Xây Dựng", "Khoa Quản Lí Dự Án");
@@ -109,37 +78,6 @@ public class DataInitializer implements CommandLineRunner {
             System.out.println("✅ Inserted departments");
         }
 
-        // thêm dữ liệu vào bảng tiêu chí sinh viên 5 tốt
-//        if (fiveGoodCriteriaRepository.count() == 0) { // Kiểm tra nếu bảng chưa có dữ liệu
-//            List<FiveGoodCriteria> criteriaList = Arrays.asList(
-//                    FiveGoodCriteria.builder()
-//                            .name("Đạo đức tốt")
-//                            .description("Có phẩm chất đạo đức tốt, sống và làm việc theo pháp luật.")
-//                            .build(),
-//
-//                    FiveGoodCriteria.builder()
-//                            .name("Học tập tốt")
-//                            .description("Có thành tích học tập tốt, điểm trung bình đạt loại khá trở lên.")
-//                            .build(),
-//
-//                    FiveGoodCriteria.builder()
-//                            .name("Thể lực tốt")
-//                            .description("Thường xuyên rèn luyện thể dục thể thao, có sức khỏe tốt.")
-//                            .build(),
-//
-//                    FiveGoodCriteria.builder()
-//                            .name("Tình nguyện tốt")
-//                            .description("Tham gia các hoạt động tình nguyện, giúp đỡ cộng đồng.")
-//                            .build(),
-//
-//                    FiveGoodCriteria.builder()
-//                            .name("Hội nhập tốt")
-//                            .description("Có kỹ năng mềm, ngoại ngữ, tin học tốt, tích cực hội nhập quốc tế.")
-//                            .build()
-//            );
-//
-//            fiveGoodCriteriaRepository.saveAll(criteriaList); // Lưu tất cả vào database
-//        }
         if (fiveGoodCriteriaRepository.count() == 0) {
             // Lấy một học kỳ bất kỳ từ database
             Semester semester = semesterRepository.findAll().stream().findFirst().orElse(null);
@@ -196,32 +134,6 @@ public class DataInitializer implements CommandLineRunner {
         }
 
 
-//        if (fiveGoodCriteriaLcdRepository.count() == 0) { // Kiểm tra nếu bảng chưa có dữ liệu
-//            List<FiveGoodCriteriaLcd> criteriaList = List.of(
-//                    FiveGoodCriteriaLcd.builder()
-//                            .name("Công tác tổ chức tốt")
-//                            .description("Duy trì sinh hoạt định kỳ, có cơ cấu tổ chức rõ ràng và hoạt động hiệu quả.")
-//                            .build(),
-//                    FiveGoodCriteriaLcd.builder()
-//                            .name("Hoạt động phong trào sôi nổi")
-//                            .description("Tích cực tham gia và tổ chức các phong trào do Đoàn cấp trên phát động.")
-//                            .build(),
-//                    FiveGoodCriteriaLcd.builder()
-//                            .name("Công tác giáo dục hiệu quả")
-//                            .description("Thực hiện tốt việc tuyên truyền, giáo dục lý tưởng cách mạng, đạo đức, lối sống cho đoàn viên.")
-//                            .build(),
-//                    FiveGoodCriteriaLcd.builder()
-//                            .name("Hỗ trợ đoàn viên, sinh viên tốt")
-//                            .description("Quan tâm, hỗ trợ sinh viên khó khăn trong học tập và đời sống.")
-//                            .build(),
-//                    FiveGoodCriteriaLcd.builder()
-//                            .name("Ứng dụng công nghệ, chuyển đổi số tốt")
-//                            .description("Sử dụng nền tảng số trong quản lý, tuyên truyền và tổ chức hoạt động Đoàn.")
-//                            .build()
-//            );
-//
-//            fiveGoodCriteriaLcdRepository.saveAll(criteriaList);
-//        }
         if (fiveGoodCriteriaLcdRepository.count() == 0) {
             Semester semester = semesterRepository.findAll().stream().findFirst().orElse(null);
             if (semester != null) {
@@ -273,7 +185,7 @@ public class DataInitializer implements CommandLineRunner {
             // Kiểm tra xem có dữ liệu từ department và course không
             if (!departments.isEmpty() && !courses.isEmpty()) {
                 List<Class> classes = Arrays.asList(
-                        Class.builder().name("CNTT K45").department(departments.get(0)).course(courses.get(0)).status(true).build(),
+                        Class.builder().name("21TCLC_DT3").department(departments.get(0)).course(courses.get(0)).status(true).build(),
                         Class.builder().name("Cơ Khí K45").department(departments.get(1)).course(courses.get(0)).status(true).build(),
                         Class.builder().name("Điện K45").department(departments.get(2)).course(courses.get(0)).status(true).build(),
                         Class.builder().name("Hóa K45").department(departments.get(3)).course(courses.get(0)).status(true).build(),

@@ -10,7 +10,7 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 @Setter
-public class FiveGoodCriteriaDTO {
+public class FiveGoodCriteriaLcdDTO {
     @NotBlank(message = "Tên tiêu chí không được để trống")
     private String name;
 

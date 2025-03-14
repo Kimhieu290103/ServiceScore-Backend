@@ -31,7 +31,12 @@ public class DisciplinaryPointServiceImpl implements DisciplinaryPointService {
     @Override
     public DisciplinaryPoint Addpoint(User user, Event event) {
         Registration registration = registrationRepository.findByUserAndEvent(user, event);
-        if (registration != null && registration.isAttendances()) {
+        // Nếu không tìm thấy bản đăng ký -> Trả về lỗi
+        if (registration == null) {
+            throw new IllegalStateException("Người dùng chưa đăng ký sự kiện này.");
+        }
+
+        if ( registration.isAttendances()) {
             return null;
         }
 
