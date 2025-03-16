@@ -179,22 +179,90 @@ public class DisciplinaryPointServiceImpl implements DisciplinaryPointService {
                 "totalPoints", totalPoints
         );
     }
+//
+//    @Override
+//    public List<StudentPointResponse> getStudentsWithTotalPointsByClass(Long classId) {
+//        Class clazz = classRepository.findById(classId)
+//                .orElseThrow(() -> new RuntimeException("Class not found"));
+//        // Lấy danh sách sinh viên trong lớp
+//        List<User> students = userRepository.findByClazz(clazz);
+//
+//        List<StudentPointResponse> studentPointsList = students.stream().map(student -> {
+//            // Tính tổng điểm của sinh viên
+//            Long totalPoints = disciplinaryPointRepository.findByUser(student)
+//                    .stream()
+//                    .mapToLong(DisciplinaryPoint::getPoints)
+//                    .sum();
+//
+//            // Trả về đối tượng StudentPointResponse
+//            return StudentPointResponse.builder()
+//                    .studentId(student.getId())
+//                    .studentName(student.getFullname())
+//                    .className(student.getClazz().getName())
+//                    .email(student.getEmail())
+//                    .phoneNumber(student.getPhoneNumber())
+//                    .dateOfBirth(student.getDateOfBirth())
+//                    .Department(student.getClazz().getDepartment().getName())
+//                    .address(student.getAddress())
+//                    .totalPoints(totalPoints)
+//                    .build();
+//        }).toList();
+//
+//        return studentPointsList;
+//    }
+//
+//    @Override
+//    public List<StudentPointResponse> getStudentsWithTotalPointsByClassAndSemester(Long classId, Long semester) {
+//        Class clazz = classRepository.findById(classId)
+//                .orElseThrow(() -> new RuntimeException("Class not found"));
+//
+//        List<User> students = userRepository.findByClazz(clazz);
+//
+//        List<StudentPointResponse> studentPointsList = students.stream().map(student -> {
+//            Long totalPoints = Optional.ofNullable(
+//                    disciplinaryPointRepository.getTotalPointsByUserAndSemester(student.getId(), semester)
+//            ).orElse(0L);
+//
+//            return StudentPointResponse.builder()
+//                    .studentId(student.getId())
+//                    .studentName(student.getFullname())
+//                    .className(student.getClazz().getName())
+//                    .email(student.getEmail())
+//                    .phoneNumber(student.getPhoneNumber())
+//                    .dateOfBirth(student.getDateOfBirth())
+//                    .Department(student.getClazz().getDepartment().getName())
+//                    .address(student.getAddress())
+//                    .totalPoints(totalPoints)
+//                    .build();
+//        }).toList();
+//
+//        return studentPointsList;
+//    }
 
     @Override
-    public List<StudentPointResponse> getStudentsWithTotalPointsByClass(Long classId) {
-        Class clazz = classRepository.findById(classId)
-                .orElseThrow(() -> new RuntimeException("Class not found"));
-        // Lấy danh sách sinh viên trong lớp
-        List<User> students = userRepository.findByClazz(clazz);
+    public List<StudentPointResponse> getStudentsWithTotalPoints(
+            Long classId, Integer courseId, Integer departmentId,Long semesterId) {
 
-        List<StudentPointResponse> studentPointsList = students.stream().map(student -> {
-            // Tính tổng điểm của sinh viên
-            Long totalPoints = disciplinaryPointRepository.findByUser(student)
-                    .stream()
-                    .mapToLong(DisciplinaryPoint::getPoints)
-                    .sum();
+        // Lấy danh sách sinh viên theo tiêu chí
+        List<User> students = userRepository.findByFilters(classId, courseId, departmentId);
 
-            // Trả về đối tượng StudentPointResponse
+        return students.stream().map(student -> {
+            Long totalPoints;
+
+            if (semesterId != null) {
+                // Nếu có học kỳ, lấy điểm theo học kỳ
+                totalPoints = Optional.ofNullable(
+                        disciplinaryPointRepository.getTotalPointsByUserAndSemester(student.getId(), semesterId)
+                ).orElse(0L);
+            } else {
+                // Nếu không có học kỳ, lấy điểm từ bảng DisciplinaryPoint
+                totalPoints = disciplinaryPointRepository.findByUser(student)
+                        .stream()
+                        .mapToLong(DisciplinaryPoint::getPoints)
+                        .sum();
+            }
+
+            // Trả về kết quả
             return StudentPointResponse.builder()
                     .studentId(student.getId())
                     .studentName(student.getFullname())
@@ -207,36 +275,6 @@ public class DisciplinaryPointServiceImpl implements DisciplinaryPointService {
                     .totalPoints(totalPoints)
                     .build();
         }).toList();
-
-        return studentPointsList;
-    }
-
-    @Override
-    public List<StudentPointResponse> getStudentsWithTotalPointsByClassAndSemester(Long classId, Long semester) {
-        Class clazz = classRepository.findById(classId)
-                .orElseThrow(() -> new RuntimeException("Class not found"));
-
-        List<User> students = userRepository.findByClazz(clazz);
-
-        List<StudentPointResponse> studentPointsList = students.stream().map(student -> {
-            Long totalPoints = Optional.ofNullable(
-                    disciplinaryPointRepository.getTotalPointsByUserAndSemester(student.getId(), semester)
-            ).orElse(0L);
-
-            return StudentPointResponse.builder()
-                    .studentId(student.getId())
-                    .studentName(student.getFullname())
-                    .className(student.getClazz().getName())
-                    .email(student.getEmail())
-                    .phoneNumber(student.getPhoneNumber())
-                    .dateOfBirth(student.getDateOfBirth())
-                    .Department(student.getClazz().getDepartment().getName())
-                    .address(student.getAddress())
-                    .totalPoints(totalPoints)
-                    .build();
-        }).toList();
-
-        return studentPointsList;
     }
 
 

@@ -155,22 +155,17 @@ public class DisciplinaryPointController {
         }
     }
 
-    // Lấy danh sách sinh viên thoe lớp
-    @GetMapping("/class/{classId}")
-    public ResponseEntity<List<StudentPointResponse>> getStudentsByClass(@PathVariable Long classId) {
-        List<StudentPointResponse> studentPoints = disciplinaryPointService.getStudentsWithTotalPointsByClass(classId);
-        return ResponseEntity.ok(studentPoints);
+
+    // lấy danh sách và số điểm sinh viên theo filter
+
+    @GetMapping
+    public ResponseEntity<List<StudentPointResponse>> getStudents(
+            @RequestParam(required = false) Long classId,
+            @RequestParam(required = false) Integer courseId,
+            @RequestParam(required = false) Integer departmentId,
+            @RequestParam(required = false) Long  semesterId) {
+
+        List<StudentPointResponse> students = disciplinaryPointService.getStudentsWithTotalPoints(classId, courseId, departmentId, semesterId);
+        return ResponseEntity.ok(students);
     }
-
-    @GetMapping("/class/{classId}/semester/{semester}")
-    public ResponseEntity<List<StudentPointResponse>> getStudentsByClassAndSemester(
-            @PathVariable Long classId,
-            @PathVariable Long semester) {
-
-        List<StudentPointResponse> studentPoints =
-                disciplinaryPointService.getStudentsWithTotalPointsByClassAndSemester(classId, semester);
-
-        return ResponseEntity.ok(studentPoints);
-    }
-
 }
