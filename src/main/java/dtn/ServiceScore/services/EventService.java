@@ -29,7 +29,7 @@ public interface EventService {
 
     EventCriteriaResponse getFilteredEventCriteria(Long eventId);
 
-    List<Event> getEventByUser();
+    Page<Event> getEventByUser(Pageable pageable);
 
     // Kiểm tra xem các sự kiện đã kết thúc
     List<Event> getExpiredEvents(LocalDateTime now);

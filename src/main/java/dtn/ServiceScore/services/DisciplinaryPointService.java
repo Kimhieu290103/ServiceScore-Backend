@@ -25,12 +25,7 @@ public interface DisciplinaryPointService {
     // Danh sách điểm theo các kì
     List<PointResponse> getDisciplinaryPointsByUserId();
     Map<String, Object> getDisciplinaryPointsWithTotal();
-//
-//    // danh sách thông tin và điểm của sinh viên theo lớp
-//    List<StudentPointResponse> getStudentsWithTotalPointsByClass(Long classId);
-//
-//    // danh sách thông tin và điểm của sinh viên theo kì
-//    List<StudentPointResponse> getStudentsWithTotalPointsByClassAndSemester(Long classId, Long semester);
+
 
     // danh sách điêmr sinh viên
     List<StudentPointResponse> getStudentsWithTotalPoints(

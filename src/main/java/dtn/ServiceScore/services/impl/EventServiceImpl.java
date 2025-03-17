@@ -158,7 +158,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public Page<Event> getEventsByEventType(Long eventTypeId, Pageable pageable) {
-        return eventRepository.findByEventTypeNative(eventTypeId, pageable);
+        return eventRepository.findByEventType_Id(eventTypeId, pageable);
     }
 
     @Override
@@ -262,10 +262,11 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<Event> getEventByUser() {
+    public Page<Event> getEventByUser(Pageable pageable) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Long userId = user.getId();
-        return eventRepository.findByUser_Id(userId);
+
+        return eventRepository.findByUser_Id(userId, pageable);
     }
 
     @Override

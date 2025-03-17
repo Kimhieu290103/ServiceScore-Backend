@@ -113,7 +113,7 @@ public class EventController {
 
     @SecurityRequirement(name = "bearerAuth")
     @GetMapping("")
-    public ResponseEntity<EventListResponse> getProducts(
+    public ResponseEntity<EventListResponse> getAllEvents(
             @RequestParam("page") int page,
             @RequestParam("limit") int limit
     ) {
@@ -165,11 +165,52 @@ public class EventController {
     }
 
     @GetMapping("/by-event-type")
-    public Page<Event> getEventsByEventType(
-            @RequestParam Long eventTypeId,
-            Pageable pageable
+    public ResponseEntity<EventListResponse> getEventsByEventType(
+            @RequestParam("eventTypeId") Long eventTypeId,
+            @RequestParam("page") int page,
+            @RequestParam("limit") int limit
     ) {
-        return eventService.getEventsByEventType(eventTypeId, pageable);
+        // Tạo PageRequest với sắp xếp theo registrationStartDate giảm dần
+        Pageable pageable = PageRequest.of(page, limit, Sort.by(Sort.Direction.DESC, "registrationStartDate"));
+
+        // Gọi Service để lấy danh sách Event theo eventTypeId
+        Page<Event> eventPages = eventService.getEventsByEventType(eventTypeId, pageable);
+        int totalPages = eventPages.getTotalPages();
+
+        // Map từ Event -> EventResponse
+        List<EventRespone> eventResponses = eventPages.getContent().stream().map(event -> {
+            List<EventImageRespone> eventImages = eventImageService.findByEventId(event.getId())
+                    .stream()
+                    .map(image -> new EventImageRespone(image.getId(), image.getEvent().getId(), image.getImageUrl()))
+                    .toList();
+
+            return EventRespone.builder()
+                    .id(event.getId())
+                    .name(event.getName())
+                    .description(event.getDescription())
+                    .date(event.getDate())
+                    .endDate(event.getEndDate())
+                    .registrationStartDate(event.getRegistrationStartDate())
+                    .registrationEndDate(event.getRegistrationEndDate())
+                    .semester(SemesterRespone.builder()
+                            .id(event.getSemester().getId())
+                            .name(event.getSemester().getName())
+                            .build())
+                    .user_id(event.getUser().getId())
+                    .score(event.getScore())
+                    .maxRegistrations(event.getMaxRegistrations())
+                    .currentRegistrations(event.getCurrentRegistrations())
+                    .location(event.getLocation())
+                    .additionalInfo(event.getAdditionalInfo())
+                    .eventType(event.getEventType().getName())
+                    .eventImage(eventImages)
+                    .build();
+        }).toList();
+
+        return ResponseEntity.ok(EventListResponse.builder()
+                .events(eventResponses)
+                .totalPage(totalPages)
+                .build());
     }
 
     @SecurityRequirement(name = "bearerAuth")
@@ -382,13 +423,54 @@ private String storeFile(MultipartFile file) throws IOException {
         }
 
     }
+    // Lấy dánh sách sự kiện mà bản thân đã tạo
     @SecurityRequirement(name = "bearerAuth")
-    @PostMapping("/by_user")
-    public ResponseEntity<?> getEventByUser() {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-       Long userId = user.getId();
-       return ResponseEntity.ok(eventService.getEventByUser());
+    @PostMapping("/my-events")
+    public ResponseEntity<EventListResponse> getMyEvents(
+            @RequestParam("page") int page,
+            @RequestParam("limit") int limit
+    ) {
+        // Tạo Pageable với sắp xếp theo ngày đăng ký giảm dần
+        Pageable pageable = PageRequest.of(page, limit, Sort.by(Sort.Direction.DESC, "registrationStartDate"));
 
+        // Gọi Service để lấy danh sách Event của user có phân trang
+        Page<Event> eventPages = eventService.getEventByUser(pageable);
+        int totalPages = eventPages.getTotalPages();
+
+        // Map từ Event -> EventRespone
+        List<EventRespone> eventResponses = eventPages.getContent().stream().map(event -> {
+            List<EventImageRespone> eventImages = eventImageService.findByEventId(event.getId())
+                    .stream()
+                    .map(image -> new EventImageRespone(image.getId(), image.getEvent().getId(), image.getImageUrl()))
+                    .toList();
+
+            return EventRespone.builder()
+                    .id(event.getId())
+                    .name(event.getName())
+                    .description(event.getDescription())
+                    .date(event.getDate())
+                    .endDate(event.getEndDate())
+                    .registrationStartDate(event.getRegistrationStartDate())
+                    .registrationEndDate(event.getRegistrationEndDate())
+                    .semester(SemesterRespone.builder()
+                            .id(event.getSemester().getId())
+                            .name(event.getSemester().getName())
+                            .build())
+                    .user_id(event.getUser().getId())
+                    .score(event.getScore())
+                    .maxRegistrations(event.getMaxRegistrations())
+                    .currentRegistrations(event.getCurrentRegistrations())
+                    .location(event.getLocation())
+                    .additionalInfo(event.getAdditionalInfo())
+                    .eventType(event.getEventType().getName())
+                    .eventImage(eventImages)
+                    .build();
+        }).toList();
+
+        return ResponseEntity.ok(EventListResponse.builder()
+                .events(eventResponses)
+                .totalPage(totalPages)
+                .build());
     }
 
     // tạo mã QR
