@@ -2,6 +2,7 @@ package dtn.ServiceScore.controllers;
 
 import dtn.ServiceScore.exceptions.DataNotFoundException;
 import dtn.ServiceScore.responses.MessageResponse;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.core.io.Resource;
 import dtn.ServiceScore.model.Registration;
 import dtn.ServiceScore.model.User;
@@ -11,11 +12,14 @@ import dtn.ServiceScore.responses.UserResponse;
 import dtn.ServiceScore.services.RegistrationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -102,6 +106,7 @@ public class RegistrationController {
         return ResponseEntity.ok(response);
     }
 
+    // danh sách sự kiện sinh viên đăng kí
     @GetMapping("/user/getevents")
     public ResponseEntity<List<EventRespone>> getEventsByUser() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -110,6 +115,7 @@ public class RegistrationController {
         return ResponseEntity.ok(events);
     }
 
+    // danh sách các sinh viên đã điểm danh
     @GetMapping("/event/checked/{eventId}")
     public ResponseEntity<List<UserResponse>> getCheckedInStudentsByEvent(@PathVariable Long eventId) {
         List<UserResponse> users = registrationService.getCheckedInStudentsByEvent(eventId);
@@ -117,6 +123,7 @@ public class RegistrationController {
     }
 
 
+    // danb sách các hoạt dộng sinh viên đã tham gia(có điêmr danh)
    @GetMapping("/attended/{userId}")
    public ResponseEntity<?> getAttendedEvents(
            @PathVariable Long userId,
@@ -125,11 +132,29 @@ public class RegistrationController {
        return ResponseEntity.ok(events);
    }
 
+   // xuất danh sách sinh viên đăng kí sự kiện exel
     @GetMapping("/export/{eventId}")
     public ResponseEntity<Resource> exportEventRegistrations(@PathVariable Long eventId) {
         return registrationService.exportEventRegistrationsToExcel(eventId);
     }
 
+    // Hủy đăng kí sự kiện
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteRegistration(@PathVariable Long id) {
+        try {
+            registrationService.cancelRegistration(id);
+            return ResponseEntity.ok("Đã hủy đăng ký thành công!");
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse(e.getMessage()));
+        }
+    }
 
+    // xuất các sự kiện mà sinh viên tham gia , có thể xuất theo kì nếu thêm tham số kì học
+    @GetMapping("/export/attended-events")
+    public ResponseEntity<Resource> exportAttendedEvents(
+            @RequestParam Long userId,
+            @RequestParam(required = false) Long semesterId) {
+        return registrationService.exportAttendedEventsToExcel(userId, semesterId);
+    }
 
 }

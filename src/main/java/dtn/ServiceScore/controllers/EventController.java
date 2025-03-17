@@ -164,20 +164,16 @@ public class EventController {
                 .build());
     }
 
-    @GetMapping("/by-event-type")
-    public ResponseEntity<EventListResponse> getEventsByEventType(
+    @GetMapping("/events-by-type")
+    public ResponseEntity<EventListResponse> getEventsByType(
             @RequestParam("eventTypeId") Long eventTypeId,
             @RequestParam("page") int page,
             @RequestParam("limit") int limit
     ) {
-        // Tạo PageRequest với sắp xếp theo registrationStartDate giảm dần
-        Pageable pageable = PageRequest.of(page, limit, Sort.by(Sort.Direction.DESC, "registrationStartDate"));
-
-        // Gọi Service để lấy danh sách Event theo eventTypeId
-        Page<Event> eventPages = eventService.getEventsByEventType(eventTypeId, pageable);
+        PageRequest pageRequest = PageRequest.of(page, limit, Sort.by(Sort.Direction.DESC, "registrationStartDate"));
+        Page<Event> eventPages = eventService.getEventsByEventType(eventTypeId, pageRequest);
         int totalPages = eventPages.getTotalPages();
 
-        // Map từ Event -> EventResponse
         List<EventRespone> eventResponses = eventPages.getContent().stream().map(event -> {
             List<EventImageRespone> eventImages = eventImageService.findByEventId(event.getId())
                     .stream()
@@ -212,7 +208,6 @@ public class EventController {
                 .totalPage(totalPages)
                 .build());
     }
-
     @SecurityRequirement(name = "bearerAuth")
     @PostMapping(value = "/createEventImage", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> uploadEventImage(@Valid @ModelAttribute EventDTO eventDTO,
@@ -430,14 +425,13 @@ private String storeFile(MultipartFile file) throws IOException {
             @RequestParam("page") int page,
             @RequestParam("limit") int limit
     ) {
-        // Tạo Pageable với sắp xếp theo ngày đăng ký giảm dần
-        Pageable pageable = PageRequest.of(page, limit, Sort.by(Sort.Direction.DESC, "registrationStartDate"));
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Long userId = user.getId();
 
-        // Gọi Service để lấy danh sách Event của user có phân trang
-        Page<Event> eventPages = eventService.getEventByUser(pageable);
+        PageRequest pageRequest = PageRequest.of(page, limit, Sort.by(Sort.Direction.DESC, "registrationStartDate"));
+        Page<Event> eventPages = eventService.getEventByUser(pageRequest);
         int totalPages = eventPages.getTotalPages();
 
-        // Map từ Event -> EventRespone
         List<EventRespone> eventResponses = eventPages.getContent().stream().map(event -> {
             List<EventImageRespone> eventImages = eventImageService.findByEventId(event.getId())
                     .stream()
@@ -472,6 +466,7 @@ private String storeFile(MultipartFile file) throws IOException {
                 .totalPage(totalPages)
                 .build());
     }
+
 
     // tạo mã QR
     @GetMapping("/generateQR/{eventId}")

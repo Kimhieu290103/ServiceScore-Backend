@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface RegistrationRepository extends JpaRepository<Registration, Long> {
     List<Registration> findByUser(User userId);
@@ -34,4 +35,6 @@ public interface RegistrationRepository extends JpaRepository<Registration, Long
     List<Registration> findByEventAndAttendancesTrue(Event event);
 
     List<Registration> findByUserIdAndAttendancesTrue(Long userId);
+
+    Optional<Registration> findByUser_IdAndEvent_Id(Long userId, Long eventId);
 }

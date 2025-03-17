@@ -1,5 +1,6 @@
 package dtn.ServiceScore.controllers;
 
+import dtn.ServiceScore.dtos.ChangePasswordDTO;
 import dtn.ServiceScore.dtos.UserDTO;
 import dtn.ServiceScore.dtos.UserLoginDTO;
 import dtn.ServiceScore.model.User;
@@ -95,5 +96,12 @@ public class UserController {
         // Đảo ngược danh sách
         Collections.reverse(userResponses);
         return userResponses;
+    }
+
+    // thay đổi mật khẩu
+    @PostMapping("/change-password")
+    public ResponseEntity<String> changePassword(@RequestBody ChangePasswordDTO request) {
+        userService.changePassword(request);
+        return ResponseEntity.ok("Đổi mật khẩu thành công!");
     }
 }

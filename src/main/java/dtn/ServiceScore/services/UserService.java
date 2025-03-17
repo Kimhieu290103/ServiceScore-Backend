@@ -1,5 +1,6 @@
 package dtn.ServiceScore.services;
 
+import dtn.ServiceScore.dtos.ChangePasswordDTO;
 import dtn.ServiceScore.dtos.UserDTO;
 import dtn.ServiceScore.model.User;
 import dtn.ServiceScore.responses.LoginRespone;
@@ -16,4 +17,6 @@ public interface UserService {
     //List<User> searchByUsername(String username) throws RuntimeException;
 
     User getUserById(Long userId);
+
+    void changePassword(ChangePasswordDTO request);
 }

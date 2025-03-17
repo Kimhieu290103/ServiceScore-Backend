@@ -8,20 +8,23 @@ import dtn.ServiceScore.responses.EventRespone;
 import dtn.ServiceScore.responses.UserResponse;
 
 
+import java.io.IOException;
 import java.util.List;
 
 public interface RegistrationService {
     Registration register_event(Long eventId, Long userId) throws RuntimeException;
 
-    void checkInEvent(Long registrationId) throws RuntimeException;
+//    void checkInEvent(Long registrationId) throws RuntimeException;
+//
+//    void checkInEvent(Long eventId, Long userId) throws RuntimeException;
+//
+//    void multiCheckInEvent(List<Long> registrationIds) throws RuntimeException;
+//
+//    void multiCheckInEvent(Long eventId, List<Long> userIds) throws RuntimeException;
+//
+//    void allCheckInEvent(Long eventId) throws RuntimeException;
 
-    void checkInEvent(Long eventId, Long userId) throws RuntimeException;
-
-    void multiCheckInEvent(List<Long> registrationIds) throws RuntimeException;
-
-    void multiCheckInEvent(Long eventId, List<Long> userIds) throws RuntimeException;
-
-    void allCheckInEvent(Long eventId) throws RuntimeException;
+    void cancelRegistration( Long eventId);
 
     boolean isUserRegistered(Long eventId, Long userId) throws RuntimeException;
 
@@ -39,4 +42,6 @@ public interface RegistrationService {
 //    List<EventRespone> getAttendedEventsBySemester(Long userId, String semesterName);
 
     ResponseEntity<Resource> exportEventRegistrationsToExcel(Long eventID);
+
+    ResponseEntity<Resource> exportAttendedEventsToExcel(Long userId, Long semesterId);
 }
