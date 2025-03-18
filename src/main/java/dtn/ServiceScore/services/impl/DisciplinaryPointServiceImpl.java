@@ -1,7 +1,6 @@
 package dtn.ServiceScore.services.impl;
-import dtn.ServiceScore.enums.ExternalEventStatus;
+import dtn.ServiceScore.utils.Enums.ExternalEventStatus;
 import dtn.ServiceScore.model.*;
-import dtn.ServiceScore.model.Class;
 import dtn.ServiceScore.repositories.*;
 import dtn.ServiceScore.responses.PointResponse;
 import dtn.ServiceScore.responses.StudentPointResponse;
@@ -158,15 +157,14 @@ public class DisciplinaryPointServiceImpl implements DisciplinaryPointService {
         Long userId = user.getId();
         List<DisciplinaryPoint> disciplinaryPoints= disciplinaryPointRepository.findByUser_Id(userId);
         // Tạo danh sách kết quả
-        List<PointResponse> responseList = disciplinaryPoints.stream()
+
+        return disciplinaryPoints.stream()
                 .map(dp -> PointResponse.builder()
                         .id(dp.getId())
                         .semester(dp.getSemester().getName())
                         .points(dp.getPoints())
                         .build())
                 .toList();
-
-        return responseList;
     }
 
     @Override

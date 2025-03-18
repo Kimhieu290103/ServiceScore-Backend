@@ -1,7 +1,6 @@
 package dtn.ServiceScore.services.impl;
 
 import dtn.ServiceScore.dtos.FiveGoodCriteriaLcdDTO;
-import dtn.ServiceScore.model.FiveGoodCriteria;
 import dtn.ServiceScore.model.FiveGoodCriteriaLcd;
 import dtn.ServiceScore.model.Semester;
 import dtn.ServiceScore.repositories.FiveGoodCriteriaLcdRepository;

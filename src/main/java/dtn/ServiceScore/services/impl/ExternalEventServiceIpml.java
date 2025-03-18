@@ -1,7 +1,7 @@
 package dtn.ServiceScore.services.impl;
 
 import dtn.ServiceScore.dtos.ExternalEventDTO;
-import dtn.ServiceScore.enums.ExternalEventStatus;
+import dtn.ServiceScore.utils.Enums.ExternalEventStatus;
 import dtn.ServiceScore.model.ExternalEvent;
 import dtn.ServiceScore.model.Semester;
 import dtn.ServiceScore.model.User;

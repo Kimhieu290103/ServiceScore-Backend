@@ -1,6 +1,6 @@
 package dtn.ServiceScore.model;
 
-import dtn.ServiceScore.enums.ExternalEventStatus;
+import dtn.ServiceScore.utils.Enums.ExternalEventStatus;
 import jakarta.persistence.*;
 import lombok.*;
 

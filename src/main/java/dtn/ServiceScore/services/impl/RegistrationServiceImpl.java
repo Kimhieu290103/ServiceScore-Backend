@@ -158,19 +158,17 @@ public class RegistrationServiceImpl implements RegistrationService {
                 .map(reg -> reg.getUser().getClazz()) // Lấy thông tin lớp từ User
                 .map(studentClass -> (studentClass != null) ? studentClass.getName() : "Other") // Nếu lớp bị null, gán "Other"
                 .map(className -> (className != null && className.length() >= 2) ? className.substring(0, 2) : "Other") // Lấy 2 ký tự đầu
-                .collect(Collectors.groupingBy(course -> {
-                    switch (course) {
-                        case "20": return "Course_20";
-                        case "21": return "Course_21";
-                        case "22": return "Course_22";
-                        case "23": return "Course_23";
-                        case "24": return "Course_24";
-                        default: return "Other";
-                    }
+                .collect(Collectors.groupingBy(course -> switch (course) {
+                    case "20" -> "Course_20";
+                    case "21" -> "Course_21";
+                    case "22" -> "Course_22";
+                    case "23" -> "Course_23";
+                    case "24" -> "Course_24";
+                    default -> "Other";
                 }, Collectors.counting()));
 
         // Cập nhật số lượng thực tế vào studentByCourse
-        studentCounts.forEach(studentByCourse::put);
+        studentByCourse.putAll(studentCounts);
 
         return EventRegistrationResponse.builder()
                 .users(users)
@@ -201,8 +199,8 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     @Override
-    public List<EventRespone> getAllEventByStudent(Long sudentId) {
-        User existingUser = userRepository.findById(sudentId)
+    public List<EventRespone> getAllEventByStudent(Long studentId) {
+        User existingUser = userRepository.findById(studentId)
                 .orElseThrow(() -> new DataNotFoundException("Không tìm người dùng"));
         List<Registration> registrations = registrationRepository.findByUser(existingUser);
         return registrations.stream()

@@ -1,6 +1,6 @@
 package dtn.ServiceScore.repositories;
 
-import dtn.ServiceScore.enums.ExternalEventStatus;
+import dtn.ServiceScore.utils.Enums.ExternalEventStatus;
 import dtn.ServiceScore.model.ExternalEvent;
 import org.springframework.data.jpa.repository.JpaRepository;
 

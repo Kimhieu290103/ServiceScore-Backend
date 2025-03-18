@@ -278,7 +278,7 @@ public class EventServiceImpl implements EventService {
     // Hàm chuyển đổi chuỗi sang LocalDateTime
     private LocalDateTime parseLocalDateTime(LocalDateTime dateTime, DateTimeFormatter formatter) {
         try {
-            return dateTime != null ? dateTime : null;
+            return dateTime;
         } catch (Exception e) {
             throw new DateTimeParseException("Lỗi định dạng ngày giờ", dateTime.toString(), 0);
         }

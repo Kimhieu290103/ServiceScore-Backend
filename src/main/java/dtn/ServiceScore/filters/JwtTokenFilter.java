@@ -41,11 +41,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 return;
             }
             final String authHeader = request.getHeader("Authorization");
-            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
-                return;
-            }
-            if (authHeader.startsWith("Bearer ")) {
+            if (authHeader != null && authHeader.startsWith("Bearer ")) {
                 final String token = authHeader.substring(7);
                 final String phoneNumber = jwtTokenUtil.extractUserName(token);
                 if (phoneNumber != null && SecurityContextHolder.getContext().getAuthentication() == null) {
@@ -60,6 +56,9 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                     }
                 }
+            } else {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+                return;
             }
             filterChain.doFilter(request, response);
         } catch (Exception e) {

@@ -22,4 +22,8 @@ public class Enums {
             return name().toLowerCase();
         }
     }
+
+    public enum ExternalEventStatus {
+        PENDING, APPROVED, REJECTED
+    }
 }
