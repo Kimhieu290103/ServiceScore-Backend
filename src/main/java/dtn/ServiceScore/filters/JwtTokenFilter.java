@@ -3,7 +3,6 @@ package dtn.ServiceScore.filters;
 import dtn.ServiceScore.components.JwtTokenUtil;
 import dtn.ServiceScore.model.User;
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotNull;

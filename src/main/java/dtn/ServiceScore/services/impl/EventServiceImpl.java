@@ -1,6 +1,5 @@
 package dtn.ServiceScore.services.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import dtn.ServiceScore.dtos.EventDTO;
 import dtn.ServiceScore.exceptions.DataNotFoundException;
 import dtn.ServiceScore.exceptions.InvalidArgException;
@@ -42,7 +41,7 @@ public class EventServiceImpl implements EventService {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String userRoles = user.getRole().getName();
         // Xác định loại sự kiện dựa vào role
-        Long eventTypeId = Long.parseLong(String.valueOf(eventDTO.getEventType()));
+        long eventTypeId = Long.parseLong(String.valueOf(eventDTO.getEventType()));
         Long eventTypeName = (userRoles.contains("BTV") || userRoles.contains("CTSV") || userRoles.contains("HSV"))
                 ? eventTypeId
                 : 1;
@@ -114,7 +113,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public Event getEventById(long id) throws Exception {
+    public Event getEventById(long id) throws RuntimeException {
         return eventRepository.findById(id).orElseThrow(() -> new DataNotFoundException("khong tim thay su kien"));
     }
 
@@ -185,7 +184,7 @@ public class EventServiceImpl implements EventService {
             User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
             String userRoles = user.getRole().getName();
-            Long eventTypeId = Long.parseLong(String.valueOf(eventDTO.getEventType()));
+            long eventTypeId = Long.parseLong(String.valueOf(eventDTO.getEventType()));
             Long eventTypeName = (userRoles.contains("BTV") || userRoles.contains("CTSV") || userRoles.contains("HSV"))
                     ? eventTypeId
                     : 1;

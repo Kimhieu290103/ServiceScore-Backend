@@ -7,7 +7,6 @@ import dtn.ServiceScore.model.Semester;
 import dtn.ServiceScore.model.User;
 import dtn.ServiceScore.repositories.ExternalEventRepository;
 import dtn.ServiceScore.repositories.SemesterRepository;
-import dtn.ServiceScore.repositories.UserRepository;
 import dtn.ServiceScore.responses.ExternalEventResponse;
 import dtn.ServiceScore.services.ExternalEventService;
 import lombok.RequiredArgsConstructor;

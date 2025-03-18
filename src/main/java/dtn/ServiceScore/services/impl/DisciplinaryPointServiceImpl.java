@@ -187,7 +187,7 @@ public class DisciplinaryPointServiceImpl implements DisciplinaryPointService {
         List<User> students = userRepository.findByFilters(classId, courseId, departmentId);
 
         return students.stream().map(student -> {
-            Long totalPoints;
+            long totalPoints;
 
             if (semesterId != null) {
                 // Nếu có học kỳ, lấy điểm theo học kỳ
