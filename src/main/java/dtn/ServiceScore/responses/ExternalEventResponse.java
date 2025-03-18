@@ -38,7 +38,7 @@ public class ExternalEventResponse {
     private String proofUrl;
 
 
-    private String status ;
+    private String status;
 
 
     private Long points;

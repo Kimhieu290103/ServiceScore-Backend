@@ -34,6 +34,7 @@ public class EventServiceImpl implements EventService {
     private final FiveGoodCriteriaLcdRepository fiveGoodCriteriaLcdRepository;
     private final EventCriteriaLcdRepository eventCriteriaLcdRepository;
     private final EventTypeRepository eventTypeRepository;
+
     @Override
     public Event createEvent(EventDTO eventDTO) throws RuntimeException {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");

@@ -16,22 +16,25 @@ import dtn.ServiceScore.utils.Enums;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
-import java.time.LocalDate;
-import java.util.*;
-import java.util.stream.Collectors;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class RegistrationServiceImpl implements RegistrationService {
@@ -40,6 +43,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final EventRepository eventRepository;
     public final EventImageService eventImageService;
     public final EventService eventService;
+
     // đăng kí sự kiện
     @Override
     @Transactional
@@ -128,7 +132,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     // danh sách sinh viên đăng kí sự kiện
     @Override
-    public EventRegistrationResponse  getAllStudentByEvent(Long eventID) {
+    public EventRegistrationResponse getAllStudentByEvent(Long eventID) {
         Event existingEvent = eventRepository.findById(eventID)
                 .orElseThrow(() -> new DataNotFoundException("Không tìm thấy event"));
         List<Registration> registrations = registrationRepository.findByEvent(existingEvent);
@@ -237,16 +241,15 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     @Override
-    public List<EventRespone> getAttendedEvents(Long userId, Long semesterId ) {
+    public List<EventRespone> getAttendedEvents(Long userId, Long semesterId) {
         System.out.println("Received semesterId: " + semesterId);
         List<Registration> registrations = registrationRepository.findByUserIdAndAttendancesTrue(userId);
 
         return registrations.stream()
-                .filter(registration ->semesterId == null || registration.getEvent().getSemester().getId().equals(semesterId)) // Lọc theo kỳ học
+                .filter(registration -> semesterId == null || registration.getEvent().getSemester().getId().equals(semesterId)) // Lọc theo kỳ học
                 .map(registration -> mapToDTO(registration.getEvent()))
                 .collect(Collectors.toList());
     }
-
 
 
     private EventRespone mapToDTO(Event event) {

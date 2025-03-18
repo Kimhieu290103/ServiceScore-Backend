@@ -14,25 +14,19 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("api/v1/events")
@@ -42,6 +36,7 @@ public class EventController {
     public final EventImageService eventImageService;
     private final CloudinaryService cloudinaryService;
     private final QRCodeService qrCodeService;
+
     @SecurityRequirement(name = "bearerAuth")
     @PostMapping("/create")
     public ResponseEntity<?> createEvent(@Valid @RequestBody EventDTO eventDTO, BindingResult result) {
@@ -61,7 +56,6 @@ public class EventController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
-
 
 
     @SecurityRequirement(name = "bearerAuth")
@@ -208,6 +202,7 @@ public class EventController {
                 .totalPage(totalPages)
                 .build());
     }
+
     @SecurityRequirement(name = "bearerAuth")
     @PostMapping(value = "/createEventImage", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> uploadEventImage(@Valid @ModelAttribute EventDTO eventDTO,
@@ -310,7 +305,7 @@ public class EventController {
 
     }
 
-//    private String storeFile(MultipartFile file) throws IOException {
+    //    private String storeFile(MultipartFile file) throws IOException {
 //        String filename = StringUtils.cleanPath(file.getOriginalFilename());
 //        // theem UUID vao truoc ten file de ten file la duy nhat
 //        String uniqueFilename = UUID.randomUUID() + "_" + filename;
@@ -325,12 +320,12 @@ public class EventController {
 //        Files.copy(file.getInputStream(), destination, StandardCopyOption.REPLACE_EXISTING);
 //        return uniqueFilename;
 //    }
-private String storeFile(MultipartFile file) throws IOException {
-    if (file.getSize() > 10 * 1024 * 1024) {
-        throw new IOException("File quá lớn! Giới hạn là 10MB.");
+    private String storeFile(MultipartFile file) throws IOException {
+        if (file.getSize() > 10 * 1024 * 1024) {
+            throw new IOException("File quá lớn! Giới hạn là 10MB.");
+        }
+        return cloudinaryService.uploadFile(file);
     }
-    return cloudinaryService.uploadFile(file);
-}
 
     private boolean isImageFile(MultipartFile file) {
         String contentType = file.getContentType();
@@ -421,6 +416,7 @@ private String storeFile(MultipartFile file) throws IOException {
         }
 
     }
+
     // Lấy dánh sách sự kiện mà bản thân đã tạo
     @SecurityRequirement(name = "bearerAuth")
     @GetMapping("/my-events")

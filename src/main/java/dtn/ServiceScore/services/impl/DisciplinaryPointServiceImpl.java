@@ -1,16 +1,19 @@
 package dtn.ServiceScore.services.impl;
-import dtn.ServiceScore.utils.Enums.ExternalEventStatus;
+
 import dtn.ServiceScore.model.*;
 import dtn.ServiceScore.repositories.*;
 import dtn.ServiceScore.responses.PointResponse;
 import dtn.ServiceScore.responses.StudentPointResponse;
 import dtn.ServiceScore.services.DisciplinaryPointService;
+import dtn.ServiceScore.utils.Enums.ExternalEventStatus;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDate;
 import java.util.*;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -21,6 +24,7 @@ public class DisciplinaryPointServiceImpl implements DisciplinaryPointService {
     private final StudentCriteriaRepository studentCriteriaRepository;
     private final ExternalEventRepository externalEventRepository;
     private final UserRepository userRepository;
+
     @Override
     @Transactional
     public DisciplinaryPoint Addpoint(User user, Event event) {
@@ -30,7 +34,7 @@ public class DisciplinaryPointServiceImpl implements DisciplinaryPointService {
             throw new IllegalStateException("Người dùng chưa đăng ký sự kiện này.");
         }
 
-        if ( registration.isAttendances()) {
+        if (registration.isAttendances()) {
             return null;
         }
 
@@ -153,7 +157,7 @@ public class DisciplinaryPointServiceImpl implements DisciplinaryPointService {
     public List<PointResponse> getDisciplinaryPointsByUserId() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Long userId = user.getId();
-        List<DisciplinaryPoint> disciplinaryPoints= disciplinaryPointRepository.findByUser_Id(userId);
+        List<DisciplinaryPoint> disciplinaryPoints = disciplinaryPointRepository.findByUser_Id(userId);
         // Tạo danh sách kết quả
 
         return disciplinaryPoints.stream()
@@ -181,7 +185,7 @@ public class DisciplinaryPointServiceImpl implements DisciplinaryPointService {
 
     @Override
     public List<StudentPointResponse> getStudentsWithTotalPoints(
-            Long classId, Integer courseId, Integer departmentId,Long semesterId) {
+            Long classId, Integer courseId, Integer departmentId, Long semesterId) {
 
         // Lấy danh sách sinh viên theo tiêu chí
         List<User> students = userRepository.findByFilters(classId, courseId, departmentId);
@@ -216,7 +220,6 @@ public class DisciplinaryPointServiceImpl implements DisciplinaryPointService {
                     .build();
         }).toList();
     }
-
 
 
 }

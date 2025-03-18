@@ -16,6 +16,7 @@ import java.util.List;
 public class FiveGoodCriteriaLcdServiceImpl implements FiveGoodCriteriaLcdService {
     private final FiveGoodCriteriaLcdRepository fiveGoodCriteriaLcdRepository;
     private final SemesterRepository semesterRepository;
+
     @Override
     public List<FiveGoodCriteriaLcd> getAllFiveGoodCriteriaLcd() {
         return fiveGoodCriteriaLcdRepository.findByIsActiveTrue();

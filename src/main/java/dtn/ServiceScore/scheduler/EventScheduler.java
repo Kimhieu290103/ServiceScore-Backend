@@ -1,12 +1,13 @@
 package dtn.ServiceScore.scheduler;
-import dtn.ServiceScore.model.Event;
 
+import dtn.ServiceScore.model.Event;
 import dtn.ServiceScore.services.EventService;
 import dtn.ServiceScore.services.LcdCriteriaService;
 import dtn.ServiceScore.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -37,7 +38,6 @@ public class EventScheduler {
 
             // Gọi service xử lý sự kiện kết thúc
             String result = lcdCriteriaService.Event_validation(user, event);
-
 
 
             System.out.println("Đã xử lý sự kiện: " + event.getName() + " | Kết quả: " + result);

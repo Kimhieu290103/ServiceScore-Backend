@@ -7,10 +7,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
 @Service
 @RequiredArgsConstructor
-public class EventTypeServiceImpl implements EventTypeService{
-    private  final EventTypeRepository eventTypeRepository;
+public class EventTypeServiceImpl implements EventTypeService {
+    private final EventTypeRepository eventTypeRepository;
+
     @Override
     public List<EventType> getAllEventTypes() {
         return eventTypeRepository.findAll();

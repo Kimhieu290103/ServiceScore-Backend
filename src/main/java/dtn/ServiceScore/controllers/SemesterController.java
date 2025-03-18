@@ -14,6 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SemesterController {
     private final SemesterService semesterService;
+
     @GetMapping
     public List<Semester> getAllSemesters() {
         return semesterService.getAllSemesters();

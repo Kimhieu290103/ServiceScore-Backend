@@ -11,7 +11,7 @@ import java.util.Map;
 
 public class CloudinaryConfig {
     @Bean
-    public Cloudinary configKey(){
+    public Cloudinary configKey() {
         Map config = new HashMap<>();
         config.put("cloud_name", "dlomvsdxb");
         config.put("api_key", "741976424531679");

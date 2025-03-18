@@ -8,5 +8,6 @@ import java.util.Optional;
 
 public interface FiveGoodCriteriaRepository extends JpaRepository<FiveGoodCriteria, Long> {
     Optional<FiveGoodCriteria> findByName(String name);
+
     List<FiveGoodCriteria> findByIsActiveTrue();
 }

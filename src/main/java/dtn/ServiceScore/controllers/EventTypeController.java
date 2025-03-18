@@ -15,6 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EventTypeController {
     private final EventTypeService eventTypeService;
+
     @GetMapping
     public ResponseEntity<List<EventType>> getAllEventTypes() {
         return ResponseEntity.ok(eventTypeService.getAllEventTypes());
