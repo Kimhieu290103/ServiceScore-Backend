@@ -12,11 +12,12 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-public class CloudinaryService {
+public class CloudinaryService   {
 
     private final Cloudinary cloudinary;
-
+   // 10MB
     public String uploadFile(MultipartFile file) throws IOException {
+
         Map uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
         return uploadResult.get("url").toString();
     }

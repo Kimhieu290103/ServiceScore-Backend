@@ -29,7 +29,11 @@ public class LcdCriteriaServiceImpl implements LcdCriteriaService {
     @Override
     public String Event_validation(User user, Event event) {
         List<EventCriteriaLcd> eventCriteriaLcdList = eventCriteriaLcdRepository.findByEventId(event.getId());
-
+        if (!user.getRole().getName().equals("LCD")) {
+            event.setStatus("COMPLETED");
+            eventRepository.save(event);
+            return "Không phải LCD!";
+        }
         if (eventCriteriaLcdList.isEmpty()) {
             return "Không có tiêu chí nào để ghi!";
         }

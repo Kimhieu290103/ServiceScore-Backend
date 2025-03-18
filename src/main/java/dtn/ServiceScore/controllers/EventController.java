@@ -228,7 +228,7 @@ public class EventController {
             for (MultipartFile file : files) {
                 if (file != null) {
                     // kiem tra kich thuoc file anh
-                    if (file.getSize() > 10 * 1024 * 1024) {
+                    if (file.getSize() > 50 * 1024 * 1024) {
                         return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body("this file too laget, maximum size is 10mb");
 
                     }
@@ -277,7 +277,7 @@ public class EventController {
             for (MultipartFile file : files) {
                 if (file != null) {
                     // kiem tra kich thuoc file anh
-                    if (file.getSize() > 10 * 1024 * 1024) {
+                    if (file.getSize() > 50 * 1024 * 1024) {
                         return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body("this file too laget, maximum size is 10mb");
 
                     }
@@ -293,7 +293,7 @@ public class EventController {
 //                                    .build());
 //                    eventImages.add(eventImage);
                     // Upload ảnh lên Cloudinary
-                    String imageUrl = cloudinaryService.uploadFile(file);
+                    String imageUrl = storeFile(file);
 
                     // Lưu thông tin ảnh vào database
                     EventImage eventImage = eventService.createEventImage(existingEvent.getId(),
@@ -326,6 +326,9 @@ public class EventController {
 //        return uniqueFilename;
 //    }
 private String storeFile(MultipartFile file) throws IOException {
+    if (file.getSize() > 10 * 1024 * 1024) {
+        throw new IOException("File quá lớn! Giới hạn là 10MB.");
+    }
     return cloudinaryService.uploadFile(file);
 }
 
