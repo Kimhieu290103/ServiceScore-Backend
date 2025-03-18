@@ -78,8 +78,8 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 Pair.of("/v3/api-docs", "GET"),
                 Pair.of("/images/", "GET"),
                 Pair.of("/api/v1/five_good/all", "GET"),
-                Pair.of("/api/v1/events/", "GET"),
-                Pair.of("/api/v1/events", "GET")
+                Pair.of("/api/v1/events/all", "GET"),
+                Pair.of("/api/v1/events/all/", "GET")
 
 
         );

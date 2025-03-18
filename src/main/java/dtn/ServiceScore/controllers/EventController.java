@@ -65,8 +65,8 @@ public class EventController {
 
 
     @SecurityRequirement(name = "bearerAuth")
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getProductById(@PathVariable("id") Long eventId) {
+    @GetMapping("/all/{id}")
+    public ResponseEntity<?> getEventById(@PathVariable("id") Long eventId) {
         try {
             Event existingEvent = eventService.getEventById(eventId);
             // Lấy hỉnh ảnh
@@ -112,7 +112,7 @@ public class EventController {
     }
 
     @SecurityRequirement(name = "bearerAuth")
-    @GetMapping("")
+    @GetMapping("all")
     public ResponseEntity<EventListResponse> getAllEvents(
             @RequestParam("page") int page,
             @RequestParam("limit") int limit
@@ -164,7 +164,7 @@ public class EventController {
                 .build());
     }
 
-    @GetMapping("/events-by-type")
+    @GetMapping("/all/events-by-type")
     public ResponseEntity<EventListResponse> getEventsByType(
             @RequestParam("eventTypeId") Long eventTypeId,
             @RequestParam("page") int page,
@@ -420,7 +420,7 @@ private String storeFile(MultipartFile file) throws IOException {
     }
     // Lấy dánh sách sự kiện mà bản thân đã tạo
     @SecurityRequirement(name = "bearerAuth")
-    @PostMapping("/my-events")
+    @GetMapping("/my-events")
     public ResponseEntity<EventListResponse> getMyEvents(
             @RequestParam("page") int page,
             @RequestParam("limit") int limit
