@@ -1,8 +1,10 @@
 package dtn.ServiceScore.controllers;
 
-import dtn.ServiceScore.model.*;
+import dtn.ServiceScore.model.DisciplinaryPoint;
+import dtn.ServiceScore.model.Event;
+import dtn.ServiceScore.model.ExternalEvent;
+import dtn.ServiceScore.model.User;
 import dtn.ServiceScore.responses.MessageResponse;
-import dtn.ServiceScore.responses.PointResponse;
 import dtn.ServiceScore.responses.StudentPointResponse;
 import dtn.ServiceScore.services.DisciplinaryPointService;
 import dtn.ServiceScore.services.EventService;
@@ -47,6 +49,7 @@ public class DisciplinaryPointController {
             return ResponseEntity.internalServerError().body(new MessageResponse("Lỗi hệ thống: " + e.getMessage()));
         }
     }
+
     // điểm danh tất cả sinh viên
     @PostMapping("/batchAll/{eventId}")
     public ResponseEntity<?> addPointsForAllRegisteredUsers(@PathVariable Long eventId) {
@@ -90,6 +93,7 @@ public class DisciplinaryPointController {
             return ResponseEntity.internalServerError().body("Lỗi hệ thống: " + e.getMessage());
         }
     }
+
     // lấy số điêmr của bản thân
     @GetMapping("/by-user")
     public ResponseEntity<?> getDisciplinaryPointsByUserId() {
@@ -116,7 +120,7 @@ public class DisciplinaryPointController {
             // Gọi hàm cộng điểm và cập nhật trạng thái
             disciplinaryPointService.AddPointForExternalEvent(user, externalEvent);
             return ResponseEntity.ok(new MessageResponse("External Event approved successfully and points added!"));
-        }catch (IllegalStateException e) {
+        } catch (IllegalStateException e) {
             // Trường hợp sự kiện đã được duyệt trước đó
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse(e.getMessage()));
         } catch (Exception e) {
@@ -163,7 +167,7 @@ public class DisciplinaryPointController {
             @RequestParam(required = false) Long classId,
             @RequestParam(required = false) Integer courseId,
             @RequestParam(required = false) Integer departmentId,
-            @RequestParam(required = false) Long  semesterId) {
+            @RequestParam(required = false) Long semesterId) {
 
         List<StudentPointResponse> students = disciplinaryPointService.getStudentsWithTotalPoints(classId, courseId, departmentId, semesterId);
         return ResponseEntity.ok(students);

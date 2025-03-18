@@ -1,9 +1,5 @@
 package dtn.ServiceScore.responses;
 
-import dtn.ServiceScore.enums.ExternalEventStatus;
-import dtn.ServiceScore.model.Semester;
-import dtn.ServiceScore.model.User;
-import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -42,7 +38,7 @@ public class ExternalEventResponse {
     private String proofUrl;
 
 
-    private String status ;
+    private String status;
 
 
     private Long points;

@@ -14,18 +14,25 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
+
 @RestController
 @RequestMapping("api/v1/events")
 @RequiredArgsConstructor
@@ -109,7 +116,8 @@ public class EventController {
             @RequestParam("page") int page,
             @RequestParam("limit") int limit
     ) {
-
+//        PageRequest pageRequest = PageRequest.of(page,
+//                limit);
         // Thêm sắp xếp mặc định theo registrationStartDate giảm dần
         PageRequest pageRequest = PageRequest.of(page, limit, Sort.by(Sort.Direction.DESC, "registrationStartDate"));
 
@@ -301,6 +309,21 @@ public class EventController {
 
     }
 
+//    private String storeFile(MultipartFile file) throws IOException {
+//        String filename = StringUtils.cleanPath(file.getOriginalFilename());
+//        // theem UUID vao truoc ten file de ten file la duy nhat
+//        String uniqueFilename = UUID.randomUUID() + "_" + filename;
+//        // duong dan den thu muc chua file anh
+//        java.nio.file.Path uploadDir = Paths.get("uploads/images");
+//        if (!Files.exists(uploadDir)) {
+//            Files.createDirectories(uploadDir);
+//        }
+//        // duong dan day du den file
+//        java.nio.file.Path destination = Paths.get(uploadDir.toString(), uniqueFilename);
+//        // sao chep file vao thu muc dich
+//        Files.copy(file.getInputStream(), destination, StandardCopyOption.REPLACE_EXISTING);
+//        return uniqueFilename;
+//    }
 private String storeFile(MultipartFile file) throws IOException {
     if (file.getSize() > 10 * 1024 * 1024) {
         throw new IOException("File quá lớn! Giới hạn là 10MB.");
@@ -374,7 +397,11 @@ private String storeFile(MultipartFile file) throws IOException {
                         return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).body("file must be an iamge");
 
                     }
-
+//                    String filename = storeFile(file);
+//                    EventImage eventImage = eventService.createEventImage(newEvent.getId(),
+//                            EventImage.builder()
+//                                    .imageUrl(filename)
+//                                    .build());
                     // Upload ảnh lên Cloudinary
                     String imageUrl = cloudinaryService.uploadFile(file);
 

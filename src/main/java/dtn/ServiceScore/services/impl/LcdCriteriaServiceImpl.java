@@ -21,6 +21,7 @@ public class LcdCriteriaServiceImpl implements LcdCriteriaService {
     private final LcdCriteriaRepository lcdCriteriaRepository;
 
     private final EventRepository eventRepository;
+
     @Override
     public List<User> getLcdsCompletedAllCriteria(Long semesterId) {
         return lcdCriteriaRepository.findLcdsCompletedAllCriteria(semesterId);

@@ -1,25 +1,22 @@
 package dtn.ServiceScore.controllers;
 
 import dtn.ServiceScore.exceptions.DataNotFoundException;
-import dtn.ServiceScore.responses.MessageResponse;
-import jakarta.persistence.EntityNotFoundException;
-import org.springframework.core.io.Resource;
 import dtn.ServiceScore.model.Registration;
 import dtn.ServiceScore.model.User;
 import dtn.ServiceScore.responses.EventRegistrationResponse;
 import dtn.ServiceScore.responses.EventRespone;
+import dtn.ServiceScore.responses.MessageResponse;
 import dtn.ServiceScore.responses.UserResponse;
 import dtn.ServiceScore.services.RegistrationService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -124,15 +121,15 @@ public class RegistrationController {
 
 
     // danb sách các hoạt dộng sinh viên đã tham gia(có điêmr danh)
-   @GetMapping("/attended/{userId}")
-   public ResponseEntity<?> getAttendedEvents(
-           @PathVariable Long userId,
-           @RequestParam(required = false) Long semesterId) {  // Thêm tham số semesterId tùy chọn
-       List<EventRespone> events = registrationService.getAttendedEvents(userId, semesterId);
-       return ResponseEntity.ok(events);
-   }
+    @GetMapping("/attended/{userId}")
+    public ResponseEntity<?> getAttendedEvents(
+            @PathVariable Long userId,
+            @RequestParam(required = false) Long semesterId) {  // Thêm tham số semesterId tùy chọn
+        List<EventRespone> events = registrationService.getAttendedEvents(userId, semesterId);
+        return ResponseEntity.ok(events);
+    }
 
-   // xuất danh sách sinh viên đăng kí sự kiện exel
+    // xuất danh sách sinh viên đăng kí sự kiện exel
     @GetMapping("/export/{eventId}")
     public ResponseEntity<Resource> exportEventRegistrations(@PathVariable Long eventId) {
         return registrationService.exportEventRegistrationsToExcel(eventId);

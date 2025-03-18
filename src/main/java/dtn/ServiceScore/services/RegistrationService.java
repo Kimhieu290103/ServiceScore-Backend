@@ -1,14 +1,12 @@
 package dtn.ServiceScore.services;
 
-import org.springframework.core.io.Resource;
-import org.springframework.http.ResponseEntity;
 import dtn.ServiceScore.model.Registration;
 import dtn.ServiceScore.responses.EventRegistrationResponse;
 import dtn.ServiceScore.responses.EventRespone;
 import dtn.ServiceScore.responses.UserResponse;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 
-
-import java.io.IOException;
 import java.util.List;
 
 public interface RegistrationService {
@@ -24,7 +22,7 @@ public interface RegistrationService {
 //
 //    void allCheckInEvent(Long eventId) throws RuntimeException;
 
-    void cancelRegistration( Long eventId);
+    void cancelRegistration(Long eventId);
 
     boolean isUserRegistered(Long eventId, Long userId) throws RuntimeException;
 

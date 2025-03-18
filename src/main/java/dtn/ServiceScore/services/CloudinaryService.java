@@ -3,7 +3,6 @@ package dtn.ServiceScore.services;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -12,10 +11,11 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-public class CloudinaryService   {
+public class CloudinaryService {
 
     private final Cloudinary cloudinary;
-   // 10MB
+
+    // 10MB
     public String uploadFile(MultipartFile file) throws IOException {
 
         Map uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());

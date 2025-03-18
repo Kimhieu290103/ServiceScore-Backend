@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface FiveGoodCriteriaLcdService {
     List<FiveGoodCriteriaLcd> getAllFiveGoodCriteriaLcd();
+
     FiveGoodCriteriaLcd createCriteriaLcd(FiveGoodCriteriaLcdDTO dto);
 
     void softDeleteCriteriaLcd(Long id);

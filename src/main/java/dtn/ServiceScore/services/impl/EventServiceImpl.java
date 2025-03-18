@@ -1,6 +1,5 @@
 package dtn.ServiceScore.services.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import dtn.ServiceScore.dtos.EventDTO;
 import dtn.ServiceScore.exceptions.DataNotFoundException;
 import dtn.ServiceScore.exceptions.InvalidArgException;
@@ -29,22 +28,21 @@ import java.util.stream.Collectors;
 public class EventServiceImpl implements EventService {
     private final EventRepository eventRepository;
     private final SemesterRepository semesterRepository;
-    private final LcdRepository lcdRepository;
     private final EventImageRepository eventImageRepository;
     private final FiveGoodCriteriaRepository fiveGoodCriteriaRepository;
     private final EventCriteriaRepository eventCriteriaRepository;
     private final FiveGoodCriteriaLcdRepository fiveGoodCriteriaLcdRepository;
     private final EventCriteriaLcdRepository eventCriteriaLcdRepository;
     private final EventTypeRepository eventTypeRepository;
+
     @Override
-    public Event createEvent(EventDTO eventDTO) throws Exception {
+    public Event createEvent(EventDTO eventDTO) throws RuntimeException {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
-        ObjectMapper objectMapper = new ObjectMapper();
         String eventName = eventDTO.getName();
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String userRoles = user.getRole().getName();
         // Xác định loại sự kiện dựa vào role
-        Long eventTypeId = Long.parseLong(String.valueOf(eventDTO.getEventType()));
+        long eventTypeId = Long.parseLong(String.valueOf(eventDTO.getEventType()));
         Long eventTypeName = (userRoles.contains("BTV") || userRoles.contains("CTSV") || userRoles.contains("HSV"))
                 ? eventTypeId
                 : 1;
@@ -116,7 +114,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public Event getEventById(long id) throws Exception {
+    public Event getEventById(long id) throws RuntimeException {
         return eventRepository.findById(id).orElseThrow(() -> new DataNotFoundException("khong tim thay su kien"));
     }
 
@@ -134,26 +132,24 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public Page<Event> getAllEvents(PageRequest pageRequest) {
-        return eventRepository.findAll(pageRequest).map(event -> {
-            return Event.builder()
-                    .id(event.getId())
-                    .name(event.getName())
-                    .description(event.getDescription())
-                    .date(event.getDate())
-                    .endDate(event.getEndDate())
-                    .registrationStartDate(event.getRegistrationStartDate())
-                    .registrationEndDate(event.getRegistrationEndDate())
-                    .status(event.getStatus())
-                    .semester(event.getSemester())
-                    .user(event.getUser())
-                    .score(event.getScore())
-                    .maxRegistrations(event.getMaxRegistrations())
-                    .currentRegistrations(event.getCurrentRegistrations())
-                    .additionalInfo(event.getAdditionalInfo())
-                    .location(event.getLocation())
-                    .eventType(event.getEventType())
-                    .build();
-        });
+        return eventRepository.findAll(pageRequest).map(event -> Event.builder()
+                .id(event.getId())
+                .name(event.getName())
+                .description(event.getDescription())
+                .date(event.getDate())
+                .endDate(event.getEndDate())
+                .registrationStartDate(event.getRegistrationStartDate())
+                .registrationEndDate(event.getRegistrationEndDate())
+                .status(event.getStatus())
+                .semester(event.getSemester())
+                .user(event.getUser())
+                .score(event.getScore())
+                .maxRegistrations(event.getMaxRegistrations())
+                .currentRegistrations(event.getCurrentRegistrations())
+                .additionalInfo(event.getAdditionalInfo())
+                .location(event.getLocation())
+                .eventType(event.getEventType())
+                .build());
     }
 
     @Override
@@ -189,7 +185,7 @@ public class EventServiceImpl implements EventService {
             User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
             String userRoles = user.getRole().getName();
-            Long eventTypeId = Long.parseLong(String.valueOf(eventDTO.getEventType()));
+            long eventTypeId = Long.parseLong(String.valueOf(eventDTO.getEventType()));
             Long eventTypeName = (userRoles.contains("BTV") || userRoles.contains("CTSV") || userRoles.contains("HSV"))
                     ? eventTypeId
                     : 1;
@@ -278,7 +274,7 @@ public class EventServiceImpl implements EventService {
     // Hàm chuyển đổi chuỗi sang LocalDateTime
     private LocalDateTime parseLocalDateTime(LocalDateTime dateTime, DateTimeFormatter formatter) {
         try {
-            return dateTime != null ? dateTime : null;
+            return dateTime;
         } catch (Exception e) {
             throw new DateTimeParseException("Lỗi định dạng ngày giờ", dateTime.toString(), 0);
         }

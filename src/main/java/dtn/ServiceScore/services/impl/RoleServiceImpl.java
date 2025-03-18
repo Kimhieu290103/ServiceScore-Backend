@@ -13,7 +13,7 @@ public class RoleServiceImpl implements RoleService {
     private final RoleRepository roleRepository;
 
     @Override
-    public void createRole(RoleDTO roleDTO) throws Exception {
+    public void createRole(RoleDTO roleDTO) throws RuntimeException {
         Role role = Role.builder()
                 .name(roleDTO.getName())
                 .build();

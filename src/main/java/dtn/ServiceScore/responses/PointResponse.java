@@ -9,7 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class PointResponse {
-    private  Long id;
+    private Long id;
     private String semester;
     private Long points;
 

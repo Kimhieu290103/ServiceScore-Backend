@@ -22,6 +22,7 @@ public class ClassController {
             throw new RuntimeException(e);
         }
     }
+
     @PostMapping("/search")
     public ResponseEntity<?> searchClasses(@RequestBody ClassSearchRequest request) {
         List<dtn.ServiceScore.model.Class> classes = classService.getClasses(request);

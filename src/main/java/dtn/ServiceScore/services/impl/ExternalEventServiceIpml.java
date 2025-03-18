@@ -1,15 +1,14 @@
 package dtn.ServiceScore.services.impl;
 
 import dtn.ServiceScore.dtos.ExternalEventDTO;
-import dtn.ServiceScore.enums.ExternalEventStatus;
 import dtn.ServiceScore.model.ExternalEvent;
 import dtn.ServiceScore.model.Semester;
 import dtn.ServiceScore.model.User;
 import dtn.ServiceScore.repositories.ExternalEventRepository;
 import dtn.ServiceScore.repositories.SemesterRepository;
-import dtn.ServiceScore.repositories.UserRepository;
 import dtn.ServiceScore.responses.ExternalEventResponse;
 import dtn.ServiceScore.services.ExternalEventService;
+import dtn.ServiceScore.utils.Enums.ExternalEventStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -23,8 +22,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ExternalEventServiceIpml implements ExternalEventService {
     private final ExternalEventRepository externalEventRepository;
-    private final UserRepository userRepository;
     private final SemesterRepository semesterRepository;
+
     @Override
     public ExternalEventResponse createExternalEvent(ExternalEventDTO dto) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

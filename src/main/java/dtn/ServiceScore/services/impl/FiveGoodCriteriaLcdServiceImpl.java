@@ -1,7 +1,6 @@
 package dtn.ServiceScore.services.impl;
 
 import dtn.ServiceScore.dtos.FiveGoodCriteriaLcdDTO;
-import dtn.ServiceScore.model.FiveGoodCriteria;
 import dtn.ServiceScore.model.FiveGoodCriteriaLcd;
 import dtn.ServiceScore.model.Semester;
 import dtn.ServiceScore.repositories.FiveGoodCriteriaLcdRepository;
@@ -17,6 +16,7 @@ import java.util.List;
 public class FiveGoodCriteriaLcdServiceImpl implements FiveGoodCriteriaLcdService {
     private final FiveGoodCriteriaLcdRepository fiveGoodCriteriaLcdRepository;
     private final SemesterRepository semesterRepository;
+
     @Override
     public List<FiveGoodCriteriaLcd> getAllFiveGoodCriteriaLcd() {
         return fiveGoodCriteriaLcdRepository.findByIsActiveTrue();

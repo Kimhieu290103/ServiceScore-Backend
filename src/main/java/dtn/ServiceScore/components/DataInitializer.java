@@ -21,6 +21,7 @@ public class DataInitializer implements CommandLineRunner {
     private final FiveGoodCriteriaLcdRepository fiveGoodCriteriaLcdRepository;
     private final EventTypeRepository eventTypeRepository;
     private final ClassRepository classRepository;
+
     public DataInitializer(RoleRepository roleRepository
             , LcdRepository lcdRepository
             , SemesterRepository semesterRepository
@@ -28,7 +29,7 @@ public class DataInitializer implements CommandLineRunner {
             , DepartmentRepository departmentRepository
             , FiveGoodCriteriaRepository fiveGoodCriteriaRepository
             , FiveGoodCriteriaLcdRepository fiveGoodCriteriaLcdRepository
-            ,   EventTypeRepository eventTypeRepository
+            , EventTypeRepository eventTypeRepository
             , ClassRepository classRepository) {
         this.roleRepository = roleRepository;
         this.lcdRepository = lcdRepository;
@@ -62,13 +63,11 @@ public class DataInitializer implements CommandLineRunner {
         }
 
 
-
         if (courseRepository.count() == 0) {
             List<String> courseNames = List.of("2021-2025", "2022-2026", "2023-2027", "2024-2028", "2025-2029", "2026-2030");
             courseNames.forEach(name -> courseRepository.save(Course.builder().name(name).build()));
             System.out.println("✅ Inserted courses");
         }
-
 
 
         // Kiểm tra bảng Department trống thì thêm dữ liệu

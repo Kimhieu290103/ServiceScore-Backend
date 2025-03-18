@@ -8,7 +8,10 @@ import java.util.List;
 
 public interface ExternalEventService {
     ExternalEventResponse createExternalEvent(ExternalEventDTO dto);
+
     List<ExternalEventResponse> getPendingEvents();
+
     List<ExternalEventResponse> getUserEvents(Long userId);
+
     ExternalEvent findById(Long id);
 }

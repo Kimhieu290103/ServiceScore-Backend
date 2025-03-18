@@ -22,12 +22,14 @@ public interface DisciplinaryPointService {
 
     // điểm danh tất cả sinh viên
     Map<String, Object> addPointsForAllRegisteredUsers(Event event);
+
     // Danh sách điểm theo các kì
     List<PointResponse> getDisciplinaryPointsByUserId();
+
     Map<String, Object> getDisciplinaryPointsWithTotal();
 
 
     // danh sách điêmr sinh viên
     List<StudentPointResponse> getStudentsWithTotalPoints(
-            Long classId, Integer courseId, Integer departmentId,Long semesterId);
+            Long classId, Integer courseId, Integer departmentId, Long semesterId);
 }

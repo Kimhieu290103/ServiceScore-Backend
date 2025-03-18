@@ -1,8 +1,6 @@
 package dtn.ServiceScore.controllers;
 
-import dtn.ServiceScore.dtos.FiveGoodCriteriaDTO;
 import dtn.ServiceScore.dtos.FiveGoodCriteriaLcdDTO;
-import dtn.ServiceScore.model.FiveGoodCriteria;
 import dtn.ServiceScore.model.FiveGoodCriteriaLcd;
 import dtn.ServiceScore.services.FiveGoodCriteriaLcdService;
 import jakarta.validation.Valid;
@@ -24,10 +22,11 @@ public class FiveGoodCriteriaLcdController {
             throw new RuntimeException(e);
         }
     }
+
     //  API Thêm mới tiêu chí
     @PostMapping
     public ResponseEntity<?> createCriteria(@Valid @RequestBody FiveGoodCriteriaLcdDTO dto) {
-     FiveGoodCriteriaLcd fiveGoodCriteriaLcd = fiveGoodCriteriaLcdService.createCriteriaLcd(dto);
+        FiveGoodCriteriaLcd fiveGoodCriteriaLcd = fiveGoodCriteriaLcdService.createCriteriaLcd(dto);
         return ResponseEntity.ok(fiveGoodCriteriaLcd);
     }
 

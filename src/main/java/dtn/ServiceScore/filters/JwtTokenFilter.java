@@ -3,7 +3,6 @@ package dtn.ServiceScore.filters;
 import dtn.ServiceScore.components.JwtTokenUtil;
 import dtn.ServiceScore.model.User;
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotNull;
@@ -33,7 +32,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(@NotNull HttpServletRequest request
             , @NotNull HttpServletResponse response
-            , @NotNull FilterChain filterChain) throws ServletException, IOException {
+            , @NotNull FilterChain filterChain) throws IOException {
         try {
             //filterChain.doFilter(request,response); // ai cung cho di qua
             if (isBypassToken(request)) {
@@ -41,11 +40,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 return;
             }
             final String authHeader = request.getHeader("Authorization");
-            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
-                return;
-            }
-            if (authHeader.startsWith("Bearer ")) {
+            if (authHeader != null && authHeader.startsWith("Bearer ")) {
                 final String token = authHeader.substring(7);
                 final String phoneNumber = jwtTokenUtil.extractUserName(token);
                 if (phoneNumber != null && SecurityContextHolder.getContext().getAuthentication() == null) {
@@ -60,6 +55,9 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                     }
                 }
+            } else {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+                return;
             }
             filterChain.doFilter(request, response);
         } catch (Exception e) {
