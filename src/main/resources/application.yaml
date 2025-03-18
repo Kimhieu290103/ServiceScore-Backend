@@ -9,7 +9,7 @@ spring:
     url : jdbc:postgresql://dpg-cvakruvnoe9s73fb1trg-a.oregon-postgres.render.com/servicescore_db
     username: root #user postgres
     password: ZSw9M7Rto2bVaf6ihJ33y7Fo2pbLe2pi #Mat khau
-#
+
 #    url: jdbc:postgresql://localhost:5432/servicescore_db #ten database
 #    username: postgres
 #    password: trankimhieu123 #Mat khau
