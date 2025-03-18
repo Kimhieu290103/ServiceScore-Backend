@@ -29,7 +29,6 @@ import java.util.stream.Collectors;
 public class EventServiceImpl implements EventService {
     private final EventRepository eventRepository;
     private final SemesterRepository semesterRepository;
-    private final LcdRepository lcdRepository;
     private final EventImageRepository eventImageRepository;
     private final FiveGoodCriteriaRepository fiveGoodCriteriaRepository;
     private final EventCriteriaRepository eventCriteriaRepository;
@@ -37,9 +36,8 @@ public class EventServiceImpl implements EventService {
     private final EventCriteriaLcdRepository eventCriteriaLcdRepository;
     private final EventTypeRepository eventTypeRepository;
     @Override
-    public Event createEvent(EventDTO eventDTO) throws Exception {
+    public Event createEvent(EventDTO eventDTO) throws RuntimeException {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
-        ObjectMapper objectMapper = new ObjectMapper();
         String eventName = eventDTO.getName();
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String userRoles = user.getRole().getName();
@@ -134,26 +132,24 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public Page<Event> getAllEvents(PageRequest pageRequest) {
-        return eventRepository.findAll(pageRequest).map(event -> {
-            return Event.builder()
-                    .id(event.getId())
-                    .name(event.getName())
-                    .description(event.getDescription())
-                    .date(event.getDate())
-                    .endDate(event.getEndDate())
-                    .registrationStartDate(event.getRegistrationStartDate())
-                    .registrationEndDate(event.getRegistrationEndDate())
-                    .status(event.getStatus())
-                    .semester(event.getSemester())
-                    .user(event.getUser())
-                    .score(event.getScore())
-                    .maxRegistrations(event.getMaxRegistrations())
-                    .currentRegistrations(event.getCurrentRegistrations())
-                    .additionalInfo(event.getAdditionalInfo())
-                    .location(event.getLocation())
-                    .eventType(event.getEventType())
-                    .build();
-        });
+        return eventRepository.findAll(pageRequest).map(event -> Event.builder()
+                .id(event.getId())
+                .name(event.getName())
+                .description(event.getDescription())
+                .date(event.getDate())
+                .endDate(event.getEndDate())
+                .registrationStartDate(event.getRegistrationStartDate())
+                .registrationEndDate(event.getRegistrationEndDate())
+                .status(event.getStatus())
+                .semester(event.getSemester())
+                .user(event.getUser())
+                .score(event.getScore())
+                .maxRegistrations(event.getMaxRegistrations())
+                .currentRegistrations(event.getCurrentRegistrations())
+                .additionalInfo(event.getAdditionalInfo())
+                .location(event.getLocation())
+                .eventType(event.getEventType())
+                .build());
     }
 
     @Override

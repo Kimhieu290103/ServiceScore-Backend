@@ -21,8 +21,6 @@ public class DisciplinaryPointServiceImpl implements DisciplinaryPointService {
     private final StudentCriteriaRepository studentCriteriaRepository;
     private final ExternalEventRepository externalEventRepository;
     private final UserRepository userRepository;
-    private final ClassRepository classRepository;
-    private final SemesterRepository semesterRepository;
     @Override
     @Transactional
     public DisciplinaryPoint Addpoint(User user, Event event) {

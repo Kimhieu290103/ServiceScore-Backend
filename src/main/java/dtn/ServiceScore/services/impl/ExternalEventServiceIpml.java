@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ExternalEventServiceIpml implements ExternalEventService {
     private final ExternalEventRepository externalEventRepository;
-    private final UserRepository userRepository;
     private final SemesterRepository semesterRepository;
     @Override
     public ExternalEventResponse createExternalEvent(ExternalEventDTO dto) {
