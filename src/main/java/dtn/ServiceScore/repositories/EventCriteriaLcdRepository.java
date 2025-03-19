@@ -18,4 +18,9 @@ public interface EventCriteriaLcdRepository extends JpaRepository<EventCriteriaL
     // ✅ **Tìm tất cả bản ghi theo eventId**
     @Query("SELECT ecl FROM EventCriteriaLcd ecl WHERE ecl.event.id = :eventId")
     List<EventCriteriaLcd> findByEventId(@Param("eventId") Long id);
+
+    @Transactional
+    @Modifying
+    @Query("DELETE FROM EventCriteriaLcd e WHERE e.criteria.id = :criteriaId")
+    void deleteByCriteriaId(Long criteriaId);
 }

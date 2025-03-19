@@ -10,6 +10,8 @@ public interface FiveGoodCriteriaService {
 
     FiveGoodCriteria createCriteria(FiveGoodCriteriaDTO dto);
 
-    void softDeleteCriteria(Long id);
+    void deleteCriteria(Long id);
+    List<FiveGoodCriteria> getCriteriaBySemester(Long semesterId);
 
+    FiveGoodCriteria updateCriteria(Long id, FiveGoodCriteriaDTO dto);
 }

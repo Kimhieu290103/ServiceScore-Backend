@@ -10,4 +10,6 @@ public interface FiveGoodCriteriaRepository extends JpaRepository<FiveGoodCriter
     Optional<FiveGoodCriteria> findByName(String name);
 
     List<FiveGoodCriteria> findByIsActiveTrue();
+
+    List<FiveGoodCriteria> findBySemesterId(Long semesterId);
 }

@@ -26,4 +26,6 @@ public interface StudentCriteriaRepository extends JpaRepository<StudentCriteria
     @Modifying
     @Query("DELETE FROM StudentCriteria sc WHERE sc.criteria.id = :criteriaId")
     void deleteByCriteriaId(@Param("criteriaId") Long criteriaId);
+
+
 }

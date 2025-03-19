@@ -32,10 +32,23 @@ public class FiveGoodCriteriaController {
     }
 
     // API xóa mềm tiêu chí
-    @PutMapping("/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> softDeleteCriteria(@PathVariable Long id) {
-        fiveGoodCriteriaService.softDeleteCriteria(id);
+        fiveGoodCriteriaService.deleteCriteria(id);
         return ResponseEntity.ok("✅ Đã xóa mềm tiêu chí có ID: " + id);
+    }
+
+    // Lấy danh sách tiêu chí theo kỳ học
+    @GetMapping("/{semesterId}")
+    public  ResponseEntity<?> getCriteriaBySemester(@PathVariable Long semesterId) {
+        return ResponseEntity.ok(fiveGoodCriteriaService.getCriteriaBySemester(semesterId));
+    }
+    @PutMapping("/{id}")
+    public ResponseEntity<FiveGoodCriteria> updateCriteria(
+            @PathVariable Long id,
+            @RequestBody FiveGoodCriteriaDTO dto) {
+        FiveGoodCriteria updatedCriteria = fiveGoodCriteriaService.updateCriteria(id, dto);
+        return ResponseEntity.ok(updatedCriteria);
     }
 
 }

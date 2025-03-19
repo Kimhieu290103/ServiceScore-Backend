@@ -4,7 +4,9 @@ import dtn.ServiceScore.model.FiveGoodCriteriaLcd;
 import dtn.ServiceScore.model.LcdCriteria;
 import dtn.ServiceScore.model.Semester;
 import dtn.ServiceScore.model.User;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -23,4 +25,10 @@ public interface LcdCriteriaRepository extends JpaRepository<LcdCriteria, Long> 
     boolean existsByUserAndCriteriaAndSemester(@Param("user") User user,
                                                @Param("criteria") FiveGoodCriteriaLcd criteria,
                                                @Param("semester") Semester semester);
+
+    @Transactional
+    @Modifying
+    @Query("DELETE FROM LcdCriteria l WHERE l.fiveGoodCriteriaLcd.id = :criteriaId")
+    void deleteByCriteriaId(Long criteriaId);
+
 }
