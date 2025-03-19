@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,6 +57,12 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (isUserRegistered(eventId, userId)) {
             throw new IllegalStateException("Bạn đã đăng kí sự kiện");
         }
+        if(existingEvent.getRegistrationEndDate().isBefore(LocalDateTime.now())) {
+            throw new IllegalStateException("Sự kiện đã kết thúc đăng kí");
+        }
+        if(LocalDateTime.now().isBefore(existingEvent.getRegistrationStartDate())) {
+            throw new IllegalStateException("Chưa đến ngày đăng kí");
+        }
         if (Objects.equals(existingEvent.getCurrentRegistrations(), existingEvent.getMaxRegistrations())) {
             throw new IllegalStateException("Sự kiện đã đủ số lượng người đăng kí");
         }
@@ -81,48 +88,6 @@ public class RegistrationServiceImpl implements RegistrationService {
         registrationRepository.delete(registration);
     }
 
-
-//    @Override
-//    public void checkInEvent(Long registrationId) throws RuntimeException {
-//        Registration existingRegistration = registrationRepository.findById(registrationId)
-//                .orElseThrow(() -> new DataNotFoundException("Không tìm thấy registration"));
-//        existingRegistration.setAttendances(true);
-//        existingRegistration.setStatus(Enums.RegistrationStatus.CHECKED_IN.toString());
-//        registrationRepository.save(existingRegistration);
-//    }
-
-//    @Override
-//    public void checkInEvent(Long eventId, Long userId) throws RuntimeException {
-//        List<Registration> registrations = registrationRepository.findByUserIdAndEventId(userId, eventId);
-//        if (registrations.isEmpty()) {
-//            throw new DataNotFoundException("Không tìm thấy đăng ký");
-//        }
-//        Registration registration = registrations.get(0);
-//        registration.setAttendances(true);
-//        registration.setStatus(Enums.RegistrationStatus.CHECKED_IN.toString());
-//        registrationRepository.save(registration);
-//    }
-//
-//    public void multiCheckInEvent(List<Long> registrationIds) throws RuntimeException {
-//        for (Long registrationId : registrationIds) {
-//            checkInEvent(registrationId);
-//        }
-//    }
-//
-//    public void multiCheckInEvent(Long eventId, List<Long> userIds) throws RuntimeException {
-//        for (Long userId : userIds) {
-//            checkInEvent(eventId, userId);
-//        }
-//    }
-//
-//    public void allCheckInEvent(Long eventId) throws RuntimeException {
-//        List<Registration> registrations = registrationRepository.findByEventId(eventId);
-//        for (Registration registration : registrations) {
-//            registration.setAttendances(true);
-//            registration.setStatus(Enums.RegistrationStatus.CHECKED_IN.toString());
-//            registrationRepository.save(registration);
-//        }
-//    }
 
     @Override
     public boolean isUserRegistered(Long eventId, Long userId) {
