@@ -45,57 +45,6 @@ public class RegistrationController {
 
     }
 
-//    @PostMapping("/checkin/{registrationId}")
-//    public ResponseEntity<?> checkInEvent(@PathVariable Long registrationId) {
-//        try {
-//            registrationService.checkInEvent(registrationId);
-//            return ResponseEntity.ok("Check in success");
-//        } catch (Exception e) {
-//            return ResponseEntity.badRequest().body(e.getMessage());
-//        }
-//    }
-//
-
-//    @PostMapping("/checkin/{eventId}/{userId}")
-//    public ResponseEntity<?> checkInEvent(@PathVariable Long eventId, @PathVariable Long userId) {
-//        try {
-//            registrationService.checkInEvent(eventId, userId);
-//            return ResponseEntity.ok("Check in success");
-//        } catch (Exception e) {
-//            return ResponseEntity.badRequest().body(e.getMessage());
-//        }
-//    }
-//
-//    @PostMapping("/checkin/multi/{eventId}")
-//    public ResponseEntity<?> multiCheckInEvent(@RequestBody List<Long> registrationIds, @PathVariable Long eventId) {
-//        try {
-//            registrationService.multiCheckInEvent(eventId, registrationIds);
-//            return ResponseEntity.ok("Check in success");
-//        } catch (Exception e) {
-//            return ResponseEntity.badRequest().body(e.getMessage());
-//        }
-//    }
-//
-//    @PostMapping("/checkin/multi/user/{eventId}")
-//    public ResponseEntity<?> multiCheckInEventByUser(@RequestBody List<Long> userIds, @PathVariable Long eventId) {
-//        try {
-//            registrationService.multiCheckInEvent(eventId, userIds);
-//            return ResponseEntity.ok("Check in success");
-//        } catch (Exception e) {
-//            return ResponseEntity.badRequest().body(e.getMessage());
-//        }
-//    }
-
-//    @PostMapping("/checkin/all/{eventId}")
-//    public ResponseEntity<?> allCheckInEvent(@PathVariable Long eventId) {
-//        try {
-//            registrationService.allCheckInEvent(eventId);
-//            return ResponseEntity.ok("Check in success");
-//        } catch (Exception e) {
-//            return ResponseEntity.badRequest().body(e.getMessage());
-//        }
-//    }
-
     // danh sách sinh viên đăng kí sự kiện
     @GetMapping("/event/{eventId}")
     public ResponseEntity<?> getUsersByEvent(@PathVariable Long eventId) {

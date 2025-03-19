@@ -36,14 +36,24 @@ public class WebSecurityConfig {
                             .requestMatchers(POST,"/api/v1/points/batchAll/**"
                                                             ,"/api/v1/points/batch/**",
                                                              "/api/v1/points/**").hasAnyRole("HSV","LCD","BTV","CTSV")
-                            .requestMatchers(PUT, "/api/v1/points/**/approve"
-                                                            ,"/api/v1/points/**/reject").hasAnyRole("HSV")
+                            .requestMatchers(PUT, "/api/v1/points/**"
+                                                            ).hasAnyRole("HSV")
                             .requestMatchers(GET, "/api/v1/points/by-user").hasAnyRole("SV")
                             .requestMatchers(POST, "/api/v1/events/createEventImage"
                                                         ,"/api/v1/events/uploadImage/**").hasAnyRole("HSV","LCD","BTV","CTSV")
                             .requestMatchers(PUT, "/api/v1/events/**").hasAnyRole("HSV","LCD","BTV","CTSV")
                             .requestMatchers(GET, "/api/v1/events/my-events").hasAnyRole("HSV","LCD","BTV","CTSV")
-
+                            .requestMatchers(POST, "/api/external-events").hasAnyRole("SV")
+                            .requestMatchers(GET, "/api/external-events/pending").hasAnyRole("HSV")
+                            .requestMatchers(GET, "/api/external-events/my-events").hasAnyRole("SV")
+                            .requestMatchers(PUT, "/api/v1/five_good/delete/**").hasAnyRole("HSV")
+                            .requestMatchers(POST, "/api/v1/five_good").hasAnyRole("HSV")
+                            .requestMatchers(POST, "/api/v1/five_good_lcd").hasAnyRole("BTV")
+                            .requestMatchers(PUT, "/api/v1/five_good_lcd/delete/**").hasAnyRole("BTV")
+                            .requestMatchers(POST, "/api/v1/registrations/**").hasAnyRole("SV")
+                            .requestMatchers(DELETE, "/api/v1/registrations/**").hasAnyRole("SV")
+                            .requestMatchers(GET, "/api/v1/registrations/event/**"
+                            ,"/api/v1/registrations/export/**").hasAnyRole("HSV","LCD","BTV","CTSV")
 
                             // Các request còn lại yêu cầu xác thực
                             .anyRequest().authenticated();
