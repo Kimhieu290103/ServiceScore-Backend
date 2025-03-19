@@ -32,7 +32,9 @@ public class WebSecurityConfig {
                             .requestMatchers(POST, "/api/v1/users/register", "/api/v1/users/login").permitAll()
                             .requestMatchers(GET, "/api/v1/five_good/all", "/api/v1/events/all"
                                                     , "/api/v1/events/all/**"
-                                                    ,"/api/v1/events/criteria/**").permitAll()
+                                                    ,"/api/v1/events/criteria/**","/swagger-ui/**"
+                                    ,"/v3/api-docs","/v3/api-docs/**"
+                            ,"/swagger-ui").permitAll()
                             .requestMatchers(POST,"/api/v1/points/batchAll/**"
                                                             ,"/api/v1/points/batch/**",
                                                              "/api/v1/points/**").hasAnyRole("HSV","LCD","BTV","CTSV")
